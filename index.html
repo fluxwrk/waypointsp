@@ -39,7 +39,6 @@
 
       <div id="heroImageCard" class="hero-image-card">
         <img id="heroImage" src="img/nord-atmo.png" alt="Decorative Linux banner">
-        <button id="imageSettingsBtn" class="image-settings-btn" title="Banner settings" aria-label="Banner settings">⚙</button>
       </div>
     </section>
 
@@ -170,7 +169,10 @@
           <label>Custom Search URL<input id="customSearchInput" placeholder="https://example.com/search?q=%s"></label>
         </div>
         <label class="custom-css-label">Custom CSS<textarea id="customCssInput" spellcheck="false" placeholder=".brand-wordmark { display: none; }"></textarea></label>
-        <div class="custom-css-help">Custom CSS is applied last, so it can override Waypoint styling. Useful examples:<br><code>.brand-wordmark { display: none; }</code><br><code>.section { border-radius: 24px !important; }</code><br><code>:root { --waypoint-green: #ff79c6; }</code></div>
+        <div class="custom-css-help">Custom CSS is applied last, so it can override Waypoint styling.<br>For more examples, open the terminal man page.</div>
+        <div class="button-row settings-uploads">
+          <button id="openCssManBtn" class="ghost-btn" type="button">Open CSS Man Page</button>
+        </div>
         <div class="button-row settings-uploads">
           <button id="clearCustomCssBtn" class="ghost-btn" type="button">Clear Custom CSS</button>
         </div>

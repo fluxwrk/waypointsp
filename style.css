@@ -2347,3 +2347,50 @@ html[data-custom-colors="true"] textarea {
 .custom-css-help code {
   color: var(--text);
 }
+
+
+/* v1.1.1 feedback fixes */
+/* Hidden section titles should remove the whole title bar and free bookmark space. */
+.ui-hide-section-titles .section-header {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.ui-hide-section-titles .section-name {
+  display: none !important;
+}
+
+.ui-hide-section-titles .section-actions {
+  top: 8px !important;
+  right: 8px !important;
+  z-index: 3 !important;
+}
+
+.ui-hide-section-titles .section:not(:hover):not(:focus-within) .section-actions {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.ui-hide-section-titles .links {
+  margin-top: 0 !important;
+}
+
+.ui-hide-section-titles.bookmark-list-layout .section,
+.ui-hide-section-titles.bookmark-grid-layout .section {
+  padding-top: 10px !important;
+}
+
+/* Banner settings now live in Settings > Banner. The floating cog is gone. */
+.image-settings-btn {
+  display: none !important;
+}
+
+#openCssManBtn {
+  margin-top: 8px;
+}

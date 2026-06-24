@@ -15,6 +15,20 @@ All notable changes to Waypoint will be documented in this file.
 
 ---
 
+## [1.1.2x] - 2026-06-24
+
+### Fixed
+- Settings now default to the **Appearance** page when opened.
+- Removed the banner settings cog for a cleaner interface.
+- Added `man css` terminal documentation.
+- Added a Custom CSS help button linking to the CSS manual.
+- Replaced confusing placeholder CSS examples with a clearer documentation path.
+
+### Changed
+- Hide Section Titles now minimizes the section header (planned improvement: fully hide the header while preserving section functionality).
+
+---
+
 ## [1.1.1] - 2026-06-24
 
 ### Added

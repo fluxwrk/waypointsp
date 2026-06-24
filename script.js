@@ -411,9 +411,12 @@ function positionTerminal() {
 }
 
 function openSettingsPage(page = "appearance") {
+  const validPages = ["appearance", "layout", "bookmarks", "weather", "banner", "advanced", "backup"];
+  const targetPage = validPages.includes(page) ? page : "appearance";
   $("settingsModal")?.classList.remove("hidden");
-  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === page));
-  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === page));
+  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === targetPage));
+  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === targetPage));
+  positionTerminal();
 }
 function openModal(id) {
   if (id === "settingsModal") {
@@ -1019,10 +1022,33 @@ function runCommand(commandRaw) {
 
   if (["q", "quit", "exit"].includes(lower)) { closeModal("terminalModal"); return; }
 
+  if ((head === "man" && arg === "css") || (head === "help" && arg === "css")) {
+    return output(`
+      <strong>CSS man page</strong><br><br>
+      Custom CSS is loaded after Waypoint's normal styling. Use <strong>!important</strong> when a built-in rule is stronger.<br><br>
+      <strong>Common examples</strong><br><br>
+      Change the main accent color:<br>
+      <code>:root { --waypoint-green: #ff79c6; --accent: #ff79c6; }</code><br><br>
+      Hide the Waypoint wordmark:<br>
+      <code>.brand-wordmark { display: none !important; }</code><br><br>
+      Make bookmark cards rounder:<br>
+      <code>.link { border-radius: 18px !important; }</code><br><br>
+      Make sections more transparent:<br>
+      <code>.section { background: rgba(5, 9, 18, .35) !important; }</code><br><br>
+      Remove bookmark card borders:<br>
+      <code>.link { border-color: transparent !important; }</code><br><br>
+      Make section titles lowercase:<br>
+      <code>.section-name { text-transform: none !important; }</code><br><br>
+      <strong>What :root means</strong><br>
+      <code>:root</code> targets the whole page. It is mostly used for changing CSS variables like colors, spacing, and theme values.
+    `);
+  }
+
   if (head === "help") {
     return output(`
       <strong>Available commands</strong><br><br>
       help<br>
+      man css<br>
       fetch<br>
       settings<br>
       show|hide logo|title|clock|weather|search|sections<br>
@@ -1254,10 +1280,9 @@ function bindEvents() {
   $("logoBtn")?.addEventListener("click", () => openModal("terminalModal"));
   setupTerminalDrag();
   setupSettingsDrag();
-  $("settingsBtn")?.addEventListener("click", () => openModal("settingsModal"));
+  $("settingsBtn")?.addEventListener("click", () => openSettingsPage("appearance"));
   $("weatherWidget")?.addEventListener("click", () => { openSettingsPage("weather"); setTimeout(() => $("weatherLocationInput")?.focus(), 80); });
   $("clock")?.addEventListener("click", focusSearch);
-  $("imageSettingsBtn")?.addEventListener("click", () => openSettingsPage("banner"));
   $("saveLinkBtn")?.addEventListener("click", saveLink);
   $("searchForm")?.addEventListener("submit", e => {
     const form = e.currentTarget;
@@ -1337,6 +1362,7 @@ function bindEvents() {
   bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
   bindSetting("customCssInput", "input", value => { data.settings.customCss = value.slice(0, 8000); save(); applyPersonalization(); });
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
+  $("openCssManBtn")?.addEventListener("click", () => { openModal("terminalModal"); runCommand("man css"); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
   bindSetting("heroStyleSelect", "change", value => { data.settings.heroStyle = value; save(); render(); });
