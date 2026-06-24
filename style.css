@@ -1211,7 +1211,7 @@ body {
   font: 950 18px var(--sans);
 }
 .search input {
-  padding-left: 10px;
+  padding-left: 25px;
   font-size: 17px;
 }
 .search button {
