@@ -2256,3 +2256,35 @@ body.bookmark-list-layout .delete-link {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+.settings-v11 { width: min(980px, calc(100vw - 36px)) !important; }
+.settings-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.settings-tab { border-radius: 12px; padding: 9px 11px; color: var(--muted); background: rgba(0,0,0,.18); }
+.settings-tab.active { color: var(--text); border-color: color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 52%); background: color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 88%); }
+.settings-page { display: none; }
+.settings-page.active { display: block; }
+.custom-css-label { margin-top: 12px; }
+#customCssInput { min-height: 180px; resize: vertical; font-family: var(--mono); line-height: 1.45; }
+.search-engine-badge { flex: 0 0 38px; height: 38px; margin-left: 12px; display: grid; place-items: center; border-radius: 50%; color: var(--waypoint-green, var(--accent)); background: rgba(255,255,255,.045); font: 950 18px var(--sans); }
+body { font-size: calc(16px * var(--ui-scale, 1)); }
+.brand-wordmark { font-size: clamp(19px, 1.7vw, 25px) !important; }
+.ui-hide-logo .logo-mark, .ui-hide-wordmark .brand-wordmark, .ui-hide-clock #clock, .ui-hide-weather #weatherWidget, .ui-hide-search .search { display: none !important; }
+.ui-hide-section-titles .section-name { display: none !important; }
+.ui-hide-section-titles .section-header { min-height: 28px; justify-content: flex-end; background: transparent !important; border-color: transparent !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 4px !important; }
+body.bookmark-list-layout .link a, body.bookmark-grid-layout .link a { font-size: var(--bookmark-font-size, 12px) !important; }
+body.bookmark-list-layout .link img, body.bookmark-grid-layout .link img { width: var(--bookmark-icon-size, 22px) !important; height: var(--bookmark-icon-size, 22px) !important; }
+html[data-bookmark-columns="2"] body.bookmark-list-layout .links, html[data-bookmark-columns="2"] body.bookmark-grid-layout .links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+html[data-bookmark-columns="3"] body.bookmark-list-layout .links, html[data-bookmark-columns="3"] body.bookmark-grid-layout .links { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-bookmark-columns="4"] body.bookmark-grid-layout .links { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+.layout-minimal .brand-wordmark, .layout-minimal #clock, .layout-minimal #weatherWidget, .layout-minimal .hero-image-card { display: none !important; }
+.layout-minimal .hero { display: flex !important; min-height: 78px !important; margin: 6px 0 22px !important; }
+.layout-minimal .search { position: relative !important; top: auto !important; left: auto !important; transform: none !important; width: min(780px, 100%) !important; }
+.layout-centered .toolbar { grid-template-columns: 1fr !important; justify-items: center !important; }
+.layout-centered .toolbar-right { justify-content: center !important; margin-left: 0 !important; }
+.layout-centered .brand-wordmark { justify-self: center !important; margin: 0 !important; }
+.layout-dashboard .hero-image-card { min-height: 330px !important; }
+.fetch-output { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 26px; margin: 0; color: #d9e5f6; font: 800 13px/1.35 var(--mono); white-space: pre; }
+.fetch-logo { color: var(--waypoint-green, var(--accent)); text-shadow: 0 0 20px color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 62%); }
+.fetch-info strong { color: var(--waypoint-green, var(--accent)); }
+@media (max-width: 640px) { .fetch-output { grid-template-columns: 1fr; gap: 10px; font-size: 12px; } .settings-tabs { gap: 6px; } .settings-tab { padding: 8px 9px; } }

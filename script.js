@@ -99,7 +99,24 @@ const defaultData = {
     weatherUnit: "auto",
     searchEngine: "google",
     customSearchUrl: "",
-    shortcut: "altT",
+    shortcut: "none",
+    fontFamily: "system",
+    uiScale: 100,
+    useCustomColors: false,
+    customAccent: "#00d084",
+    customPanel: "#09111a",
+    customText: "#d8dee9",
+    layoutPreset: "classic",
+    showLogo: true,
+    showWordmark: true,
+    showClock: true,
+    showWeather: true,
+    showSearch: true,
+    showSectionTitles: true,
+    bookmarkColumns: "auto",
+    bookmarkFontSize: 12,
+    bookmarkIconSize: 22,
+    customCss: "",
     terminalLeft: null,
     terminalTop: null,
     lastModified: null
@@ -174,7 +191,19 @@ function normalizeData(input) {
   normalized.settings.weatherUnit = ["auto", "fahrenheit", "celsius"].includes(normalized.settings.weatherUnit) ? normalized.settings.weatherUnit : "auto";
   normalized.settings.searchEngine = SEARCH_ENGINES[normalized.settings.searchEngine] ? normalized.settings.searchEngine : "google";
   normalized.settings.customSearchUrl = String(normalized.settings.customSearchUrl || "").trim().slice(0, 240);
-  normalized.settings.shortcut = ["altT", "ctrlShiftSpace", "none"].includes(normalized.settings.shortcut) ? normalized.settings.shortcut : "altT";
+  normalized.settings.shortcut = ["altT", "ctrlShiftSpace", "none"].includes(normalized.settings.shortcut) ? normalized.settings.shortcut : "none";
+  normalized.settings.fontFamily = ["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "system";
+  normalized.settings.uiScale = clamp(Number(normalized.settings.uiScale), 85, 120, 100);
+  normalized.settings.useCustomColors = normalized.settings.useCustomColors === true || normalized.settings.useCustomColors === "true";
+  normalized.settings.customAccent = /^#[0-9a-f]{6}$/i.test(normalized.settings.customAccent || "") ? normalized.settings.customAccent : "#00d084";
+  normalized.settings.customPanel = /^#[0-9a-f]{6}$/i.test(normalized.settings.customPanel || "") ? normalized.settings.customPanel : "#09111a";
+  normalized.settings.customText = /^#[0-9a-f]{6}$/i.test(normalized.settings.customText || "") ? normalized.settings.customText : "#d8dee9";
+  normalized.settings.layoutPreset = ["classic", "minimal", "dashboard", "centered"].includes(normalized.settings.layoutPreset) ? normalized.settings.layoutPreset : "classic";
+  ["showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles"].forEach(key => { normalized.settings[key] = normalized.settings[key] !== false && normalized.settings[key] !== "false"; });
+  normalized.settings.bookmarkColumns = ["auto", "2", "3", "4"].includes(String(normalized.settings.bookmarkColumns)) ? String(normalized.settings.bookmarkColumns) : "auto";
+  normalized.settings.bookmarkFontSize = clamp(Number(normalized.settings.bookmarkFontSize), 10, 15, 12);
+  normalized.settings.bookmarkIconSize = clamp(Number(normalized.settings.bookmarkIconSize), 14, 36, 22);
+  normalized.settings.customCss = String(normalized.settings.customCss || "").slice(0, 8000);
   normalized.settings.terminalLeft = normalized.settings.terminalLeft === null ? null : clamp(Number(normalized.settings.terminalLeft), 20, 4000, null);
   normalized.settings.terminalTop = normalized.settings.terminalTop === null ? null : clamp(Number(normalized.settings.terminalTop), 20, 4000, null);
   normalized.settings.lastModified = normalized.settings.lastModified || null;
@@ -189,6 +218,50 @@ function save() {
   syncControls();
 }
 
+function hexToRgba(hex, alpha = 1) {
+  const raw = String(hex || "#000000").replace("#", "");
+  const n = parseInt(raw.length === 3 ? raw.split("").map(c => c + c).join("") : raw, 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+function colorMix(hexA, hexB, weightB = .5) {
+  const toRgb = hex => {
+    const raw = String(hex || "#000000").replace("#", "");
+    const n = parseInt(raw.length === 3 ? raw.split("").map(c => c + c).join("") : raw, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const a = toRgb(hexA), b = toRgb(hexB);
+  const rgb = a.map((v, i) => Math.round(v * (1 - weightB) + b[i] * weightB));
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+}
+function applyPersonalization() {
+  const s = data.settings;
+  const body = document.body;
+  ["classic", "minimal", "dashboard", "centered"].forEach(p => body.classList.toggle(`layout-${p}`, s.layoutPreset === p));
+  body.classList.toggle("ui-hide-logo", s.showLogo === false);
+  body.classList.toggle("ui-hide-wordmark", s.showWordmark === false);
+  body.classList.toggle("ui-hide-clock", s.showClock === false);
+  body.classList.toggle("ui-hide-weather", s.showWeather === false);
+  body.classList.toggle("ui-hide-search", s.showSearch === false);
+  body.classList.toggle("ui-hide-section-titles", s.showSectionTitles === false);
+  document.documentElement.style.setProperty("--ui-scale", String(s.uiScale / 100));
+  document.documentElement.style.setProperty("--bookmark-font-size", `${s.bookmarkFontSize}px`);
+  document.documentElement.style.setProperty("--bookmark-icon-size", `${s.bookmarkIconSize}px`);
+  document.documentElement.style.setProperty("--bookmark-columns", s.bookmarkColumns === "auto" ? "" : s.bookmarkColumns);
+  document.documentElement.dataset.bookmarkColumns = s.bookmarkColumns || "auto";
+  const fonts = {
+    system: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    inter: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    jetbrains: '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+    fira: '"Fira Sans", Inter, ui-sans-serif, system-ui, sans-serif',
+    roboto: 'Roboto, Inter, ui-sans-serif, system-ui, sans-serif',
+    mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace'
+  };
+  document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.system);
+  let style = $("waypointCustomCss");
+  if (!style) { style = document.createElement("style"); style.id = "waypointCustomCss"; document.head.appendChild(style); }
+  style.textContent = s.customCss || "";
+}
 function applyTheme() {
   const theme = getTheme();
   const root = document.documentElement;
@@ -199,6 +272,17 @@ function applyTheme() {
   root.style.setProperty("--muted", theme.muted);
   root.style.setProperty("--accent", theme.accent);
   root.style.setProperty("--border", theme.border);
+  if (data.settings.useCustomColors) {
+    root.style.setProperty("--accent", data.settings.customAccent);
+    root.style.setProperty("--waypoint-green", data.settings.customAccent);
+    root.style.setProperty("--panel", hexToRgba(data.settings.customPanel, .70));
+    root.style.setProperty("--panel-strong", hexToRgba(data.settings.customPanel, .92));
+    root.style.setProperty("--text", data.settings.customText);
+    root.style.setProperty("--muted", colorMix(data.settings.customText, "#808080", .45));
+    root.style.setProperty("--border", hexToRgba(data.settings.customText, .16));
+  } else {
+    root.style.setProperty("--waypoint-green", "#00d084");
+  }
 
   const bg = $("backgroundLayer");
   const overlay = $("backgroundOverlay");
@@ -244,11 +328,28 @@ function syncControls() {
   setValue("searchEngineSelect", s.searchEngine);
   setValue("customSearchInput", s.customSearchUrl);
   setValue("themeSelect", s.theme);
+  setValue("fontSelect", s.fontFamily);
+  setValue("uiScaleSlider", s.uiScale);
+  setValue("customColorsSelect", String(!!s.useCustomColors));
+  setValue("accentColorInput", s.customAccent);
+  setValue("panelColorInput", s.customPanel);
+  setValue("textColorInput", s.customText);
+  setValue("layoutPresetSelect", s.layoutPreset);
+  setValue("showLogoSelect", String(s.showLogo !== false));
+  setValue("showWordmarkSelect", String(s.showWordmark !== false));
+  setValue("showClockSelect", String(s.showClock !== false));
+  setValue("showWeatherSelect", String(s.showWeather !== false));
+  setValue("showSearchSelect", String(s.showSearch !== false));
+  setValue("showSectionTitlesSelect", String(s.showSectionTitles !== false));
   setValue("backgroundModeSelect", s.backgroundMode);
   setValue("heroStyleSelect", s.heroStyle);
   setValue("shortcutSelect", s.shortcut);
   setValue("heroFitSelect", s.heroFit || "cover");
   setValue("bookmarkLayoutSelect", s.bookmarkLayout || "list");
+  setValue("bookmarkColumnsSelect", s.bookmarkColumns || "auto");
+  setValue("bookmarkFontSlider", s.bookmarkFontSize);
+  setValue("bookmarkIconSlider", s.bookmarkIconSize);
+  setValue("customCssInput", s.customCss || "");
   setValue("overlaySlider", s.overlay);
   setValue("blurSlider", s.blur);
   setValue("heroHeightSlider", s.heroHeight);
@@ -259,6 +360,9 @@ function syncControls() {
   setText("heroHeightValue", `${s.heroHeight}px`);
   setText("heroZoomValue", `${s.heroZoom}%`);
   setText("heroYValue", `${s.heroY}%`);
+  setText("uiScaleValue", `${s.uiScale}%`);
+  setText("bookmarkFontValue", `${s.bookmarkFontSize}px`);
+  setText("bookmarkIconValue", `${s.bookmarkIconSize}px`);
 }
 function setValue(id, value) { const el = $(id); if (!el) return; if (document.activeElement === el) return; if (el.value !== String(value)) el.value = value; }
 function setText(id, value) { const el = $(id); if (el) el.textContent = value; }
@@ -284,6 +388,11 @@ function positionTerminal() {
   }
 }
 
+function openSettingsPage(page = "appearance") {
+  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === page));
+  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === page));
+  openModal("settingsModal");
+}
 function openModal(id) {
   $(id)?.classList.remove("hidden");
   if (id === "terminalModal") {
@@ -299,6 +408,7 @@ function render() {
   document.body.classList.toggle("bookmark-list-layout", (data.settings.bookmarkLayout || "list") === "list");
   document.body.classList.toggle("bookmark-grid-layout", (data.settings.bookmarkLayout || "list") === "grid");
   applyTheme();
+  applyPersonalization();
   applyHero();
   updateLogoPrompt();
   syncControls();
@@ -619,22 +729,29 @@ function buildFastfetchHtml() {
   const theme = getTheme();
   const heroLabel = data.settings.heroStyle === "auto" ? `Theme Default (${theme.defaultHero === "atmo" ? "Atmosphere" : "Desktop"})` : labelHero(data.settings.heroStyle);
   const modified = data.settings.lastModified ? formatRelativeDate(new Date(data.settings.lastModified)) : "Never";
+  const logo = `  /\\/|  __
+ |/\\/  / /
+      / /
+     / /
+    /_/____
+     |_____|`;
+  const rows = [
+    ["Version", "1.1.0-dev"],
+    ["Theme", theme.label],
+    ["Preset", data.settings.layoutPreset],
+    ["Font", data.settings.fontFamily],
+    ["Bookmarks", countBookmarks()],
+    ["Sections", data.sections.length],
+    ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"],
+    ["Banner", heroLabel],
+    ["Weather", data.settings.showWeather === false ? "Hidden" : (data.settings.weatherLocation || "Not set")],
+    ["Search", labelSearch(data.settings.searchEngine)],
+    ["Modified", modified]
+  ];
   return `
-    <div class="fastfetch-lines inline-fastfetch">
-      <div class="fastfetch-title">${escapeHtml(displayUserName())}'s Waypoint</div>
-      <div class="fastfetch-row"><span>User</span><strong>${escapeHtml(displayUserName())}</strong></div>
-      <div class="fastfetch-row"><span>Bookmarks</span><strong>${countBookmarks()}</strong></div>
-      <div class="fastfetch-row"><span>Sections</span><strong>${data.sections.length}</strong></div>
-      <div class="fastfetch-row"><span>Theme</span><strong>${escapeHtml(theme.label)}</strong></div>
-      <div class="fastfetch-row"><span>Banner</span><strong>${escapeHtml(heroLabel)}</strong></div>
-      <div class="fastfetch-row"><span>Banner Fit</span><strong>${escapeHtml(data.settings.heroFit === "contain" ? "Fit Entire Image" : "Fill/Crop")}</strong></div>
-      <div class="fastfetch-row"><span>Weather</span><strong>${escapeHtml(data.settings.weatherLocation || "Not set")}</strong></div>
-      <div class="fastfetch-row"><span>Search</span><strong>${escapeHtml(labelSearch(data.settings.searchEngine))}</strong></div>
-      <div class="fastfetch-row"><span>Bookmarks</span><strong>${escapeHtml((data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid")}</strong></div>
-      <div class="fastfetch-row"><span>Wallpaper</span><strong>${escapeHtml(labelBackground(data.settings.backgroundMode))}</strong></div>
-      <div class="fastfetch-row"><span>Shortcut</span><strong>${escapeHtml(labelShortcut(data.settings.shortcut))}</strong></div>
-      <div class="fastfetch-row"><span>Modified</span><strong>${escapeHtml(modified)}</strong></div>
-    </div>
+    <pre class="fetch-output"><span class="fetch-logo">${escapeHtml(logo)}</span><span class="fetch-info"><strong>${escapeHtml(displayUserName())}@waypoint</strong>
+-------------
+${rows.map(([k,v]) => `${String(k).padEnd(10)} ${escapeHtml(v)}`).join("\n")}</span></pre>
   `;
 }
 
@@ -880,8 +997,12 @@ function runCommand(commandRaw) {
     return output(`
       <strong>Available commands</strong><br><br>
       help<br>
-      stfetch / fetch<br>
+      fetch<br>
       settings<br>
+      show|hide logo|title|clock|weather|search|sections<br>
+      preset classic|minimal|dashboard|centered<br>
+      font system|inter|jetbrains|fira|roboto|mono<br>
+      accent #00d084<br>
       engine google|duckduckgo|brave|bing|custom<br>
       customsearch &lt;url with %s&gt;<br>
       name &lt;value&gt;<br>
@@ -901,10 +1022,42 @@ function runCommand(commandRaw) {
     `);
   }
 
-  if (["stfetch", "fetch", "fastfetch"].includes(head)) return output(buildFastfetchHtml());
+  if (head === "fetch") return output(buildFastfetchHtml());
   if (head === "settings") {
-    openModal("settingsModal");
+    openSettingsPage(arg || "appearance");
     return output("Opened settings.");
+  }
+
+  if (["show", "hide"].includes(head)) {
+    const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles" };
+    const key = keyMap[arg];
+    if (!key) return output("Usage: show|hide logo|title|clock|weather|search|sections");
+    data.settings[key] = head === "show";
+    save(); render();
+    return output(`${head === "show" ? "Shown" : "Hidden"}: <strong>${escapeHtml(arg)}</strong>.`);
+  }
+
+  if (head === "preset") {
+    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return output("Usage: preset classic|minimal|dashboard|centered");
+    data.settings.layoutPreset = arg;
+    save(); render();
+    return output(`Layout preset set to <strong>${escapeHtml(arg)}</strong>.`);
+  }
+
+  if (head === "font") {
+    if (!["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(arg)) return output("Usage: font system|inter|jetbrains|fira|roboto|mono");
+    data.settings.fontFamily = arg;
+    save(); render();
+    return output(`Font set to <strong>${escapeHtml(arg)}</strong>.`);
+  }
+
+  if (head === "accent") {
+    const color = rest[0] || "";
+    if (!/^#[0-9a-f]{6}$/i.test(color)) return output("Usage: accent #00d084");
+    data.settings.customAccent = color;
+    data.settings.useCustomColors = true;
+    save(); render();
+    return output(`Accent color set to <strong>${escapeHtml(color)}</strong>.`);
   }
 
   if (head === "name") {
@@ -1075,9 +1228,9 @@ function bindEvents() {
   $("logoBtn")?.addEventListener("click", () => openModal("terminalModal"));
   setupTerminalDrag();
   $("settingsBtn")?.addEventListener("click", () => openModal("settingsModal"));
-  $("weatherWidget")?.addEventListener("click", () => { openModal("settingsModal"); setTimeout(() => $("weatherLocationInput")?.focus(), 80); });
+  $("weatherWidget")?.addEventListener("click", () => { openSettingsPage("weather"); setTimeout(() => $("weatherLocationInput")?.focus(), 80); });
   $("clock")?.addEventListener("click", focusSearch);
-  $("imageSettingsBtn")?.addEventListener("click", () => openModal("settingsModal"));
+  $("imageSettingsBtn")?.addEventListener("click", () => openSettingsPage("banner"));
   $("saveLinkBtn")?.addEventListener("click", saveLink);
   $("searchForm")?.addEventListener("submit", e => {
     const form = e.currentTarget;
@@ -1120,6 +1273,7 @@ function bindEvents() {
     if (clearIconBtn) clearIconBtn.disabled = true;
   });
 
+  document.querySelectorAll(".settings-tab").forEach(btn => btn.addEventListener("click", () => openSettingsPage(btn.dataset.settingsPage || "appearance")));
   document.querySelectorAll("[data-close-modal]").forEach(btn => btn.addEventListener("click", () => closeModal(btn.dataset.closeModal)));
   document.querySelectorAll(".modal").forEach(modal => modal.addEventListener("click", e => { if (e.target === modal) closeModal(modal.id); }));
   document.querySelectorAll("[data-command]").forEach(btn => btn.addEventListener("click", () => executeButtonCommand(btn.dataset.command)));
@@ -1138,6 +1292,25 @@ function bindEvents() {
   bindSetting("searchEngineSelect", "change", value => { data.settings.searchEngine = value; save(); applySearchEngine(); renderTerminal(); });
   bindSetting("customSearchInput", "change", value => { data.settings.customSearchUrl = value.trim().slice(0, 240); save(); applySearchEngine(); });
   bindSetting("themeSelect", "change", value => { data.settings.theme = value; save(); render(); });
+  bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); render(); });
+  bindNumber("uiScaleSlider", "uiScale", () => applyPersonalization());
+  bindSetting("customColorsSelect", "change", value => { data.settings.useCustomColors = value === "true"; save(); render(); });
+  bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; data.settings.useCustomColors = true; save(); render(); });
+  bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; data.settings.useCustomColors = true; save(); render(); });
+  bindSetting("textColorInput", "input", value => { data.settings.customText = value; data.settings.useCustomColors = true; save(); render(); });
+  bindSetting("layoutPresetSelect", "change", value => { data.settings.layoutPreset = value; save(); render(); });
+  bindSetting("showLogoSelect", "change", value => { data.settings.showLogo = value === "true"; save(); render(); });
+  bindSetting("showWordmarkSelect", "change", value => { data.settings.showWordmark = value === "true"; save(); render(); });
+  bindSetting("showClockSelect", "change", value => { data.settings.showClock = value === "true"; save(); render(); });
+  bindSetting("showWeatherSelect", "change", value => { data.settings.showWeather = value === "true"; save(); render(); });
+  bindSetting("showSearchSelect", "change", value => { data.settings.showSearch = value === "true"; save(); render(); });
+  bindSetting("showSectionTitlesSelect", "change", value => { data.settings.showSectionTitles = value === "true"; save(); render(); });
+  bindSetting("bookmarkColumnsSelect", "change", value => { data.settings.bookmarkColumns = value; save(); render(); });
+  bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
+  bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
+  bindSetting("customCssInput", "input", value => { data.settings.customCss = value.slice(0, 8000); save(); applyPersonalization(); });
+  $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
+  $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
   bindSetting("heroStyleSelect", "change", value => { data.settings.heroStyle = value; save(); render(); });
   bindSetting("heroFitSelect", "change", value => { data.settings.heroFit = value; save(); render(); });
@@ -1173,7 +1346,6 @@ function bindEvents() {
     if (data.settings.shortcut === "ctrlShiftSpace" && event.ctrlKey && event.shiftKey && event.code === "Space") {
       event.preventDefault(); openModal("terminalModal");
     }
-    if (event.key === "/") { event.preventDefault(); focusSearch(); }
   });
 }
 

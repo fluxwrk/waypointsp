@@ -29,8 +29,9 @@
     </header>
 
     <section class="hero">
-      <form action="https://www.google.com/search" method="GET" class="search" autocomplete="off">
-        <input name="q" placeholder="Search Google" autofocus>
+      <form id="searchForm" action="https://www.google.com/search" method="GET" class="search" autocomplete="off">
+        <span id="searchEngineBadge" class="search-engine-badge" aria-hidden="true">G</span>
+        <input id="searchInput" name="q" placeholder="Search Google" autofocus>
         <button type="submit" aria-label="Search">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.75 4a6.75 6.75 0 0 1 5.34 10.88l3.52 3.51a.86.86 0 0 1-1.22 1.22l-3.51-3.52A6.75 6.75 0 1 1 10.75 4Zm0 1.72a5.03 5.03 0 1 0 0 10.06 5.03 5.03 0 0 0 0-10.06Z"/></svg>
         </button>
@@ -88,34 +89,99 @@
   </div>
 
   <div class="modal hidden" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
-    <div class="modal-content settings-modal">
+    <div class="modal-content settings-modal settings-v11">
       <button class="modal-close" data-close-modal="settingsModal" aria-label="Close settings">×</button>
       <h3 id="settingsModalTitle">Settings</h3>
-      <div class="terminal-control-grid" aria-label="Startpage settings">
-            <label>Your Name<input id="userNameInput" placeholder="user" maxlength="32"></label>
-            <label>Weather Location<input id="weatherLocationInput" placeholder="City, Region, Country or ZIP" maxlength="80"></label>
-            <label>Weather Unit<select id="weatherUnitSelect"><option value="fahrenheit">Fahrenheit</option><option value="celsius">Celsius</option></select></label>
-            <label>Theme<select id="themeSelect"><option value="catppuccin">Catppuccin</option><option value="nord">Nord</option><option value="gruvbox">Gruvbox</option><option value="tokyoNight">Tokyo Night</option></select></label>
-            <label>Wallpaper<select id="backgroundModeSelect"><option value="wallpaper">Theme Wallpaper</option><option value="gradient">Theme Gradient</option><option value="custom">Custom Upload</option></select></label>
-            <label>Banner Style<select id="heroStyleSelect"><option value="auto">Theme Default</option><option value="desktop">Desktop</option><option value="atmo">Atmosphere</option><option value="custom">Custom Upload</option><option value="hidden">Hidden</option></select></label>
-            <label>Banner Fit<select id="heroFitSelect"><option value="cover">Fill/Crop</option><option value="contain">Fit Entire Image</option></select></label>
-            <label>Bookmark Layout<select id="bookmarkLayoutSelect"><option value="list">Compact List</option><option value="grid">Grid Cards</option></select></label>
-            <label>Shortcut<select id="shortcutSelect"><option value="altT">Alt+T</option><option value="ctrlShiftSpace">Ctrl+Shift+Space</option><option value="none">Disabled</option></select></label>
-            <label>Overlay <span id="overlayValue"></span><input type="range" id="overlaySlider" min="0" max="70" value="35"></label>
-            <label>Blur <span id="blurValue"></span><input type="range" id="blurSlider" min="0" max="20" value="0"></label>
-            <label>Banner Height <span id="heroHeightValue"></span><input type="range" id="heroHeightSlider" min="120" max="340" value="210"></label>
-            <label>Banner Zoom <span id="heroZoomValue"></span><input type="range" id="heroZoomSlider" min="60" max="180" value="100"></label>
-            <label>Banner Y <span id="heroYValue"></span><input type="range" id="heroYSlider" min="0" max="100" value="50"></label>
-          </div>
 
-          <div class="button-row settings-uploads">
-            <label class="upload-btn">Upload Wallpaper<input type="file" id="backgroundUpload" accept="image/*" hidden></label>
-            <label class="upload-btn">Upload Banner<input type="file" id="imageUpload" accept="image/*" hidden></label>
-            <button id="resetBackgroundBtn" class="ghost-btn" type="button">Reset Wallpaper</button>
-            <button id="resetHeroBtn" class="ghost-btn" type="button">Use Theme Banner</button>
-            <button id="exportBtn" class="ghost-btn" type="button">Export JSON</button>
-            <button id="importBtn" class="ghost-btn" type="button">Import JSON</button>
-          </div>
+      <div class="settings-tabs" role="tablist" aria-label="Waypoint settings pages">
+        <button class="settings-tab active" type="button" data-settings-page="appearance">Appearance</button>
+        <button class="settings-tab" type="button" data-settings-page="layout">Layout</button>
+        <button class="settings-tab" type="button" data-settings-page="bookmarks">Bookmarks</button>
+        <button class="settings-tab" type="button" data-settings-page="weather">Weather</button>
+        <button class="settings-tab" type="button" data-settings-page="banner">Banner</button>
+        <button class="settings-tab" type="button" data-settings-page="advanced">Advanced</button>
+        <button class="settings-tab" type="button" data-settings-page="backup">Backup</button>
+      </div>
+
+      <div class="settings-page active" data-page="appearance">
+        <div class="terminal-control-grid">
+          <label>Your Name<input id="userNameInput" placeholder="user" maxlength="32"></label>
+          <label>Theme<select id="themeSelect"><option value="catppuccin">Catppuccin</option><option value="nord">Nord</option><option value="gruvbox">Gruvbox</option><option value="tokyoNight">Tokyo Night</option></select></label>
+          <label>Font<select id="fontSelect"><option value="system">System</option><option value="inter">Inter</option><option value="jetbrains">JetBrains Mono</option><option value="fira">Fira Sans</option><option value="roboto">Roboto</option><option value="mono">Monospace</option></select></label>
+          <label>UI Scale <span id="uiScaleValue"></span><input type="range" id="uiScaleSlider" min="85" max="120" value="100"></label>
+          <label>Accent Color<input id="accentColorInput" type="color"></label>
+          <label>Panel Color<input id="panelColorInput" type="color"></label>
+          <label>Text Color<input id="textColorInput" type="color"></label>
+          <label>Use Custom Colors<select id="customColorsSelect"><option value="false">Theme Colors</option><option value="true">Custom Colors</option></select></label>
+        </div>
+      </div>
+
+      <div class="settings-page" data-page="layout">
+        <div class="terminal-control-grid">
+          <label>Layout Preset<select id="layoutPresetSelect"><option value="classic">Classic</option><option value="minimal">Minimal</option><option value="dashboard">Dashboard</option><option value="centered">Centered</option></select></label>
+          <label>Show Logo / Terminal Button<select id="showLogoSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
+          <label>Show Waypoint Name<select id="showWordmarkSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
+          <label>Show Clock<select id="showClockSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
+          <label>Show Weather<select id="showWeatherSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
+          <label>Show Search<select id="showSearchSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
+          <label>Show Section Titles<select id="showSectionTitlesSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
+          <label>Shortcut<select id="shortcutSelect"><option value="none">Disabled</option><option value="altT">Alt+T</option><option value="ctrlShiftSpace">Ctrl+Shift+Space</option></select></label>
+        </div>
+      </div>
+
+      <div class="settings-page" data-page="bookmarks">
+        <div class="terminal-control-grid">
+          <label>Bookmark Layout<select id="bookmarkLayoutSelect"><option value="list">Compact List</option><option value="grid">Grid Cards</option></select></label>
+          <label>Bookmark Columns<select id="bookmarkColumnsSelect"><option value="auto">Auto</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+          <label>Bookmark Font Size <span id="bookmarkFontValue"></span><input type="range" id="bookmarkFontSlider" min="10" max="15" value="12"></label>
+          <label>Icon Size <span id="bookmarkIconValue"></span><input type="range" id="bookmarkIconSlider" min="14" max="36" value="22"></label>
+        </div>
+      </div>
+
+      <div class="settings-page" data-page="weather">
+        <div class="terminal-control-grid">
+          <label>Weather Location<input id="weatherLocationInput" placeholder="City, Region, Country or ZIP" maxlength="80"></label>
+          <label>Weather Unit<select id="weatherUnitSelect"><option value="auto">Auto</option><option value="fahrenheit">Fahrenheit</option><option value="celsius">Celsius</option></select></label>
+        </div>
+      </div>
+
+      <div class="settings-page" data-page="banner">
+        <div class="terminal-control-grid">
+          <label>Wallpaper<select id="backgroundModeSelect"><option value="wallpaper">Theme Wallpaper</option><option value="gradient">Theme Gradient</option><option value="custom">Custom Upload</option></select></label>
+          <label>Banner Style<select id="heroStyleSelect"><option value="auto">Theme Default</option><option value="desktop">Desktop</option><option value="atmo">Atmosphere</option><option value="custom">Custom Upload</option><option value="hidden">Hidden</option></select></label>
+          <label>Banner Fit<select id="heroFitSelect"><option value="cover">Fill/Crop</option><option value="contain">Fit Entire Image</option></select></label>
+          <label>Overlay <span id="overlayValue"></span><input type="range" id="overlaySlider" min="0" max="70" value="35"></label>
+          <label>Blur <span id="blurValue"></span><input type="range" id="blurSlider" min="0" max="20" value="0"></label>
+          <label>Banner Height <span id="heroHeightValue"></span><input type="range" id="heroHeightSlider" min="120" max="360" value="330"></label>
+          <label>Banner Zoom <span id="heroZoomValue"></span><input type="range" id="heroZoomSlider" min="80" max="140" value="100"></label>
+          <label>Banner Y <span id="heroYValue"></span><input type="range" id="heroYSlider" min="0" max="100" value="50"></label>
+        </div>
+        <div class="button-row settings-uploads">
+          <label class="upload-btn">Upload Wallpaper<input type="file" id="backgroundUpload" accept="image/*" hidden></label>
+          <label class="upload-btn">Upload Banner<input type="file" id="imageUpload" accept="image/*" hidden></label>
+          <button id="resetBackgroundBtn" class="ghost-btn" type="button">Reset Wallpaper</button>
+          <button id="resetHeroBtn" class="ghost-btn" type="button">Use Theme Banner</button>
+        </div>
+      </div>
+
+      <div class="settings-page" data-page="advanced">
+        <div class="terminal-control-grid">
+          <label>Search Engine<select id="searchEngineSelect"><option value="google">Google</option><option value="duckduckgo">DuckDuckGo</option><option value="brave">Brave</option><option value="bing">Bing</option><option value="custom">Custom</option></select></label>
+          <label>Custom Search URL<input id="customSearchInput" placeholder="https://example.com/search?q=%s"></label>
+        </div>
+        <label class="custom-css-label">Custom CSS<textarea id="customCssInput" spellcheck="false" placeholder=".brand-wordmark { display: none; }"></textarea></label>
+        <div class="button-row settings-uploads">
+          <button id="clearCustomCssBtn" class="ghost-btn" type="button">Clear Custom CSS</button>
+        </div>
+      </div>
+
+      <div class="settings-page" data-page="backup">
+        <div class="button-row settings-uploads">
+          <button id="exportBtn" class="ghost-btn" type="button">Export JSON</button>
+          <button id="importBtn" class="ghost-btn" type="button">Import JSON</button>
+          <button id="resetEverythingBtn" class="ghost-btn" type="button">Factory Reset</button>
+        </div>
+      </div>
     </div>
   </div>
 
