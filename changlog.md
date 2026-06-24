@@ -1,3 +1,40 @@
+# Changelog
+
+All notable changes to Waypoint will be documented in this file.
+
+## [Unreleased]
+
+### Added
+-
+
+### Changed
+-
+
+### Fixed
+-
+
+---
+
+## [1.1.1] - 2026-06-24
+
+### Added
+- Movable Settings window.
+- Custom CSS support.
+- Built-in CSS help examples.
+- Layout presets for banner height.
+
+### Changed
+- Renamed **Panel Color** to **Surface Color**.
+- Surface Color now applies more consistently across interface panels.
+- Removed background blur while the Settings window is open.
+- Banner height control changed from a slider to presets.
+
+### Fixed
+- UI Scale now correctly scales the interface.
+- Settings window intended to default to Appearance (follow-up hotfix required).
+
+---
+
 ## [1.1.0] - 2026-06-24
 
 ### Added

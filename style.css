@@ -2288,3 +2288,62 @@ html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-book
 .fetch-logo { color: var(--waypoint-green, var(--accent)); text-shadow: 0 0 20px color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 62%); }
 .fetch-info strong { color: var(--waypoint-green, var(--accent)); }
 @media (max-width: 640px) { .fetch-output { grid-template-columns: 1fr; gap: 10px; font-size: 12px; } .settings-tabs { gap: 6px; } .settings-tab { padding: 8px 9px; } }
+
+
+/* v1.1 feedback fixes */
+.page-shell {
+  zoom: var(--ui-scale, 1);
+}
+#settingsModal {
+  align-items: unset !important;
+  justify-content: unset !important;
+  padding: 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  pointer-events: none !important;
+}
+#settingsModal .settings-v11 {
+  position: fixed !important;
+  left: var(--settings-left, 50%) !important;
+  top: var(--settings-top, 56px) !important;
+  transform: translateX(-50%);
+  pointer-events: auto !important;
+  max-height: calc(100vh - 72px) !important;
+  overflow: auto !important;
+}
+#settingsModalTitle {
+  cursor: move;
+  user-select: none;
+}
+body.dragging-settings,
+body.dragging-terminal {
+  user-select: none;
+}
+html[data-custom-colors="true"] .section,
+html[data-custom-colors="true"] .mini-clock,
+html[data-custom-colors="true"] .weather-widget,
+html[data-custom-colors="true"] .hero-image-card,
+html[data-custom-colors="true"] .modal-content,
+html[data-custom-colors="true"] .terminal-window,
+html[data-custom-colors="true"] .search,
+html[data-custom-colors="true"] .link {
+  background-color: var(--surface-color) !important;
+}
+html[data-custom-colors="true"] .settings-tab,
+html[data-custom-colors="true"] input,
+html[data-custom-colors="true"] select,
+html[data-custom-colors="true"] textarea {
+  background-color: color-mix(in srgb, var(--surface-color), black 18%) !important;
+}
+.custom-css-help {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(0,0,0,.18);
+  color: var(--muted);
+  font: 700 12px/1.55 var(--mono);
+}
+.custom-css-help code {
+  color: var(--text);
+}

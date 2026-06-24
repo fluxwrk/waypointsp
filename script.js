@@ -119,6 +119,8 @@ const defaultData = {
     customCss: "",
     terminalLeft: null,
     terminalTop: null,
+    settingsLeft: null,
+    settingsTop: null,
     lastModified: null
   }
 };
@@ -206,6 +208,8 @@ function normalizeData(input) {
   normalized.settings.customCss = String(normalized.settings.customCss || "").slice(0, 8000);
   normalized.settings.terminalLeft = normalized.settings.terminalLeft === null ? null : clamp(Number(normalized.settings.terminalLeft), 20, 4000, null);
   normalized.settings.terminalTop = normalized.settings.terminalTop === null ? null : clamp(Number(normalized.settings.terminalTop), 20, 4000, null);
+  normalized.settings.settingsLeft = normalized.settings.settingsLeft === null ? null : clamp(Number(normalized.settings.settingsLeft), 20, 4000, null);
+  normalized.settings.settingsTop = normalized.settings.settingsTop === null ? null : clamp(Number(normalized.settings.settingsTop), 20, 4000, null);
   normalized.settings.lastModified = normalized.settings.lastModified || null;
 
   return normalized;
@@ -245,6 +249,9 @@ function applyPersonalization() {
   body.classList.toggle("ui-hide-search", s.showSearch === false);
   body.classList.toggle("ui-hide-section-titles", s.showSectionTitles === false);
   document.documentElement.style.setProperty("--ui-scale", String(s.uiScale / 100));
+  document.documentElement.dataset.customColors = s.useCustomColors ? "true" : "false";
+  document.documentElement.style.setProperty("--surface-color", hexToRgba(s.customPanel || "#09111a", .72));
+  document.documentElement.style.setProperty("--surface-color-strong", hexToRgba(s.customPanel || "#09111a", .92));
   document.documentElement.style.setProperty("--bookmark-font-size", `${s.bookmarkFontSize}px`);
   document.documentElement.style.setProperty("--bookmark-icon-size", `${s.bookmarkIconSize}px`);
   document.documentElement.style.setProperty("--bookmark-columns", s.bookmarkColumns === "auto" ? "" : s.bookmarkColumns);
@@ -320,6 +327,12 @@ function applyHero() {
   img.src = getHeroSrc();
 }
 
+function nearestBannerHeight(value) {
+  const heights = [240, 300, 330, 360];
+  const n = Number(value) || 330;
+  return String(heights.reduce((best, h) => Math.abs(h - n) < Math.abs(best - n) ? h : best, heights[0]));
+}
+
 function syncControls() {
   const s = data.settings;
   setValue("userNameInput", s.userName);
@@ -352,13 +365,12 @@ function syncControls() {
   setValue("customCssInput", s.customCss || "");
   setValue("overlaySlider", s.overlay);
   setValue("blurSlider", s.blur);
-  setValue("heroHeightSlider", s.heroHeight);
+  setValue("heroHeightPresetSelect", nearestBannerHeight(s.heroHeight));
   setValue("heroZoomSlider", s.heroZoom);
   setValue("heroYSlider", s.heroY);
   setText("overlayValue", `${s.overlay}%`);
   setText("blurValue", `${s.blur}px`);
-  setText("heroHeightValue", `${s.heroHeight}px`);
-  setText("heroZoomValue", `${s.heroZoom}%`);
+    setText("heroZoomValue", `${s.heroZoom}%`);
   setText("heroYValue", `${s.heroY}%`);
   setText("uiScaleValue", `${s.uiScale}%`);
   setText("bookmarkFontValue", `${s.bookmarkFontSize}px`);
@@ -386,14 +398,28 @@ function positionTerminal() {
     win.style.removeProperty("--terminal-top");
     win.style.transform = "translate(-50%, -50%)";
   }
+  const settingsWin = document.querySelector(".settings-v11");
+  if (settingsWin && Number.isFinite(data.settings.settingsLeft) && Number.isFinite(data.settings.settingsTop)) {
+    settingsWin.style.setProperty("--settings-left", `${data.settings.settingsLeft}px`);
+    settingsWin.style.setProperty("--settings-top", `${data.settings.settingsTop}px`);
+    settingsWin.style.transform = "none";
+  } else if (settingsWin) {
+    settingsWin.style.removeProperty("--settings-left");
+    settingsWin.style.removeProperty("--settings-top");
+    settingsWin.style.transform = "translateX(-50%)";
+  }
 }
 
 function openSettingsPage(page = "appearance") {
+  $("settingsModal")?.classList.remove("hidden");
   document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === page));
   document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === page));
-  openModal("settingsModal");
 }
 function openModal(id) {
+  if (id === "settingsModal") {
+    document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === "appearance"));
+    document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === "appearance"));
+  }
   $(id)?.classList.remove("hidden");
   if (id === "terminalModal") {
     renderTerminal();
@@ -1227,6 +1253,7 @@ function setupTerminalDrag() {
 function bindEvents() {
   $("logoBtn")?.addEventListener("click", () => openModal("terminalModal"));
   setupTerminalDrag();
+  setupSettingsDrag();
   $("settingsBtn")?.addEventListener("click", () => openModal("settingsModal"));
   $("weatherWidget")?.addEventListener("click", () => { openSettingsPage("weather"); setTimeout(() => $("weatherLocationInput")?.focus(), 80); });
   $("clock")?.addEventListener("click", focusSearch);
@@ -1318,7 +1345,7 @@ function bindEvents() {
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
-  bindNumber("heroHeightSlider", "heroHeight", () => applyHero());
+  bindSetting("heroHeightPresetSelect", "change", value => { data.settings.heroHeight = Number(value) || 330; save(); render(); });
   bindNumber("heroZoomSlider", "heroZoom", () => applyHero());
   bindNumber("heroYSlider", "heroY", () => applyHero());
 
@@ -1358,3 +1385,43 @@ updateClock();
 setInterval(updateClock, 1000);
 refreshWeather(false);
 setInterval(() => refreshWeather(false), 30 * 60 * 1000);
+
+
+function setupSettingsDrag() {
+  const win = document.querySelector(".settings-v11");
+  const title = document.querySelector("#settingsModalTitle");
+  if (!win || !title || title.dataset.dragBound) return;
+  title.dataset.dragBound = "1";
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+  title.addEventListener("mousedown", event => {
+    if (event.target.closest("button,input,select,textarea,label")) return;
+    dragging = true;
+    const rect = win.getBoundingClientRect();
+    win.style.transform = "none";
+    win.style.setProperty("--settings-left", `${rect.left}px`);
+    win.style.setProperty("--settings-top", `${rect.top}px`);
+    offsetX = event.clientX - rect.left;
+    offsetY = event.clientY - rect.top;
+    document.body.classList.add("dragging-settings");
+    event.preventDefault();
+  });
+  window.addEventListener("mousemove", event => {
+    if (!dragging) return;
+    const maxLeft = Math.max(12, window.innerWidth - win.offsetWidth - 12);
+    const maxTop = Math.max(12, window.innerHeight - win.offsetHeight - 12);
+    const left = Math.min(maxLeft, Math.max(12, event.clientX - offsetX));
+    const top = Math.min(maxTop, Math.max(12, event.clientY - offsetY));
+    win.style.setProperty("--settings-left", `${left}px`);
+    win.style.setProperty("--settings-top", `${top}px`);
+    data.settings.settingsLeft = Math.round(left);
+    data.settings.settingsTop = Math.round(top);
+  });
+  window.addEventListener("mouseup", () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.classList.remove("dragging-settings");
+    save();
+  });
+}

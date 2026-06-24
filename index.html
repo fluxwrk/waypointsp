@@ -110,7 +110,7 @@
           <label>Font<select id="fontSelect"><option value="system">System</option><option value="inter">Inter</option><option value="jetbrains">JetBrains Mono</option><option value="fira">Fira Sans</option><option value="roboto">Roboto</option><option value="mono">Monospace</option></select></label>
           <label>UI Scale <span id="uiScaleValue"></span><input type="range" id="uiScaleSlider" min="85" max="120" value="100"></label>
           <label>Accent Color<input id="accentColorInput" type="color"></label>
-          <label>Panel Color<input id="panelColorInput" type="color"></label>
+          <label>Surface Color<input id="panelColorInput" type="color"></label>
           <label>Text Color<input id="textColorInput" type="color"></label>
           <label>Use Custom Colors<select id="customColorsSelect"><option value="false">Theme Colors</option><option value="true">Custom Colors</option></select></label>
         </div>
@@ -152,7 +152,7 @@
           <label>Banner Fit<select id="heroFitSelect"><option value="cover">Fill/Crop</option><option value="contain">Fit Entire Image</option></select></label>
           <label>Overlay <span id="overlayValue"></span><input type="range" id="overlaySlider" min="0" max="70" value="35"></label>
           <label>Blur <span id="blurValue"></span><input type="range" id="blurSlider" min="0" max="20" value="0"></label>
-          <label>Banner Height <span id="heroHeightValue"></span><input type="range" id="heroHeightSlider" min="120" max="360" value="330"></label>
+          <label>Banner Height<select id="heroHeightPresetSelect"><option value="240">Compact</option><option value="300">Balanced</option><option value="330">Tall</option><option value="360">Showcase</option></select></label>
           <label>Banner Zoom <span id="heroZoomValue"></span><input type="range" id="heroZoomSlider" min="80" max="140" value="100"></label>
           <label>Banner Y <span id="heroYValue"></span><input type="range" id="heroYSlider" min="0" max="100" value="50"></label>
         </div>
@@ -170,6 +170,7 @@
           <label>Custom Search URL<input id="customSearchInput" placeholder="https://example.com/search?q=%s"></label>
         </div>
         <label class="custom-css-label">Custom CSS<textarea id="customCssInput" spellcheck="false" placeholder=".brand-wordmark { display: none; }"></textarea></label>
+        <div class="custom-css-help">Custom CSS is applied last, so it can override Waypoint styling. Useful examples:<br><code>.brand-wordmark { display: none; }</code><br><code>.section { border-radius: 24px !important; }</code><br><code>:root { --waypoint-green: #ff79c6; }</code></div>
         <div class="button-row settings-uploads">
           <button id="clearCustomCssBtn" class="ghost-btn" type="button">Clear Custom CSS</button>
         </div>
