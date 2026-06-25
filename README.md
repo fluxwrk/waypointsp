@@ -1,14 +1,17 @@
-﻿
+﻿<div align="center">
+
+<img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
+
 # Waypoint
-
-<div align="center">
-
-    <img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
 
 ### A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.
 
-![GitHub Release](https://img.shields.io/github/v/release/waypointsp-dev/waypointsp)
-![License](https://img.shields.io/github/license/waypointsp-dev/waypointsp)
+<p>
+  <img src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp?label=Release">
+  <img src="https://img.shields.io/github/license/waypointsp-dev/waypointsp">
+  <img src="https://img.shields.io/github/last-commit/waypointsp-dev/waypointsp">
+</p>
+
 </div>
 
 
