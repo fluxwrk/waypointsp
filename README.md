@@ -1,62 +1,82 @@
-Waypoint
+﻿
+# Waypoint
 
-A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.
+> **A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.**
 
+  
 
+----------
 
+## Features
 
-Features
-Linux-Inspired Interface
-Built-in terminal with realistic command output
-fetch system information command
-Comprehensive help system
-Command history and Linux-style prompt
-Terminal transparency and customization
-Powerful Customization
-Multiple layout presets
-Compact and Grid bookmark layouts
-Theme support
-Custom accent and surface colors
-Advanced text color customization
-Custom fonts
-UI scaling
-Window transparency
-Custom CSS support
-Dashboard
-Search bar with multiple search engine support
-Weather widget
-Live clock
-Hero banner
-Bookmark sections
-Drag-and-drop organization
-Power User Features
-Import and export bookmarks
-Terminal configuration commands
-First-launch default bookmarks
-Per-category settings reset
-Responsive layout
-Screenshots
+### Linux-Inspired Interface
 
-(Coming soon)
+-   Built-in terminal with realistic command output
+-   `fetch` system information command
+-   Comprehensive help system
+-   Command history and Linux-style prompt
+-   Terminal transparency and customization
 
-Installation
+### Powerful Customization
+
+-   Multiple layout presets
+-   Compact and Grid bookmark layouts
+-   Theme support
+-   Custom accent and surface colors
+-   Advanced text color customization
+-   Custom fonts
+-   UI scaling
+-   Window transparency
+-   Custom CSS support
+
+### Dashboard
+
+-   Search bar with multiple search engine support
+-   Weather widget
+-   Live clock
+-   Hero banner
+-   Bookmark sections
+-   Drag-and-drop organization
+
+### Power User Features
+
+-   Import and export bookmarks
+-   Terminal configuration commands
+-   First-launch default bookmarks
+-   Per-category settings reset
+-   Responsive layout
+
+----------
+
+## Screenshots
+
+> _(Coming soon)_
+
+----------
+
+## Installation
 
 Clone the repository:
 
+```
 git clone https://github.com/waypointsp-dev/waypointsp.git
+```
 
-or download the latest release from the Releases page.
+or download the latest release from the **Releases** page.
 
-Open index.html in your browser.
+Open `index.html` in your browser.
 
 No installation required.
 
-Terminal
+----------
+
+## Terminal
 
 Waypoint includes a built-in Linux-inspired command terminal.
 
 Examples:
 
+```
 fetch
 
 help
@@ -76,29 +96,42 @@ show clock
 engine duckduckgo
 
 export
-Customization
+```
+
+----------
+
+## Customization
 
 Waypoint supports:
 
-Themes
-Fonts
-Layout presets
-Custom colors
-Custom CSS
-Window transparency
-Terminal transparency
+-   Themes
+-   Fonts
+-   Layout presets
+-   Custom colors
+-   Custom CSS
+-   Window transparency
+-   Terminal transparency
 
 Designed to be customized without editing source code.
 
-Roadmap
-Completed
-✅ v1.0 — Foundation
-✅ v1.1 — Personalization
-✅ v1.2 — Terminal Upgrade
-Planned
-🔲 v1.3 — Profiles
-🔲 v1.4 — Power User
-License
+----------
+
+## Roadmap
+
+### Completed
+
+-   ✅ v1.0 — Foundation
+-   ✅ v1.1 — Personalization
+-   ✅ v1.2 — Terminal Upgrade
+
+### Planned
+
+-   🔲 v1.3 — Profiles
+-   🔲 v1.4 — Power User
+
+----------
+
+## License
 
 Copyright (C) 2026 waypointsp-dev
 
