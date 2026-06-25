@@ -76,13 +76,229 @@ const THEMES = {
 
 const defaultData = {
   sections: [
-    { name: "Social", links: [] },
-    { name: "Media", links: [] },
-    { name: "Server", links: [] },
-    { name: "Web", links: [] },
-    { name: "Linux", links: [] },
-    { name: "Shopping", links: [] }
-  ],
+    {
+        name: "Development",
+        links: [
+            {
+                name: "GitHub",
+                url: "https://github.com"
+            },
+            {
+                name: "GitLab",
+                url: "https://gitlab.com"
+            },
+            {
+                name: "Stack Overflow",
+                url: "https://stackoverflow.com"
+            },
+            {
+                name: "MDN",
+                url: "https://developer.mozilla.org"
+            },
+            {
+                name: "DevDocs",
+                url: "https://devdocs.io"
+            },
+            {
+                name: "CodePen",
+                url: "https://codepen.io"
+            },
+            {
+                name: "Can I Use",
+                url: "https://caniuse.com"
+            },
+            {
+                name: "Regex101",
+                url: "https://regex101.com"
+            }
+        ]
+    },
+    {
+        name: "Linux",
+        links: [
+            {
+                name: "CachyOS",
+                url: "https://cachyos.org"
+            },
+            {
+                name: "Arch Linux",
+                url: "https://archlinux.org"
+            },
+            {
+                name: "Arch Wiki",
+                url: "https://wiki.archlinux.org"
+            },
+            {
+                name: "AUR",
+                url: "https://aur.archlinux.org"
+            },
+            {
+                name: "Flathub",
+                url: "https://flathub.org"
+            },
+            {
+                name: "ProtonDB",
+                url: "https://protondb.com"
+            },
+            {
+                name: "KDE",
+                url: "https://kde.org"
+            },
+            {
+                name: "GNOME",
+                url: "https://www.gnome.org"
+            }
+        ]
+    },
+    {
+        name: "Media",
+        links: [
+            {
+                name: "YouTube",
+                url: "https://youtube.com"
+            },
+            {
+                name: "Jellyfin",
+                url: "https://jellyfin.org"
+            },
+            {
+                name: "Plex",
+                url: "https://plex.tv"
+            },
+            {
+                name: "Spotify",
+                url: "https://spotify.com"
+            },
+            {
+                name: "IMDb",
+                url: "https://imdb.com"
+            },
+            {
+                name: "Letterboxd",
+                url: "https://letterboxd.com"
+            },
+            {
+                name: "Bandcamp",
+                url: "https://bandcamp.com"
+            },
+            {
+                name: "MusicBrainz",
+                url: "https://musicbrainz.org"
+            }
+        ]
+    },
+    {
+        name: "Utilities",
+        links: [
+            {
+                name: "Google Drive",
+                url: "https://drive.google.com"
+            },
+            {
+                name: "Google Maps",
+                url: "https://maps.google.com"
+            },
+            {
+                name: "Gmail",
+                url: "https://mail.google.com"
+            },
+            {
+                name: "Wikipedia",
+                url: "https://wikipedia.org"
+            },
+            {
+                name: "Speedtest",
+                url: "https://speedtest.net"
+            },
+            {
+                name: "Excalidraw",
+                url: "https://excalidraw.com"
+            },
+            {
+                name: "Photopea",
+                url: "https://photopea.com"
+            },
+            {
+                name: "TinyPNG",
+                url: "https://tinypng.com"
+            }
+        ]
+    },
+    {
+        name: "Community",
+        links: [
+            {
+                name: "Reddit",
+                url: "https://reddit.com"
+            },
+            {
+                name: "Discord",
+                url: "https://discord.com"
+            },
+            {
+                name: "Hacker News",
+                url: "https://news.ycombinator.com"
+            },
+            {
+                name: "Lobsters",
+                url: "https://lobste.rs"
+            },
+            {
+                name: "Phoronix",
+                url: "https://phoronix.com"
+            },
+            {
+                name: "OMG! Linux",
+                url: "https://www.omglinux.com"
+            },
+            {
+                name: "XDA",
+                url: "https://xda-developers.com"
+            },
+            {
+                name: "Lemmy",
+                url: "https://join-lemmy.org"
+            }
+        ]
+    },
+    {
+        name: "AI",
+        links: [
+            {
+                name: "ChatGPT",
+                url: "https://chatgpt.com"
+            },
+            {
+                name: "Claude",
+                url: "https://claude.ai"
+            },
+            {
+                name: "Gemini",
+                url: "https://gemini.google.com"
+            },
+            {
+                name: "Perplexity",
+                url: "https://perplexity.ai"
+            },
+            {
+                name: "Hugging Face",
+                url: "https://huggingface.co"
+            },
+            {
+                name: "Ollama",
+                url: "https://ollama.com"
+            },
+            {
+                name: "LM Studio",
+                url: "https://lmstudio.ai"
+            },
+            {
+                name: "OpenRouter",
+                url: "https://openrouter.ai"
+            }
+        ]
+    }
+],
   settings: {
     theme: "nord",
     backgroundMode: "wallpaper",
@@ -106,6 +322,14 @@ const defaultData = {
     customAccent: "#00d084",
     customPanel: "#09111a",
     customText: "#d8dee9",
+    windowTransparency: 92,
+    terminalTransparency: 94,
+    useCustomTextColors: false,
+    sectionTitleColor: "#d8dee9",
+    bookmarkTextColor: "#d8dee9",
+    mutedTextColor: "#9aa4b8",
+    terminalTextColor: "#d9e5f6",
+    statusTextColor: "#d8dee9",
     layoutPreset: "classic",
     showLogo: true,
     showWordmark: true,
@@ -131,6 +355,7 @@ let editingLink = null;
 let draggedSectionIndex = null;
 let draggedLink = null;
 let pendingLinkIcon = null;
+let terminalBuffer = [];
 
 function $(id) { return document.getElementById(id); }
 function clamp(value, min, max, fallback) { return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback; }
@@ -160,13 +385,22 @@ function loadData() {
 function normalizeData(input) {
   const normalized = structuredClone(defaultData);
 
+  const normalizeLinks = links => Array.isArray(links)
+    ? links.filter(link => link && link.url).map(link => ({ name: String(link.name || link.url), url: normalizeUrl(link.url), icon: typeof link.icon === "string" ? link.icon : "" }))
+    : [];
+
   if (Array.isArray(input.sections)) {
     normalized.sections = input.sections.map((section, index) => ({
       name: String(section.name || `Section ${index + 1}`),
-      links: Array.isArray(section.links)
-        ? section.links.filter(link => link && link.url).map(link => ({ name: String(link.name || link.url), url: String(link.url), icon: typeof link.icon === "string" ? link.icon : "" }))
-        : []
+      links: normalizeLinks(section.links)
     }));
+  } else if (input && typeof input === "object") {
+    const ignoredKeys = new Set(["settings", "version", "name", "profile", "theme", "layout", "bookmarks"]);
+    const objectSections = Object.entries(input)
+      .filter(([name, links]) => !ignoredKeys.has(name) && Array.isArray(links))
+      .map(([name, links]) => ({ name: String(name), links: normalizeLinks(links) }))
+      .filter(section => section.links.length || section.name.trim());
+    if (objectSections.length) normalized.sections = objectSections;
   }
 
   const incomingSettings = input.settings && typeof input.settings === "object" ? input.settings : input;
@@ -194,22 +428,30 @@ function normalizeData(input) {
   normalized.settings.searchEngine = SEARCH_ENGINES[normalized.settings.searchEngine] ? normalized.settings.searchEngine : "google";
   normalized.settings.customSearchUrl = String(normalized.settings.customSearchUrl || "").trim().slice(0, 240);
   normalized.settings.shortcut = ["altT", "ctrlShiftSpace", "none"].includes(normalized.settings.shortcut) ? normalized.settings.shortcut : "none";
-  normalized.settings.fontFamily = ["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "system";
+  normalized.settings.fontFamily = ["system", "inter", "jetbrains", "firacode", "fira", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "system";
   normalized.settings.uiScale = clamp(Number(normalized.settings.uiScale), 85, 120, 100);
   normalized.settings.useCustomColors = normalized.settings.useCustomColors === true || normalized.settings.useCustomColors === "true";
+  normalized.settings.windowTransparency = clamp(Number(normalized.settings.windowTransparency ?? 92), 60, 100, 92);
+  normalized.settings.terminalTransparency = clamp(Number(normalized.settings.terminalTransparency ?? 94), 60, 100, 94);
   normalized.settings.customAccent = /^#[0-9a-f]{6}$/i.test(normalized.settings.customAccent || "") ? normalized.settings.customAccent : "#00d084";
   normalized.settings.customPanel = /^#[0-9a-f]{6}$/i.test(normalized.settings.customPanel || "") ? normalized.settings.customPanel : "#09111a";
   normalized.settings.customText = /^#[0-9a-f]{6}$/i.test(normalized.settings.customText || "") ? normalized.settings.customText : "#d8dee9";
+  normalized.settings.useCustomTextColors = normalized.settings.useCustomTextColors === true || normalized.settings.useCustomTextColors === "true";
+  normalized.settings.sectionTitleColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.sectionTitleColor || "") ? normalized.settings.sectionTitleColor : "#d8dee9";
+  normalized.settings.bookmarkTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.bookmarkTextColor || "") ? normalized.settings.bookmarkTextColor : "#d8dee9";
+  normalized.settings.mutedTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.mutedTextColor || "") ? normalized.settings.mutedTextColor : "#9aa4b8";
+  normalized.settings.terminalTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.terminalTextColor || "") ? normalized.settings.terminalTextColor : "#d9e5f6";
+  normalized.settings.statusTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.statusTextColor || "") ? normalized.settings.statusTextColor : "#d8dee9";
   normalized.settings.layoutPreset = ["classic", "minimal", "dashboard", "centered"].includes(normalized.settings.layoutPreset) ? normalized.settings.layoutPreset : "classic";
   ["showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles"].forEach(key => { normalized.settings[key] = normalized.settings[key] !== false && normalized.settings[key] !== "false"; });
   normalized.settings.bookmarkColumns = ["auto", "2", "3", "4"].includes(String(normalized.settings.bookmarkColumns)) ? String(normalized.settings.bookmarkColumns) : "auto";
   normalized.settings.bookmarkFontSize = clamp(Number(normalized.settings.bookmarkFontSize), 10, 15, 12);
   normalized.settings.bookmarkIconSize = clamp(Number(normalized.settings.bookmarkIconSize), 14, 36, 22);
   normalized.settings.customCss = String(normalized.settings.customCss || "").slice(0, 8000);
+  normalized.settings.settingsLeft = Number.isFinite(Number(normalized.settings.settingsLeft)) ? Number(normalized.settings.settingsLeft) : null;
+  normalized.settings.settingsTop = Number.isFinite(Number(normalized.settings.settingsTop)) ? Number(normalized.settings.settingsTop) : null;
   normalized.settings.terminalLeft = normalized.settings.terminalLeft === null ? null : clamp(Number(normalized.settings.terminalLeft), 20, 4000, null);
   normalized.settings.terminalTop = normalized.settings.terminalTop === null ? null : clamp(Number(normalized.settings.terminalTop), 20, 4000, null);
-  normalized.settings.settingsLeft = normalized.settings.settingsLeft === null ? null : clamp(Number(normalized.settings.settingsLeft), 20, 4000, null);
-  normalized.settings.settingsTop = normalized.settings.settingsTop === null ? null : clamp(Number(normalized.settings.settingsTop), 20, 4000, null);
   normalized.settings.lastModified = normalized.settings.lastModified || null;
 
   return normalized;
@@ -249,9 +491,6 @@ function applyPersonalization() {
   body.classList.toggle("ui-hide-search", s.showSearch === false);
   body.classList.toggle("ui-hide-section-titles", s.showSectionTitles === false);
   document.documentElement.style.setProperty("--ui-scale", String(s.uiScale / 100));
-  document.documentElement.dataset.customColors = s.useCustomColors ? "true" : "false";
-  document.documentElement.style.setProperty("--surface-color", hexToRgba(s.customPanel || "#09111a", .72));
-  document.documentElement.style.setProperty("--surface-color-strong", hexToRgba(s.customPanel || "#09111a", .92));
   document.documentElement.style.setProperty("--bookmark-font-size", `${s.bookmarkFontSize}px`);
   document.documentElement.style.setProperty("--bookmark-icon-size", `${s.bookmarkIconSize}px`);
   document.documentElement.style.setProperty("--bookmark-columns", s.bookmarkColumns === "auto" ? "" : s.bookmarkColumns);
@@ -262,6 +501,12 @@ function applyPersonalization() {
     jetbrains: '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
     fira: '"Fira Sans", Inter, ui-sans-serif, system-ui, sans-serif',
     roboto: 'Roboto, Inter, ui-sans-serif, system-ui, sans-serif',
+    firacode: '"Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+    plex: '"IBM Plex Sans", Inter, ui-sans-serif, system-ui, sans-serif',
+    source: '"Source Sans 3", Inter, ui-sans-serif, system-ui, sans-serif',
+    noto: '"Noto Sans", Inter, ui-sans-serif, system-ui, sans-serif',
+    ubuntu: 'Ubuntu, Inter, ui-sans-serif, system-ui, sans-serif',
+    opensans: '"Open Sans", Inter, ui-sans-serif, system-ui, sans-serif',
     mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace'
   };
   document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.system);
@@ -287,8 +532,34 @@ function applyTheme() {
     root.style.setProperty("--text", data.settings.customText);
     root.style.setProperty("--muted", colorMix(data.settings.customText, "#808080", .45));
     root.style.setProperty("--border", hexToRgba(data.settings.customText, .16));
+    root.style.setProperty("--surface", hexToRgba(data.settings.customPanel, .70));
+    root.style.setProperty("--surface-strong", hexToRgba(data.settings.customPanel, .92));
+    root.style.setProperty("--surface-soft", hexToRgba(data.settings.customPanel, .34));
+    root.style.setProperty("--accent-hover", hexToRgba(data.settings.customAccent, .16));
   } else {
     root.style.setProperty("--waypoint-green", "#00d084");
+    root.style.setProperty("--surface", theme.panel);
+    root.style.setProperty("--surface-strong", theme.panelStrong);
+    root.style.setProperty("--surface-soft", "rgba(5, 9, 18, .16)");
+    root.style.setProperty("--accent-hover", "var(--accent-soft)");
+  }
+  root.style.setProperty("--text", data.settings.customText);
+  root.style.setProperty("--muted", colorMix(data.settings.customText, "#808080", .45));
+  root.style.setProperty("--window-opacity-percent", `${data.settings.windowTransparency}%`);
+  root.style.setProperty("--terminal-opacity", String(data.settings.terminalTransparency / 100));
+
+  if (data.settings.useCustomTextColors) {
+    root.style.setProperty("--section-title-color", data.settings.sectionTitleColor);
+    root.style.setProperty("--bookmark-text-color", data.settings.bookmarkTextColor);
+    root.style.setProperty("--custom-muted-text", data.settings.mutedTextColor);
+    root.style.setProperty("--terminal-text-color", data.settings.terminalTextColor);
+    root.style.setProperty("--status-text-color", data.settings.statusTextColor);
+  } else {
+    root.style.setProperty("--section-title-color", "var(--text)");
+    root.style.setProperty("--bookmark-text-color", "var(--text)");
+    root.style.setProperty("--custom-muted-text", "var(--muted)");
+    root.style.setProperty("--terminal-text-color", "#d9e5f6");
+    root.style.setProperty("--status-text-color", "var(--text)");
   }
 
   const bg = $("backgroundLayer");
@@ -327,12 +598,6 @@ function applyHero() {
   img.src = getHeroSrc();
 }
 
-function nearestBannerHeight(value) {
-  const heights = [240, 300, 330, 360];
-  const n = Number(value) || 330;
-  return String(heights.reduce((best, h) => Math.abs(h - n) < Math.abs(best - n) ? h : best, heights[0]));
-}
-
 function syncControls() {
   const s = data.settings;
   setValue("userNameInput", s.userName);
@@ -346,7 +611,18 @@ function syncControls() {
   setValue("customColorsSelect", String(!!s.useCustomColors));
   setValue("accentColorInput", s.customAccent);
   setValue("panelColorInput", s.customPanel);
-  setValue("textColorInput", s.customText);
+  setValue("globalTextColorInput", s.customText);
+  setValue("windowTransparencySlider", s.windowTransparency);
+  setText("windowTransparencyValue", `${s.windowTransparency}%`);
+  setValue("terminalTransparencySlider", s.terminalTransparency);
+  setText("terminalTransparencyValue", `${s.terminalTransparency}%`);
+  document.querySelectorAll(".custom-text-only input").forEach(input => input.disabled = !s.useCustomTextColors);
+  setValue("customTextColorsSelect", String(!!s.useCustomTextColors));
+  setValue("sectionTitleColorInput", s.sectionTitleColor);
+  setValue("bookmarkTextColorInput", s.bookmarkTextColor);
+  setValue("mutedTextColorInput", s.mutedTextColor);
+  setValue("terminalTextColorInput", s.terminalTextColor);
+  setValue("statusTextColorInput", s.statusTextColor);
   setValue("layoutPresetSelect", s.layoutPreset);
   setValue("showLogoSelect", String(s.showLogo !== false));
   setValue("showWordmarkSelect", String(s.showWordmark !== false));
@@ -365,7 +641,7 @@ function syncControls() {
   setValue("customCssInput", s.customCss || "");
   setValue("overlaySlider", s.overlay);
   setValue("blurSlider", s.blur);
-  setValue("heroHeightPresetSelect", nearestBannerHeight(s.heroHeight));
+  setValue("heroHeightPresetSelect", s.heroHeight);
   setValue("heroZoomSlider", s.heroZoom);
   setValue("heroYSlider", s.heroY);
   setText("overlayValue", `${s.overlay}%`);
@@ -382,7 +658,6 @@ function setText(id, value) { const el = $(id); if (el) el.textContent = value; 
 function updateLogoPrompt() {
   const text = `${displayUserName()}@waypoint:~$`;
   setText("logoPrompt", text);
-  setText("terminalPrompt", `${text} stfetch`);
   setText("commandPromptLabel", text);
 }
 
@@ -398,37 +673,36 @@ function positionTerminal() {
     win.style.removeProperty("--terminal-top");
     win.style.transform = "translate(-50%, -50%)";
   }
-  const settingsWin = document.querySelector(".settings-v11");
-  if (settingsWin && Number.isFinite(data.settings.settingsLeft) && Number.isFinite(data.settings.settingsTop)) {
-    settingsWin.style.setProperty("--settings-left", `${data.settings.settingsLeft}px`);
-    settingsWin.style.setProperty("--settings-top", `${data.settings.settingsTop}px`);
-    settingsWin.style.transform = "none";
-  } else if (settingsWin) {
-    settingsWin.style.removeProperty("--settings-left");
-    settingsWin.style.removeProperty("--settings-top");
-    settingsWin.style.transform = "translateX(-50%)";
+}
+
+
+function positionSettings() {
+  const win = document.querySelector("#settingsModal .settings-modal");
+  if (!win) return;
+  if (Number.isFinite(data.settings.settingsLeft) && Number.isFinite(data.settings.settingsTop)) {
+    win.style.setProperty("--settings-left", `${data.settings.settingsLeft}px`);
+    win.style.setProperty("--settings-top", `${data.settings.settingsTop}px`);
+    win.style.transform = "none";
+  } else {
+    win.style.removeProperty("--settings-left");
+    win.style.removeProperty("--settings-top");
+    win.style.transform = "translateX(-50%)";
   }
 }
 
 function openSettingsPage(page = "appearance") {
-  const validPages = ["appearance", "layout", "bookmarks", "weather", "banner", "advanced", "backup"];
-  const targetPage = validPages.includes(page) ? page : "appearance";
-  $("settingsModal")?.classList.remove("hidden");
-  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === targetPage));
-  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === targetPage));
-  positionTerminal();
+  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === page));
+  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === page));
+  openModal("settingsModal");
 }
 function openModal(id) {
-  if (id === "settingsModal") {
-    document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === "appearance"));
-    document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === "appearance"));
-  }
   $(id)?.classList.remove("hidden");
   if (id === "terminalModal") {
     renderTerminal();
     positionTerminal();
     setTimeout(() => $("commandInput")?.focus(), 80);
   }
+  if (id === "settingsModal") positionSettings();
 }
 function closeModal(id) { $(id)?.classList.add("hidden"); }
 function closeAllModals() { document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden")); }
@@ -460,10 +734,10 @@ function renderSections() {
     sectionEl.innerHTML = `
       <div class="section-header">
         <span class="section-name" contenteditable="true" spellcheck="false">${escapeHtml(section.name)}</span>
-        <div class="section-actions">
-          <button class="section-action add-link-btn" title="Add link" type="button">+</button>
-          <button class="section-action section-delete" title="Delete section" type="button">×</button>
-        </div>
+      </div>
+      <div class="section-actions">
+        <button class="section-action add-link-btn" title="Add link" type="button">+</button>
+        <button class="section-action section-delete" title="Delete section" type="button">×</button>
       </div>
       <div class="links" data-section-index="${sectionIndex}"></div>
     `;
@@ -765,7 +1039,7 @@ function buildFastfetchHtml() {
     /_/____
      |_____|`;
   const rows = [
-    ["Version", "1.1.0-dev"],
+    ["Version", "1.2.1"],
     ["Theme", theme.label],
     ["Preset", data.settings.layoutPreset],
     ["Font", data.settings.fontFamily],
@@ -786,6 +1060,40 @@ ${rows.map(([k,v]) => `${String(k).padEnd(10)} ${escapeHtml(v)}`).join("\n")}</s
 
 function renderTerminal() {
   updateLogoPrompt();
+  renderTerminalBuffer();
+}
+
+function terminalPrompt() {
+  return `${displayUserName()}@waypoint:~$`;
+}
+
+function renderTerminalBuffer() {
+  const out = $("commandOutput");
+  if (!out) return;
+  out.innerHTML = terminalBuffer.join("");
+  out.scrollTop = out.scrollHeight;
+}
+
+function pushTerminal(html) {
+  terminalBuffer.push(html);
+  if (terminalBuffer.length > 80) terminalBuffer = terminalBuffer.slice(-80);
+  renderTerminalBuffer();
+}
+
+function terminalBlock(html) {
+  return `<div class="terminal-block">${html}</div>`;
+}
+
+function terminalLine(text = "") {
+  return `<div>${escapeHtml(text)}</div>`;
+}
+
+function terminalPre(text, className = "") {
+  return `<pre class="${className}">${escapeHtml(text)}</pre>`;
+}
+
+function terminalEcho(command) {
+  return `<div class="terminal-echo"><span>${escapeHtml(terminalPrompt())}</span> ${escapeHtml(command)}</div>`;
 }
 
 function labelHero(value) { return ({ desktop: "Desktop", atmo: "Atmosphere", custom: "Custom", hidden: "Hidden" })[value] || "Theme Default"; }
@@ -954,21 +1262,22 @@ function updateWeatherWidget(payload = safeParse(localStorage.getItem(WEATHER_CA
 
 function weatherIcon(code, isDay = 1, desc = "") {
   if (Number.isFinite(code)) {
-    if ([0, 1].includes(code)) return isDay ? "☀" : "☾";
-    if ([2, 3].includes(code)) return "☁";
-    if ([45, 48].includes(code)) return "≋";
-    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "☔";
-    if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return "❄";
-    if (code >= 95) return "⚡";
+    if ([0, 1].includes(code)) return isDay ? "☀️" : "🌙";
+    if (code === 2) return isDay ? "🌤️" : "☁️";
+    if (code === 3) return "☁️";
+    if ([45, 48].includes(code)) return "🌫️";
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "🌧️";
+    if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return "❄️";
+    if (code >= 95) return "⛈️";
   }
   const d = String(desc).toLowerCase();
-  if (d.includes("rain") || d.includes("drizzle")) return "☔";
-  if (d.includes("snow") || d.includes("sleet")) return "❄";
-  if (d.includes("thunder")) return "⚡";
-  if (d.includes("cloud") || d.includes("overcast")) return "☁";
-  if (d.includes("fog") || d.includes("mist")) return "≋";
-  if (d.includes("clear") || d.includes("sun")) return "☀";
-  return "◌";
+  if (d.includes("thunder")) return "⛈️";
+  if (d.includes("rain") || d.includes("drizzle")) return "🌧️";
+  if (d.includes("snow") || d.includes("sleet")) return "❄️";
+  if (d.includes("cloud") || d.includes("overcast")) return "☁️";
+  if (d.includes("fog") || d.includes("mist")) return "🌫️";
+  if (d.includes("clear") || d.includes("sun")) return isDay ? "☀️" : "🌙";
+  return "🌡️";
 }
 
 function weatherCodeText(code) {
@@ -1011,211 +1320,326 @@ function updateClock() {
   clock.innerHTML = `<span class="mini-clock-date">${escapeHtml(date)}</span><span class="mini-clock-time">${escapeHtml(time)}</span>`;
 }
 
+function buildHelpText(topic = "") {
+  const t = String(topic || "").trim().toLowerCase();
+  if (t === "theme") return `theme <name>
+
+Change the active theme.
+
+Available themes:
+  nord
+  catppuccin
+  gruvbox
+  tokyo
+
+Examples:
+  theme nord
+  theme gruvbox`;
+  if (t === "layout") return `layout <mode>
+
+Change the bookmark layout.
+
+Available modes:
+  list
+  grid
+
+Examples:
+  layout list
+  layout grid
+
+Use preset for full page layout presets:
+  preset minimal
+  preset dashboard`;
+  if (t === "visibility" || t === "hide" || t === "show") return `show|hide <element>
+
+Toggle interface elements.
+
+Elements:
+  logo
+  title
+  clock
+  weather
+  search
+  sections
+
+Examples:
+  hide title
+  hide sections
+  show weather`;
+  if (t === "search" || t === "engine") return `engine <name>
+
+Change the search engine.
+
+Available engines:
+  google
+  duckduckgo
+  brave
+  bing
+  custom
+
+Examples:
+  engine duckduckgo
+  engine brave
+  customsearch https://example.com/search?q=%s`;
+  if (t === "css") return buildCssManualText();
+  return `Waypoint Terminal
+
+Common commands:
+  fetch                         Show Waypoint system info
+  help                          Show this help
+  help <topic>                  Show help for a command group
+  man css                       Show Custom CSS examples
+  settings                      Open Settings
+  settings appearance           Open a Settings page
+  theme nord                    Change theme
+  preset minimal                Change page layout preset
+  layout list                   Change bookmark layout
+  show weather                  Show a UI element
+  hide title                    Hide a UI element
+  font jetbrains                Change font
+  accent #00d084               Set accent color
+  surface #09111a              Set surface color
+  transparency 92              Set window transparency
+  titlecolor #d8dee9           Set section title color
+  engine duckduckgo             Change search engine
+  weather Russellville, AR      Set weather location
+  add section Media             Add a section
+  add link "Media" "Jellyfin" https://jellyfin.org
+  export                        Export JSON
+  import                        Import JSON
+  clear                         Clear terminal
+  exit                          Close terminal
+
+Help topics:
+  help theme
+  help layout
+  help visibility
+  help search
+  help css`;
+}
+
+function buildCssManualText() {
+  return `Custom CSS Manual
+
+Custom CSS is applied last, so it can override Waypoint styling.
+Use it for small personal tweaks. Bad CSS can make the page ugly or hide controls.
+Clear it from Settings > Advanced if you break something.
+
+Change the main accent color:
+:root {
+  --waypoint-green: #ff79c6;
+}
+
+Hide the Waypoint wordmark:
+.brand-wordmark {
+  display: none !important;
+}
+
+Make bookmark cards rounder:
+.link {
+  border-radius: 18px !important;
+}
+
+Make sections more transparent:
+.section {
+  background: rgba(5, 9, 18, .35) !important;
+}
+
+Make the search bar wider:
+.search {
+  width: min(920px, calc(100% - 80px)) !important;
+}
+
+Hide the section header completely:
+.section-header {
+  opacity: 0 !important;
+}
+
+Notes:
+  :root means the whole page.
+  --waypoint-green controls Waypoint's bright green accent.
+  !important makes your rule win over built-in styling.`;
+}
+
+function buildStatusLines(action, steps = ["Updating configuration", "Refreshing interface", "Done"]) {
+  return terminalPre([action, ...steps.map(step => `  ${step}...`)].join("\n"), "terminal-status");
+}
+
+function commandResult(text) {
+  return terminalPre(text, "terminal-result");
+}
+
 function runCommand(commandRaw) {
   const command = commandRaw.trim();
-  const out = $("commandOutput");
   if (!command) return;
-
   const lower = command.toLowerCase();
   const [head, ...rest] = lower.split(/\s+/);
   const arg = rest.join(" ");
-
+  if (head === "clear") { terminalBuffer = []; renderTerminalBuffer(); return; }
   if (["q", "quit", "exit"].includes(lower)) { closeModal("terminalModal"); return; }
+  const blocks = [terminalEcho(command)];
+  const done = html => pushTerminal(terminalBlock(blocks.join("") + (html || "")));
+  const textOut = text => done(commandResult(text));
 
-  if ((head === "man" && arg === "css") || (head === "help" && arg === "css")) {
-    return output(`
-      <strong>CSS man page</strong><br><br>
-      Custom CSS is loaded after Waypoint's normal styling. Use <strong>!important</strong> when a built-in rule is stronger.<br><br>
-      <strong>Common examples</strong><br><br>
-      Change the main accent color:<br>
-      <code>:root { --waypoint-green: #ff79c6; --accent: #ff79c6; }</code><br><br>
-      Hide the Waypoint wordmark:<br>
-      <code>.brand-wordmark { display: none !important; }</code><br><br>
-      Make bookmark cards rounder:<br>
-      <code>.link { border-radius: 18px !important; }</code><br><br>
-      Make sections more transparent:<br>
-      <code>.section { background: rgba(5, 9, 18, .35) !important; }</code><br><br>
-      Remove bookmark card borders:<br>
-      <code>.link { border-color: transparent !important; }</code><br><br>
-      Make section titles lowercase:<br>
-      <code>.section-name { text-transform: none !important; }</code><br><br>
-      <strong>What :root means</strong><br>
-      <code>:root</code> targets the whole page. It is mostly used for changing CSS variables like colors, spacing, and theme values.
-    `);
+  if (head === "help") return done(terminalPre(buildHelpText(arg), "terminal-help"));
+  if (head === "man") {
+    if (arg === "css") return done(terminalPre(buildCssManualText(), "terminal-help"));
+    return textOut(`No manual entry for ${arg || "nothing"}. Try: man css`);
   }
-
-  if (head === "help") {
-    return output(`
-      <strong>Available commands</strong><br><br>
-      help<br>
-      man css<br>
-      fetch<br>
-      settings<br>
-      show|hide logo|title|clock|weather|search|sections<br>
-      preset classic|minimal|dashboard|centered<br>
-      font system|inter|jetbrains|fira|roboto|mono<br>
-      accent #00d084<br>
-      engine google|duckduckgo|brave|bing|custom<br>
-      customsearch &lt;url with %s&gt;<br>
-      name &lt;value&gt;<br>
-      theme nord|catppuccin|gruvbox|tokyo<br>
-      banner auto|desktop|atmosphere|custom|hidden|fit|fill<br>
-      layout list|grid<br>
-      wallpaper theme|gradient|custom<br>
-      weather &lt;city, region, country or ZIP&gt;<br>
-      add section &lt;name&gt;<br>
-      delete section &lt;name&gt;<br>
-      rename section &lt;old&gt; &lt;new&gt;<br>
-      add link "Section Name" "Link Name" &lt;url&gt;<br>
-      import<br>
-      export<br>
-      reset<br>
-      q | quit | exit
-    `);
-  }
-
-  if (head === "fetch") return output(buildFastfetchHtml());
+  if (head === "fetch") return done(buildFastfetchHtml());
   if (head === "settings") {
     openSettingsPage(arg || "appearance");
-    return output("Opened settings.");
+    return textOut(`Opened Settings${arg ? ` > ${arg}` : " > appearance"}.`);
   }
-
   if (["show", "hide"].includes(head)) {
     const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles" };
     const key = keyMap[arg];
-    if (!key) return output("Usage: show|hide logo|title|clock|weather|search|sections");
+    if (!key) return textOut("Usage: show|hide logo|title|clock|weather|search|sections");
     data.settings[key] = head === "show";
     save(); render();
-    return output(`${head === "show" ? "Shown" : "Hidden"}: <strong>${escapeHtml(arg)}</strong>.`);
+    return done(buildStatusLines(`${head === "show" ? "Showing" : "Hiding"}: ${arg}`));
   }
-
   if (head === "preset") {
-    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return output("Usage: preset classic|minimal|dashboard|centered");
+    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut("Usage: preset classic|dashboard|minimal|centered");
     data.settings.layoutPreset = arg;
     save(); render();
-    return output(`Layout preset set to <strong>${escapeHtml(arg)}</strong>.`);
+    return done(buildStatusLines(`Applying layout preset: ${arg}`));
   }
-
   if (head === "font") {
-    if (!["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(arg)) return output("Usage: font system|inter|jetbrains|fira|roboto|mono");
+    if (!["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(arg)) return textOut("Usage: font system|inter|jetbrains|fira|roboto|mono");
     data.settings.fontFamily = arg;
     save(); render();
-    return output(`Font set to <strong>${escapeHtml(arg)}</strong>.`);
+    return done(buildStatusLines(`Setting font: ${arg}`));
   }
-
   if (head === "accent") {
     const color = rest[0] || "";
-    if (!/^#[0-9a-f]{6}$/i.test(color)) return output("Usage: accent #00d084");
+    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut("Usage: accent #00d084");
     data.settings.customAccent = color;
     data.settings.useCustomColors = true;
     save(); render();
-    return output(`Accent color set to <strong>${escapeHtml(color)}</strong>.`);
+    return done(buildStatusLines(`Setting accent color: ${color}`));
   }
-
+  if (head === "surface") {
+    const color = rest[0] || "";
+    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut("Usage: surface #09111a");
+    data.settings.customPanel = color;
+    data.settings.useCustomColors = true;
+    save(); render();
+    return done(buildStatusLines(`Setting surface color: ${color}`));
+  }
+  if (head === "transparency") {
+    const amount = clamp(Number(rest[0]), 60, 100, NaN);
+    if (!Number.isFinite(amount)) return textOut("Usage: transparency 60-100");
+    data.settings.windowTransparency = amount;
+    save(); render();
+    return done(buildStatusLines(`Setting window transparency: ${amount}%`));
+  }
+  if (head === "titlecolor") {
+    const color = rest[0] || "";
+    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut("Usage: titlecolor #d8dee9");
+    data.settings.sectionTitleColor = color;
+    data.settings.useCustomTextColors = true;
+    save(); render();
+    return done(buildStatusLines(`Setting section title color: ${color}`));
+  }
   if (head === "name") {
     const nextName = commandRaw.trim().replace(/^name\s*/i, "").trim();
     data.settings.userName = sanitizeUserName(nextName);
-    save(); renderTerminal();
-    return output(`Name set to <strong>${escapeHtml(displayUserName())}</strong>.`);
+    save(); render();
+    return textOut(`Name set to ${displayUserName()}.`);
   }
-
-
-
   if (head === "searchengine" || head === "engine") {
     const map = { google: "google", ddg: "duckduckgo", duckduckgo: "duckduckgo", brave: "brave", bing: "bing", custom: "custom" };
-    if (!arg) return output(`Search engine is <strong>${escapeHtml(labelSearch(data.settings.searchEngine))}</strong>.`);
-    if (!map[arg]) return output("Usage: engine google|duckduckgo|brave|bing|custom");
-    data.settings.searchEngine = map[arg]; save(); render(); return output(`Search engine set to <strong>${escapeHtml(labelSearch(data.settings.searchEngine))}</strong>.`);
+    if (!arg) return textOut(`Search engine: ${labelSearch(data.settings.searchEngine)}`);
+    if (!map[arg]) return textOut("Usage: engine google|duckduckgo|brave|bing|custom");
+    data.settings.searchEngine = map[arg];
+    save(); render();
+    return done(buildStatusLines(`Setting search engine: ${labelSearch(data.settings.searchEngine)}`));
   }
-
   if (head === "customsearch") {
     const url = commandRaw.trim().replace(/^customsearch\s*/i, "").trim();
-    if (!url) return output("Usage: customsearch https://example.com/search?q=%s");
+    if (!url) return textOut("Usage: customsearch https://example.com/search?q=%s");
     data.settings.customSearchUrl = url.slice(0, 240);
     data.settings.searchEngine = "custom";
     save(); render();
-    return output("Custom search URL saved.");
+    return textOut("Custom search URL saved.");
   }
-
   if (head === "theme" && arg) {
     const map = { catppuccin: "catppuccin", nord: "nord", gruvbox: "gruvbox", tokyo: "tokyoNight", "tokyo-night": "tokyoNight", tokyonight: "tokyoNight" };
-    if (!map[arg]) return output(`Unknown theme: ${escapeHtml(arg)}`);
-    data.settings.theme = map[arg]; save(); render(); return output(`Theme set to <strong>${getTheme().label}</strong>.`);
+    if (!map[arg]) return textOut(`theme: unknown theme '${arg}'\n\nAvailable: nord, catppuccin, gruvbox, tokyo`);
+    data.settings.theme = map[arg];
+    save(); render();
+    return done(buildStatusLines(`Applying theme: ${getTheme().label}`));
   }
-
   if (head === "banner") {
     const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", hidden: "hidden", hide: "hidden", auto: "auto", default: "auto" };
-    if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return output("Banner fit set to <strong>Fit Entire Image</strong>."); }
-    if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return output("Banner fit set to <strong>Fill/Crop</strong>."); }
-    if (!map[arg]) return output(`Unknown banner option: ${escapeHtml(arg)}`);
-    data.settings.heroStyle = map[arg]; save(); render(); return output(`Banner set to <strong>${labelHero(data.settings.heroStyle)}</strong>.`);
+    if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
+    if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
+    if (!map[arg]) return textOut(`Unknown banner option: ${arg}\nUsage: banner auto|desktop|atmosphere|custom|hidden|fit|fill`);
+    data.settings.heroStyle = map[arg];
+    save(); render();
+    return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
   }
-
   if (head === "layout") {
     const map = { list: "list", compact: "list", row: "list", rows: "list", grid: "grid", cards: "grid" };
-    if (!arg) return output(`Bookmark layout is <strong>${escapeHtml((data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid")}</strong>.`);
-    if (!map[arg]) return output("Usage: layout list|grid");
+    if (!arg) return textOut(`Bookmark layout: ${(data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"}`);
+    if (!map[arg]) return textOut("Usage: layout list|grid");
     data.settings.bookmarkLayout = map[arg];
     save(); render();
-    return output(`Bookmark layout set to <strong>${escapeHtml(data.settings.bookmarkLayout === "list" ? "Compact List" : "Grid")}</strong>.`);
+    return done(buildStatusLines(`Setting bookmark layout: ${data.settings.bookmarkLayout === "list" ? "Compact List" : "Grid"}`));
   }
-
   if (head === "weather") {
     const next = commandRaw.trim().replace(/^weather\s+/i, "").trim();
-    if (!next) return output("Usage: weather &lt;city, region, country or ZIP&gt;");
+    if (!next) return textOut("Usage: weather <city, region, country or ZIP>");
     data.settings.weatherLocation = next;
-    save(); refreshWeather(true); return output(`Weather location set to <strong>${escapeHtml(data.settings.weatherLocation)}</strong>.`);
+    save(); refreshWeather(true);
+    return done(buildStatusLines(`Setting weather location: ${data.settings.weatherLocation}`, ["Saving location", "Fetching forecast", "Done"]));
   }
-
   if (head === "wallpaper") {
     const map = { theme: "wallpaper", wallpaper: "wallpaper", default: "wallpaper", gradient: "gradient", custom: "custom" };
-    if (!map[arg]) return output("Usage: wallpaper theme|gradient|custom");
-    data.settings.backgroundMode = map[arg]; save(); render(); return output(`Wallpaper set to <strong>${labelBackground(data.settings.backgroundMode)}</strong>.`);
+    if (!map[arg]) return textOut("Usage: wallpaper theme|gradient|custom");
+    data.settings.backgroundMode = map[arg];
+    save(); render();
+    return done(buildStatusLines(`Setting wallpaper: ${labelBackground(data.settings.backgroundMode)}`));
   }
-
   if (head === "add") {
     if (arg.startsWith("section")) {
       const sectionName = commandRaw.trim().replace(/^add\s+section\s*/i, "").trim() || "New Section";
       data.sections.push({ name: sectionName, links: [] });
       save(); render();
-      return output(`Section <strong>${escapeHtml(sectionName)}</strong> added.`);
+      return textOut(`Section added: ${sectionName}`);
     }
     if (arg.startsWith("link")) {
       const parsed = parseAddLinkCommand(commandRaw);
-      if (!parsed) return output('Usage: add link &lt;section&gt; &lt;name&gt; &lt;url&gt;<br>Tip: use quotes for multi-word names, like add link "Media" "YouTube Music" https://music.youtube.com');
-      return output(addLinkByCommand(parsed.sectionName, parsed.linkName, parsed.url));
+      if (!parsed) return textOut('Usage: add link <section> <name> <url>\nTip: use quotes for multi-word names, like add link "Media" "YouTube Music" https://music.youtube.com');
+      const message = addLinkByCommand(parsed.sectionName, parsed.linkName, parsed.url).replace(/<[^>]+>/g, "");
+      return textOut(message);
     }
   }
-
   if (head === "delete" && arg.startsWith("section")) {
     const sectionName = commandRaw.trim().replace(/^delete\s+section\s*/i, "").trim();
-    if (!sectionName) return output("Usage: delete section &lt;name&gt;");
-    return output(deleteSectionByCommand(sectionName));
+    if (!sectionName) return textOut("Usage: delete section <name>");
+    const message = deleteSectionByCommand(sectionName).replace(/<[^>]+>/g, "");
+    return textOut(message);
   }
-
   if (head === "rename" && arg.startsWith("section")) {
     const body = commandRaw.trim().replace(/^rename\s+section\s*/i, "").trim();
     const quoted = [...body.matchAll(/"([^"]+)"|'([^']+)'/g)].map(match => match[1] || match[2]);
-    if (quoted.length >= 2) return output(renameSectionByCommand(quoted[0], quoted[1]));
+    if (quoted.length >= 2) return textOut(renameSectionByCommand(quoted[0], quoted[1]).replace(/<[^>]+>/g, ""));
     const parts = body.split(/\s+/);
-    if (parts.length < 2) return output('Usage: rename section &lt;old&gt; &lt;new&gt;<br>Tip: use quotes for multi-word names.');
-    return output(renameSectionByCommand(parts[0], parts.slice(1).join(" ")));
+    if (parts.length < 2) return textOut('Usage: rename section <old> <new>\nTip: use quotes for multi-word names.');
+    return textOut(renameSectionByCommand(parts[0], parts.slice(1).join(" ")).replace(/<[^>]+>/g, ""));
   }
-
-  if (head === "import") { $("importFile")?.click(); return output("Choose a JSON file to import."); }
-  if (head === "export") { exportJson(); return output("Export started."); }
+  if (head === "import") { $("importFile")?.click(); return textOut("Choose a JSON file to import."); }
+  if (head === "export") { exportJson(); return textOut("Export started."); }
   if (head === "reset") { resetEverything(); return; }
-  if (head === "clear") return output("");
   if (head === "search") { closeAllModals(); focusSearch(); return; }
-
-  output(`Unknown command: ${escapeHtml(command)}`);
-
-  function output(html) { if (out) out.innerHTML = html; }
+  return textOut(`${head}: command not found\n\nTry: help`);
 }
 
 
 function executeButtonCommand(command) {
-  if (command === "fastfetch") runCommand("fastfetch");
+  if (command === "fetch") runCommand("fetch");
   if (command === "addSection") { addSection(); }
   if (command === "toggleBanner") { data.settings.heroStyle = data.settings.heroStyle === "hidden" ? "auto" : "hidden"; save(); render(); }
   if (command === "export") exportJson();
@@ -1232,9 +1656,8 @@ function resetEverything() {
   data = structuredClone(defaultData);
   save();
   render();
-  outputCommand("Reboot complete. Defaults restored.");
+  pushTerminal(terminalBlock(commandResult("Reboot complete. Defaults restored.")));
 }
-function outputCommand(html) { const out = $("commandOutput"); if (out) out.innerHTML = html; }
 function focusSearch() { document.querySelector(".search input")?.focus(); }
 
 function setupTerminalDrag() {
@@ -1276,11 +1699,51 @@ function setupTerminalDrag() {
   });
 }
 
+
+function setupSettingsDrag() {
+  const win = document.querySelector("#settingsModal .settings-modal");
+  const bar = $("settingsModalTitle");
+  if (!win || !bar || bar.dataset.dragBound) return;
+  bar.dataset.dragBound = "1";
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+  bar.addEventListener("mousedown", event => {
+    if (event.target.closest("button,input,select,textarea")) return;
+    dragging = true;
+    const rect = win.getBoundingClientRect();
+    win.style.transform = "none";
+    win.style.setProperty("--settings-left", `${rect.left}px`);
+    win.style.setProperty("--settings-top", `${rect.top}px`);
+    offsetX = event.clientX - rect.left;
+    offsetY = event.clientY - rect.top;
+    document.body.classList.add("dragging-settings");
+    event.preventDefault();
+  });
+  window.addEventListener("mousemove", event => {
+    if (!dragging) return;
+    const maxLeft = Math.max(12, window.innerWidth - win.offsetWidth - 12);
+    const maxTop = Math.max(12, window.innerHeight - win.offsetHeight - 12);
+    const left = Math.min(maxLeft, Math.max(12, event.clientX - offsetX));
+    const top = Math.min(maxTop, Math.max(12, event.clientY - offsetY));
+    win.style.setProperty("--settings-left", `${left}px`);
+    win.style.setProperty("--settings-top", `${top}px`);
+    data.settings.settingsLeft = Math.round(left);
+    data.settings.settingsTop = Math.round(top);
+  });
+  window.addEventListener("mouseup", () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.classList.remove("dragging-settings");
+    save();
+  });
+}
+
 function bindEvents() {
   $("logoBtn")?.addEventListener("click", () => openModal("terminalModal"));
   setupTerminalDrag();
   setupSettingsDrag();
-  $("settingsBtn")?.addEventListener("click", () => openSettingsPage("appearance"));
+  $("settingsBtn")?.addEventListener("click", () => openModal("settingsModal"));
   $("weatherWidget")?.addEventListener("click", () => { openSettingsPage("weather"); setTimeout(() => $("weatherLocationInput")?.focus(), 80); });
   $("clock")?.addEventListener("click", focusSearch);
   $("saveLinkBtn")?.addEventListener("click", saveLink);
@@ -1349,7 +1812,15 @@ function bindEvents() {
   bindSetting("customColorsSelect", "change", value => { data.settings.useCustomColors = value === "true"; save(); render(); });
   bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; data.settings.useCustomColors = true; save(); render(); });
   bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; data.settings.useCustomColors = true; save(); render(); });
-  bindSetting("textColorInput", "input", value => { data.settings.customText = value; data.settings.useCustomColors = true; save(); render(); });
+  bindSetting("globalTextColorInput", "input", value => { data.settings.customText = value; save(); render(); });
+  bindNumber("windowTransparencySlider", "windowTransparency", () => render());
+  bindNumber("terminalTransparencySlider", "terminalTransparency", () => render());
+  bindSetting("customTextColorsSelect", "change", value => { data.settings.useCustomTextColors = value === "true"; save(); render(); });
+  bindSetting("sectionTitleColorInput", "input", value => { data.settings.sectionTitleColor = value; data.settings.useCustomTextColors = true; save(); render(); });
+  bindSetting("bookmarkTextColorInput", "input", value => { data.settings.bookmarkTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
+  bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
+  bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
+  bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("layoutPresetSelect", "change", value => { data.settings.layoutPreset = value; save(); render(); });
   bindSetting("showLogoSelect", "change", value => { data.settings.showLogo = value === "true"; save(); render(); });
   bindSetting("showWordmarkSelect", "change", value => { data.settings.showWordmark = value === "true"; save(); render(); });
@@ -1361,8 +1832,8 @@ function bindEvents() {
   bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
   bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
   bindSetting("customCssInput", "input", value => { data.settings.customCss = value.slice(0, 8000); save(); applyPersonalization(); });
+  $("cssManBtn")?.addEventListener("click", () => { openModal("terminalModal"); runCommand("help css"); });
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
-  $("openCssManBtn")?.addEventListener("click", () => { openModal("terminalModal"); runCommand("man css"); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
   bindSetting("heroStyleSelect", "change", value => { data.settings.heroStyle = value; save(); render(); });
@@ -1371,7 +1842,7 @@ function bindEvents() {
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
-  bindSetting("heroHeightPresetSelect", "change", value => { data.settings.heroHeight = Number(value) || 330; save(); render(); });
+  bindSetting("heroHeightPresetSelect", "change", value => { data.settings.heroHeight = Number(value); save(); applyHero(); renderTerminal(); });
   bindNumber("heroZoomSlider", "heroZoom", () => applyHero());
   bindNumber("heroYSlider", "heroY", () => applyHero());
 
@@ -1413,41 +1884,294 @@ refreshWeather(false);
 setInterval(() => refreshWeather(false), 30 * 60 * 1000);
 
 
-function setupSettingsDrag() {
-  const win = document.querySelector(".settings-v11");
-  const title = document.querySelector("#settingsModalTitle");
-  if (!win || !title || title.dataset.dragBound) return;
-  title.dataset.dragBound = "1";
-  let dragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-  title.addEventListener("mousedown", event => {
-    if (event.target.closest("button,input,select,textarea,label")) return;
-    dragging = true;
-    const rect = win.getBoundingClientRect();
-    win.style.transform = "none";
-    win.style.setProperty("--settings-left", `${rect.left}px`);
-    win.style.setProperty("--settings-top", `${rect.top}px`);
-    offsetX = event.clientX - rect.left;
-    offsetY = event.clientY - rect.top;
-    document.body.classList.add("dragging-settings");
-    event.preventDefault();
-  });
-  window.addEventListener("mousemove", event => {
-    if (!dragging) return;
-    const maxLeft = Math.max(12, window.innerWidth - win.offsetWidth - 12);
-    const maxTop = Math.max(12, window.innerHeight - win.offsetHeight - 12);
-    const left = Math.min(maxLeft, Math.max(12, event.clientX - offsetX));
-    const top = Math.min(maxTop, Math.max(12, event.clientY - offsetY));
-    win.style.setProperty("--settings-left", `${left}px`);
-    win.style.setProperty("--settings-top", `${top}px`);
-    data.settings.settingsLeft = Math.round(left);
-    data.settings.settingsTop = Math.round(top);
-  });
-  window.addEventListener("mouseup", () => {
-    if (!dragging) return;
-    dragging = false;
-    document.body.classList.remove("dragging-settings");
-    save();
-  });
+function terminalMarkup(text, className = "") {
+  return `<pre class="${className}">${String(text)}</pre>`;
 }
+function colorLine(text, className) {
+  return `<span class="${className}">${escapeHtml(text)}</span>`;
+}
+function cleanList(title, items) {
+  return `${title}\n\n${items.map(item => `  ${item}`).join("\n")}`;
+}
+function currentConfigText() {
+  const s = data.settings;
+  return [
+    `Theme: ${getTheme().label}`,
+    `Page preset: ${s.layoutPreset}`,
+    `Bookmark layout: ${s.bookmarkLayout === "grid" ? "Grid Cards" : "Compact List"}`,
+    `Font: ${s.fontFamily}`,
+    `Search engine: ${labelSearch(s.searchEngine)}`,
+    `Weather: ${s.showWeather === false ? "Hidden" : "Shown"}`,
+    `Clock: ${s.showClock === false ? "Hidden" : "Shown"}`,
+    `Section titles: ${s.showSectionTitles === false ? "Hidden" : "Shown"}`,
+    `Window transparency: ${s.windowTransparency}%`,
+    `Terminal transparency: ${s.terminalTransparency}%`,
+    `Sections: ${data.sections.length}`,
+    `Bookmarks: ${countBookmarks()}`
+  ].join("\n");
+}
+function buildHelpText(topic = "") {
+  const t = String(topic || "").trim().toLowerCase();
+  const pages = {
+    theme: `theme\n\nChange or view the current color theme.\n\nSyntax:\n  theme\n  theme <name>\n\nExamples:\n  theme nord\n  theme tokyo-night\n\nSee also:\n  ls themes`,
+    layout: `layout\n\nChange or view the bookmark layout.\n\nSyntax:\n  layout\n  layout compact\n  layout grid\n\nPreset layouts use the preset command.\n\nSee also:\n  help preset\n  ls layouts`,
+    preset: `preset\n\nChange or view the page layout preset.\n\nSyntax:\n  preset\n  preset <name>\n\nExamples:\n  preset classic\n  preset minimal\n\nSee also:\n  ls layouts`,
+    visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  sections\n  banner`,
+    search: `engine\n\nChange or view the search engine.\n\nSyntax:\n  engine\n  engine <name>\n\nExamples:\n  engine google\n  engine duckduckgo\n\nSee also:\n  ls search`,
+    weather: `weather\n\nSet, view, or refresh weather.\n\nSyntax:\n  weather\n  weather <location>\n  weather refresh\n\nExamples:\n  weather "New York, NY"\n  weather refresh`,
+    font: `font\n\nChange or view the current font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font inter\n  font jetbrains\n  font "Source Sans 3"\n\nSee also:\n  ls fonts`,
+    settings: `settings\n\nOpen Settings or a specific settings page.\n\nSyntax:\n  settings\n  settings <page>\n\nPages:\n  appearance\n  layout\n  bookmarks\n  weather\n  banner\n  text\n  advanced\n  backup`,
+    add: `add\n\nAdd a section or bookmark.\n\nSyntax:\n  add section <name>\n  add link <section> <name> <url>\n\nExamples:\n  add section Media\n  add link "Media" "Jellyfin" https://jellyfin.org`,
+    remove: `remove / delete\n\nRemove a section.\n\nSyntax:\n  remove section <name>\n  delete section <name>`,
+    rename: `rename\n\nRename a section.\n\nSyntax:\n  rename section <old> <new>\n\nExample:\n  rename section "Media" "Streaming"`,
+    colors: `colors\n\nChange interface colors.\n\nSyntax:\n  accent <hex>\n  surface <hex>\n  text <hex>\n  titlecolor <hex>\n\nExamples:\n  accent #00d084\n  surface #09111a`,
+    transparency: `transparency\n\nChange window or terminal transparency.\n\nSyntax:\n  window transparency <60-100>\n  terminal transparency <60-100>`,
+    css: buildCssManualText(),
+    ls: `ls\n\nList available options or current configuration.\n\nSyntax:\n  ls\n  ls <category>\n\nCategories:\n  commands\n  themes\n  layouts\n  fonts\n  visibility\n  search\n  config`,
+    reset: `reset\n\nReset a category of settings.\n\nSyntax:\n  reset appearance\n  reset layout\n  reset bookmarks\n  reset weather\n  reset banner\n  reset text\n  reset advanced\n  reset all`
+  };
+  if (t) return pages[t] || `No help topic for '${t}'.\n\nType help to see commands.`;
+  return cleanList("Available Commands", [
+    "fetch            Show Waypoint system information",
+    "help             Show help or command help",
+    "ls               List options and configuration",
+    "settings         Open Settings",
+    "theme            Manage themes",
+    "preset           Manage page layout presets",
+    "layout           Manage bookmark layout",
+    "font             Manage fonts",
+    "engine           Manage search engine",
+    "weather          Configure weather",
+    "show / hide      Show or hide UI elements",
+    "accent           Set accent color",
+    "surface          Set surface color",
+    "text             Set global text color",
+    "window           Set window transparency",
+    "terminal         Set terminal settings",
+    "add              Add sections or bookmarks",
+    "rename           Rename sections",
+    "remove / delete  Remove sections",
+    "export           Export configuration",
+    "import           Import configuration",
+    "reset            Reset settings",
+    "clear            Clear terminal",
+    "exit             Close terminal"
+  ]);
+}
+function buildCssManualText() {
+  return `css\n\nCustom CSS is applied last, so it can override Waypoint styling.\n\nExamples:\n  Hide the Waypoint name:\n  .brand-wordmark { display: none !important; }\n\n  Make bookmark cards rounder:\n  .link { border-radius: 18px !important; }\n\n  Hide section headers:\n  .section-header { display: none !important; }\n\n  Make the search bar wider:\n  .search { width: min(920px, calc(100% - 80px)) !important; }\n\nNotes:\n  .brand-wordmark controls the Waypoint title.\n  .link controls bookmark tiles.\n  .section controls section cards.\n  !important makes your rule win over built-in styling.`;
+}
+function listCommand(category = "") {
+  const c = String(category || "").trim().toLowerCase();
+  const maps = {
+    "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "config"]),
+    commands: buildHelpText(),
+    themes: cleanList("Available Themes", ["catppuccin", "nord", "gruvbox", "tokyo-night"]),
+    layouts: cleanList("Available Layouts", ["classic", "dashboard", "minimal", "centered", "compact bookmark layout", "grid bookmark layout"]),
+    fonts: cleanList("Available Fonts", ["system", "inter", "jetbrains", "firacode", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"]),
+    visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "sections", "banner"]),
+    search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
+    config: `Current Configuration\n\n${currentConfigText()}`
+  };
+  return maps[c] || `ls: unknown list '${c}'\n\nTry: ls`;
+}
+function buildStatusLines(action, steps = ["Updating configuration", "Refreshing interface", "Done"]) {
+  return `<pre class="terminal-status"><span class="terminal-info">${escapeHtml(action)}</span>\n${steps.map((step, index) => `<span class="${index === steps.length - 1 ? "terminal-success" : "terminal-muted"}">  ${escapeHtml(step)}...</span>`).join("\n")}</pre>`;
+}
+function commandResult(text, className = "terminal-result") {
+  return terminalPre(text, className);
+}
+function usage(text) {
+  return commandResult(text, "terminal-warning");
+}
+function fail(text) {
+  return commandResult(text, "terminal-error");
+}
+function normalizeFontName(arg) {
+  const a = arg.replaceAll(" ", "").toLowerCase();
+  const map = { system: "system", inter: "inter", jetbrains: "jetbrains", jetbrainsmono: "jetbrains", firacode: "firacode", fira: "firacode", plex: "plex", ibmplex: "plex", ibmplexsans: "plex", source: "source", sourcesans: "source", sourcesans3: "source", roboto: "roboto", noto: "noto", notosans: "noto", ubuntu: "ubuntu", opensans: "opensans", mono: "mono", monospace: "mono" };
+  return map[a] || "";
+}
+function runCommand(commandRaw) {
+  const command = commandRaw.trim();
+  if (!command) return;
+  const lower = command.toLowerCase();
+  const [head, ...rest] = lower.split(/\s+/);
+  const arg = rest.join(" ");
+  if (head === "clear") { terminalBuffer = []; renderTerminalBuffer(); return; }
+  if (["q", "quit", "exit"].includes(lower)) { closeModal("terminalModal"); return; }
+  const blocks = [terminalEcho(command)];
+  const done = html => pushTerminal(terminalBlock(blocks.join("") + (html || "")));
+  const textOut = (text, cls) => done(commandResult(text, cls));
+  if (head === "help") return done(terminalPre(buildHelpText(arg), "terminal-help"));
+  if (head === "man") return done(fail("The man command was removed. Use help <topic> instead."));
+  if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
+  if (head === "fetch") return done(buildFastfetchHtml());
+  if (head === "settings") {
+    const pageMap = { text: "textcolors", textcolor: "textcolors", textcolors: "textcolors", colors: "textcolors", appearance: "appearance", layout: "layout", bookmarks: "bookmarks", weather: "weather", banner: "banner", advanced: "advanced", backup: "backup" };
+    const page = arg ? pageMap[arg.replace(/\s+/g, "")] : "appearance";
+    if (!page) return textOut(buildHelpText("settings"), "terminal-warning");
+    openSettingsPage(page);
+    return textOut(`Opened Settings > ${page}.`, "terminal-success-text");
+  }
+  if (["show", "hide"].includes(head)) {
+    const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles", banner: "heroStyle" };
+    const key = keyMap[arg];
+    if (!key) return textOut(buildHelpText("visibility"), "terminal-warning");
+    if (key === "heroStyle") data.settings.heroStyle = head === "show" ? "auto" : "hidden";
+    else data.settings[key] = head === "show";
+    save(); render();
+    return done(buildStatusLines(`${head === "show" ? "Showing" : "Hiding"}: ${arg}`));
+  }
+  if (head === "preset") {
+    if (!arg) return textOut(`Current preset: ${data.settings.layoutPreset}`);
+    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut(buildHelpText("preset"), "terminal-warning");
+    data.settings.layoutPreset = arg; save(); render();
+    return done(buildStatusLines(`Applying layout preset: ${arg}`));
+  }
+  if (head === "font") {
+    if (!arg) return textOut(`Current font: ${data.settings.fontFamily}`);
+    const font = normalizeFontName(commandRaw.trim().replace(/^font\s*/i, "").trim());
+    if (!font) return textOut(buildHelpText("font"), "terminal-warning");
+    data.settings.fontFamily = font; save(); render();
+    return done(buildStatusLines(`Setting font: ${font}`));
+  }
+  if (head === "theme") {
+    if (!arg) return textOut(`Current theme: ${getTheme().label}`);
+    const map = { catppuccin: "catppuccin", nord: "nord", gruvbox: "gruvbox", tokyo: "tokyoNight", "tokyo-night": "tokyoNight", tokyonight: "tokyoNight" };
+    if (!map[arg]) return textOut(buildHelpText("theme"), "terminal-warning");
+    data.settings.theme = map[arg]; save(); render();
+    return done(buildStatusLines(`Applying theme: ${getTheme().label}`));
+  }
+  if (head === "layout") {
+    const map = { list: "list", compact: "list", row: "list", rows: "list", grid: "grid", cards: "grid" };
+    if (!arg) return textOut(`Bookmark layout: ${(data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid Cards"}`);
+    if (!map[arg]) return textOut(buildHelpText("layout"), "terminal-warning");
+    data.settings.bookmarkLayout = map[arg]; save(); render();
+    return done(buildStatusLines(`Setting bookmark layout: ${data.settings.bookmarkLayout === "list" ? "Compact List" : "Grid Cards"}`));
+  }
+  if (head === "accent" || head === "surface" || head === "text" || head === "titlecolor") {
+    const color = rest[0] || "";
+    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut(buildHelpText("colors"), "terminal-warning");
+    if (head === "accent") { data.settings.customAccent = color; data.settings.useCustomColors = true; }
+    if (head === "surface") { data.settings.customPanel = color; data.settings.useCustomColors = true; }
+    if (head === "text") data.settings.customText = color;
+    if (head === "titlecolor") { data.settings.sectionTitleColor = color; data.settings.useCustomTextColors = true; }
+    save(); render();
+    return done(buildStatusLines(`Setting ${head} color: ${color}`));
+  }
+  if (head === "window") {
+    if (rest[0] !== "transparency") return textOut(buildHelpText("transparency"), "terminal-warning");
+    const amount = clamp(Number(rest[1]), 60, 100, NaN);
+    if (!Number.isFinite(amount)) return textOut(buildHelpText("transparency"), "terminal-warning");
+    data.settings.windowTransparency = amount; save(); render();
+    return done(buildStatusLines(`Setting window transparency: ${amount}%`));
+  }
+  if (head === "terminal") {
+    if (!arg) return textOut(`Terminal transparency: ${data.settings.terminalTransparency}%`);
+    if (rest[0] !== "transparency") return textOut(buildHelpText("transparency"), "terminal-warning");
+    const amount = clamp(Number(rest[1]), 60, 100, NaN);
+    if (!Number.isFinite(amount)) return textOut(buildHelpText("transparency"), "terminal-warning");
+    data.settings.terminalTransparency = amount; save(); render();
+    return done(buildStatusLines(`Setting terminal transparency: ${amount}%`));
+  }
+  if (head === "transparency") return textOut("Use window transparency <60-100> or terminal transparency <60-100>.", "terminal-warning");
+  if (head === "name") {
+    const nextName = commandRaw.trim().replace(/^name\s*/i, "").trim();
+    if (!nextName) return textOut("Usage: name <username>", "terminal-warning");
+    data.settings.userName = sanitizeUserName(nextName); save(); render();
+    return textOut(`Name set to ${displayUserName()}.`, "terminal-success-text");
+  }
+  if (head === "searchengine" || head === "engine") {
+    const map = { google: "google", ddg: "duckduckgo", duckduckgo: "duckduckgo", brave: "brave", bing: "bing", custom: "custom" };
+    if (!arg) return textOut(`Current search engine: ${labelSearch(data.settings.searchEngine)}`);
+    if (!map[arg]) return textOut(buildHelpText("search"), "terminal-warning");
+    data.settings.searchEngine = map[arg]; save(); render();
+    return done(buildStatusLines(`Setting search engine: ${labelSearch(data.settings.searchEngine)}`));
+  }
+  if (head === "customsearch") {
+    const url = commandRaw.trim().replace(/^customsearch\s*/i, "").trim();
+    if (!url) return textOut("Usage: customsearch https://example.com/search?q=%s", "terminal-warning");
+    data.settings.customSearchUrl = url.slice(0, 240); data.settings.searchEngine = "custom"; save(); render();
+    return textOut("Custom search URL saved.", "terminal-success-text");
+  }
+  if (head === "weather") {
+    if (!arg) return textOut(data.settings.weatherLocation ? `Current weather location: ${data.settings.weatherLocation}` : buildHelpText("weather"), data.settings.weatherLocation ? "terminal-result" : "terminal-warning");
+    if (arg === "refresh") { refreshWeather(true); return done(buildStatusLines("Refreshing weather", ["Fetching forecast", "Done"])); }
+    const next = commandRaw.trim().replace(/^weather\s+/i, "").trim();
+    data.settings.weatherLocation = next; save(); refreshWeather(true);
+    return done(buildStatusLines(`Setting weather location: ${data.settings.weatherLocation}`, ["Saving location", "Fetching forecast", "Done"]));
+  }
+  if (head === "banner") {
+    const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", hidden: "hidden", hide: "hidden", auto: "auto", default: "auto" };
+    if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
+    if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
+    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|fit|fill", "terminal-warning");
+    data.settings.heroStyle = map[arg]; save(); render();
+    return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
+  }
+  if (head === "wallpaper") {
+    const map = { theme: "wallpaper", wallpaper: "wallpaper", default: "wallpaper", gradient: "gradient", custom: "custom" };
+    if (!map[arg]) return textOut("Usage: wallpaper theme|gradient|custom", "terminal-warning");
+    data.settings.backgroundMode = map[arg]; save(); render();
+    return done(buildStatusLines(`Setting wallpaper: ${labelBackground(data.settings.backgroundMode)}`));
+  }
+  if (head === "add") {
+    if (arg.startsWith("section")) {
+      const sectionName = commandRaw.trim().replace(/^add\s+section\s*/i, "").trim();
+      if (!sectionName) return textOut(buildHelpText("add"), "terminal-warning");
+      data.sections.push({ name: sectionName, links: [] }); save(); render();
+      return textOut(`Section added: ${sectionName}`, "terminal-success-text");
+    }
+    if (arg.startsWith("link")) {
+      const parsed = parseAddLinkCommand(commandRaw);
+      if (!parsed) return textOut(buildHelpText("add"), "terminal-warning");
+      const message = addLinkByCommand(parsed.sectionName, parsed.linkName, parsed.url).replace(/<[^>]+>/g, "");
+      return textOut(message, "terminal-success-text");
+    }
+    return textOut(buildHelpText("add"), "terminal-warning");
+  }
+  if (["delete", "remove"].includes(head) && arg.startsWith("section")) {
+    const sectionName = commandRaw.trim().replace(/^(delete|remove)\s+section\s*/i, "").trim();
+    if (!sectionName) return textOut(buildHelpText("remove"), "terminal-warning");
+    return textOut(deleteSectionByCommand(sectionName).replace(/<[^>]+>/g, ""));
+  }
+  if (head === "rename" && arg.startsWith("section")) {
+    const body = commandRaw.trim().replace(/^rename\s+section\s*/i, "").trim();
+    const quoted = [...body.matchAll(/"([^"]+)"|'([^']+)'/g)].map(match => match[1] || match[2]);
+    if (quoted.length >= 2) return textOut(renameSectionByCommand(quoted[0], quoted[1]).replace(/<[^>]+>/g, ""));
+    const parts = body.split(/\s+/);
+    if (parts.length < 2) return textOut(buildHelpText("rename"), "terminal-warning");
+    return textOut(renameSectionByCommand(parts[0], parts.slice(1).join(" ")).replace(/<[^>]+>/g, ""));
+  }
+  if (head === "import") { $("importFile")?.click(); return textOut("Choose a JSON file to import."); }
+  if (head === "export") { exportJson(); return textOut("Export started.", "terminal-success-text"); }
+  if (head === "reset") {
+    const target = arg || "";
+    if (!target) return textOut(buildHelpText("reset"), "terminal-warning");
+    resetCategory(target);
+    return done(buildStatusLines(`Resetting ${target}`));
+  }
+  if (head === "css") return textOut(buildHelpText("css"));
+  if (head === "search") { closeAllModals(); focusSearch(); return; }
+  return textOut(`${head}: command not found\n\nTry: help`, "terminal-error");
+}
+function resetCategory(target) {
+  const d = structuredClone(defaultData.settings);
+  if (target === "appearance") ["theme", "fontFamily", "uiScale", "useCustomColors", "customAccent", "customPanel", "customText", "windowTransparency"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "layout") ["layoutPreset", "showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles", "shortcut"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "bookmarks") ["bookmarkLayout", "bookmarkColumns", "bookmarkFontSize", "bookmarkIconSize"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "weather") ["weatherLocation", "weatherUnit"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroHeight", "heroZoom", "heroY", "heroStyle", "heroFit"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "text" || target === "textcolors") ["useCustomTextColors", "sectionTitleColor", "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor", "customText"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "advanced") ["searchEngine", "customSearchUrl", "customCss", "terminalTransparency"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "all" || target === "everything") { data = structuredClone(defaultData); localStorage.removeItem(CUSTOM_BG_KEY); localStorage.removeItem(CUSTOM_HERO_KEY); localStorage.removeItem(WEATHER_CACHE_KEY); }
+  else return;
+  save(); render(); refreshWeather(false);
+}
+function addResetButtonEvents() {
+  const map = { resetAppearanceBtn: "appearance", resetLayoutBtn: "layout", resetBookmarksBtn: "bookmarks", resetWeatherBtn: "weather", resetBannerBtn: "banner", resetTextBtn: "text", resetAdvancedBtn: "advanced" };
+  Object.entries(map).forEach(([id, target]) => $(id)?.addEventListener("click", () => resetCategory(target)));
+}
+addResetButtonEvents();
+

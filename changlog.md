@@ -4,77 +4,81 @@ All notable changes to Waypoint will be documented in this file.
 
 ## [Unreleased]
 
-### Added
--
-
-### Changed
--
-
-### Fixed
--
-
 ---
 
-## [1.1.2x] - 2026-06-24
-
-### Fixed
-- Settings now default to the **Appearance** page when opened.
-- Removed the banner settings cog for a cleaner interface.
-- Added `man css` terminal documentation.
-- Added a Custom CSS help button linking to the CSS manual.
-- Replaced confusing placeholder CSS examples with a clearer documentation path.
-
-### Changed
-- Hide Section Titles now minimizes the section header (planned improvement: fully hide the header while preserving section functionality).
-
----
-
-## [1.1.1] - 2026-06-24
+## [1.2.0] - 2026-06-24
 
 ### Added
+
+#### Terminal
+- Completely redesigned Linux-inspired terminal experience.
+- New `fetch` command with Waypoint system information.
+- Comprehensive terminal help system.
+- Command-specific help pages (`help <command>`).
+- New `ls` command for browsing available themes, layouts, fonts, configuration, and more.
+- Terminal commands for managing settings.
+- Terminal transparency controls.
+- Improved command validation and usage feedback.
+
+#### Personalization
+- Expanded font selection.
+- Theme-aware and custom text color modes.
+- Per-category text color customization.
+- Window transparency controls.
+- Terminal transparency controls.
+- Per-category settings reset buttons.
+
+#### Interface
+- Browser favicon using the Waypoint logo.
+- First-launch default bookmark collection.
+- Real weather icons.
+- Improved settings organization.
+
+### Changed
+
+- Terminal output now more closely resembles a real Linux terminal.
+- Improved terminal color palette and readability.
+- Simplified help system.
+- Improved layout presets.
+- Improved section header behavior.
+- Improved appearance customization workflow.
+- Refined color customization interface.
+- Improved settings usability throughout.
+
+### Fixed
+
+- Section layout regressions.
+- Hidden section header behavior.
+- UI scaling.
+- Banner height controls.
 - Movable Settings window.
-- Custom CSS support.
-- Built-in CSS help examples.
-- Layout presets for banner height.
-
-### Changed
-- Renamed **Panel Color** to **Surface Color**.
-- Surface Color now applies more consistently across interface panels.
-- Removed background blur while the Settings window is open.
-- Banner height control changed from a slider to presets.
-
-### Fixed
-- UI Scale now correctly scales the interface.
-- Settings window intended to default to Appearance (follow-up hotfix required).
+- Window transparency.
+- Terminal transparency.
+- Surface color application.
+- Settings navigation.
+- Various layout and appearance regressions.
 
 ---
 
 ## [1.1.0] - 2026-06-24
 
 ### Added
-#### Personalization
-- Split Settings into multiple pages
 
-#### Appearance
-- Custom fonts
-- UI scaling
-- Custom colors
-- Layout presets
-- Bookmark layout/column/sizing controls
-
-#### Interface
-- Hide/show UI elements
-- Reduced Waypoint wordmark size
-- Theme customization improvements
-
-#### Power User
-- Initial Custom CSS support
-- Theme import/export groundwork
-
-#### Terminal
-- Added terminal commands for new personalization settings
-- Standardized around a single `fetch` command
+- Split Settings into multiple pages.
+- Layout presets.
+- Custom fonts.
+- Custom CSS support.
+- Hide/show UI elements.
+- Appearance customization.
+- Theme customization.
+- Bookmark layout customization.
 
 ### Changed
-- Reorganized Settings into categorized pages
-- Modernized personalization workflow
+
+- Reduced Waypoint wordmark size.
+- Modernized settings interface.
+- Improved bookmark layout.
+
+### Fixed
+
+- Numerous UI and layout improvements.

@@ -276,20 +276,7 @@ button svg { fill: currentColor; display: block; }
   background: linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.22));
   pointer-events: none;
 }
-.image-settings-btn {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  z-index: 2;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  opacity: .18;
-}
-.hero-image-card:hover .image-settings-btn { opacity: 1; }
-
+.hero-image-card:hover 
 .sections {
   display: grid;
   grid-template-columns: repeat(6, minmax(140px, 1fr));
@@ -1222,16 +1209,6 @@ body {
   color: #05080f;
   background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent), white 35%));
 }
-.image-settings-btn {
-  top: 18px;
-  right: 18px;
-  bottom: auto;
-  width: 48px;
-  height: 48px;
-  opacity: .0;
-  background: rgba(5, 8, 15, .72);
-}
-.hero-image-card:hover .image-settings-btn { opacity: .95; }
 .sections {
   position: relative;
   z-index: 3;
@@ -1551,13 +1528,6 @@ body {
   box-shadow: 0 14px 35px rgba(0,208,132,.22);
 }
 .search:focus-within { border-color: rgba(0,208,132,.45); }
-.image-settings-btn {
-  opacity: .75;
-  right: 22px;
-  top: 28px;
-  color: color-mix(in srgb, var(--text), var(--waypoint-green) 20%);
-  background: rgba(6, 10, 19, .68);
-}
 
 .section-name::before { color: var(--waypoint-green); }
 .section {
@@ -2270,8 +2240,10 @@ body.bookmark-list-layout .delete-link {
 body { font-size: calc(16px * var(--ui-scale, 1)); }
 .brand-wordmark { font-size: clamp(19px, 1.7vw, 25px) !important; }
 .ui-hide-logo .logo-mark, .ui-hide-wordmark .brand-wordmark, .ui-hide-clock #clock, .ui-hide-weather #weatherWidget, .ui-hide-search .search { display: none !important; }
+.ui-hide-section-titles .section-header { height: 0 !important; min-height: 0 !important; max-height: 0 !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; overflow: visible !important; }
 .ui-hide-section-titles .section-name { display: none !important; }
-.ui-hide-section-titles .section-header { min-height: 28px; justify-content: flex-end; background: transparent !important; border-color: transparent !important; box-shadow: none !important; padding: 0 !important; margin-bottom: 4px !important; }
+.ui-hide-section-titles .section-actions { top: 8px !important; right: 8px !important; }
+.ui-hide-section-titles .links { margin-top: 0 !important; }
 body.bookmark-list-layout .link a, body.bookmark-grid-layout .link a { font-size: var(--bookmark-font-size, 12px) !important; }
 body.bookmark-list-layout .link img, body.bookmark-grid-layout .link img { width: var(--bookmark-icon-size, 22px) !important; height: var(--bookmark-icon-size, 22px) !important; }
 html[data-bookmark-columns="2"] body.bookmark-list-layout .links, html[data-bookmark-columns="2"] body.bookmark-grid-layout .links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
@@ -2288,12 +2260,113 @@ html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-book
 .fetch-logo { color: var(--waypoint-green, var(--accent)); text-shadow: 0 0 20px color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 62%); }
 .fetch-info strong { color: var(--waypoint-green, var(--accent)); }
 @media (max-width: 640px) { .fetch-output { grid-template-columns: 1fr; gap: 10px; font-size: 12px; } .settings-tabs { gap: 6px; } .settings-tab { padding: 8px 9px; } }
-
-
-/* v1.1 feedback fixes */
-.page-shell {
-  zoom: var(--ui-scale, 1);
+.ui-hide-section-titles .section-header {
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
+.ui-hide-section-titles .section-name {
+  display: none !important;
+}
+.ui-hide-section-titles .section-actions {
+  top: 8px !important;
+  right: 8px !important;
+}
+.ui-hide-section-titles .links {
+  margin-top: 0 !important;
+}
+.terminal-block {
+  margin: 0 0 14px;
+}
+.terminal-echo {
+  color: #dce4ff;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.terminal-echo span {
+  color: var(--waypoint-green, var(--accent));
+  font-weight: 900;
+}
+.terminal-result,
+.terminal-help,
+.terminal-status {
+  margin: 6px 0 0;
+  color: #d9e5f6;
+  font: 750 13px/1.55 var(--mono);
+  white-space: pre-wrap;
+}
+.terminal-help {
+  color: #cdd6f4;
+}
+.terminal-status {
+  color: #aeb7d8;
+}
+.fetch-output {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 26px;
+  margin: 8px 0 0;
+  color: #d9e5f6;
+  font: 800 13px/1.35 var(--mono);
+  white-space: pre;
+}
+.fetch-logo {
+  color: var(--waypoint-green, var(--accent));
+  text-shadow: 0 0 20px color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 62%);
+}
+.fetch-info strong {
+  color: var(--waypoint-green, var(--accent));
+}
+#terminalModal .command-output {
+  max-height: 420px !important;
+  overflow: auto !important;
+  padding-right: 4px;
+}
+@media (max-width: 640px) {
+  .fetch-output {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    font-size: 12px;
+  }
+}
+
+.sections {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(260px, 1fr)) !important;
+  gap: 14px !important;
+  align-items: start !important;
+}
+.sections > .section {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  grid-column: auto !important;
+}
+.ui-hide-section-titles .section-header {
+  display: none !important;
+}
+.ui-hide-section-titles .section {
+  padding-top: 15px !important;
+}
+.ui-hide-section-titles .links {
+  margin-top: 0 !important;
+}
+@media (max-width: 1000px) {
+  .sections {
+    grid-template-columns: repeat(2, minmax(220px, 1fr)) !important;
+  }
+}
+@media (max-width: 700px) {
+  .sections {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
 #settingsModal {
   align-items: unset !important;
   justify-content: unset !important;
@@ -2302,95 +2375,196 @@ html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-book
   backdrop-filter: none !important;
   pointer-events: none !important;
 }
-#settingsModal .settings-v11 {
+#settingsModal .settings-modal {
   position: fixed !important;
   left: var(--settings-left, 50%) !important;
-  top: var(--settings-top, 56px) !important;
+  top: var(--settings-top, 6vh) !important;
   transform: translateX(-50%);
   pointer-events: auto !important;
-  max-height: calc(100vh - 72px) !important;
-  overflow: auto !important;
 }
 #settingsModalTitle {
   cursor: move;
   user-select: none;
 }
-body.dragging-settings,
-body.dragging-terminal {
+body.dragging-settings, body.dragging-terminal {
   user-select: none;
 }
-html[data-custom-colors="true"] .section,
-html[data-custom-colors="true"] .mini-clock,
-html[data-custom-colors="true"] .weather-widget,
-html[data-custom-colors="true"] .hero-image-card,
-html[data-custom-colors="true"] .modal-content,
-html[data-custom-colors="true"] .terminal-window,
-html[data-custom-colors="true"] .search,
-html[data-custom-colors="true"] .link {
-  background-color: var(--surface-color) !important;
+#terminalModal .terminal-window {
+  width: min(1180px, calc(100vw - 48px)) !important;
 }
-html[data-custom-colors="true"] .settings-tab,
-html[data-custom-colors="true"] input,
-html[data-custom-colors="true"] select,
-html[data-custom-colors="true"] textarea {
-  background-color: color-mix(in srgb, var(--surface-color), black 18%) !important;
+#terminalModal .terminal-screen {
+  min-height: 460px !important;
 }
-.custom-css-help {
-  margin-top: 8px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: rgba(0,0,0,.18);
-  color: var(--muted);
-  font: 700 12px/1.55 var(--mono);
+#terminalModal .command-output {
+  min-height: 330px !important;
+  max-height: 620px !important;
+  font-size: 14px !important;
 }
-.custom-css-help code {
-  color: var(--text);
+body > .page-shell {
+  zoom: var(--ui-scale, 1);
 }
-
-
-/* v1.1.1 feedback fixes */
-/* Hidden section titles should remove the whole title bar and free bookmark space. */
-.ui-hide-section-titles .section-header {
-  height: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  overflow: visible !important;
+.weather-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", var(--sans) !important;
+  font-size: 24px !important;
 }
-
-.ui-hide-section-titles .section-name {
+@media (max-width: 700px) {
+  #terminalModal .terminal-window {
+    width: calc(100vw - 24px) !important;
+  }
+  #terminalModal .terminal-screen {
+    min-height: 320px !important;
+  }
+  #terminalModal .command-output {
+    min-height: 210px !important;
+  }
+  #settingsModal .settings-modal {
+    width: calc(100vw - 24px) !important;
+    left: 12px !important;
+    top: 12px !important;
+    transform: none !important;
+  }
+}
+.color-control {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 42px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 48px !important;
+}
+.color-control input[type="color"] {
+  width: 42px !important;
+  height: 34px !important;
+  padding: 2px !important;
+  border-radius: 10px !important;
+}
+.color-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.section,
+.modal-content,
+.settings-modal,
+.terminal-window,
+.search,
+.hero-image-card,
+.mini-clock,
+.weather-widget {
+  background-color: var(--surface) !important;
+}
+.link {
+  background-color: var(--surface-soft) !important;
+}
+.link:hover,
+body.bookmark-list-layout .link:hover,
+body.bookmark-grid-layout .link:hover,
+.settings-tab.active,
+button:hover,
+.upload-btn:hover {
+  background-color: var(--accent-hover) !important;
+  border-color: color-mix(in srgb, var(--accent), transparent 45%) !important;
+}
+.search:focus-within,
+.link:hover,
+.section:hover,
+.settings-tab.active {
+  border-color: color-mix(in srgb, var(--accent), transparent 45%) !important;
+}
+.section-name,
+body.bookmark-list-layout .section-name,
+body.bookmark-grid-layout .section-name {
+  color: var(--section-title-color) !important;
+}
+.link a,
+body.bookmark-list-layout .link a,
+body.bookmark-grid-layout .link a {
+  color: var(--bookmark-text-color) !important;
+}
+.weather-place,
+.mini-clock-date,
+.settings-tab,
+label {
+  color: var(--custom-muted-text) !important;
+}
+#terminalModal #commandPromptLabel,
+.terminal-echo span {
+  color: var(--terminal-text-color) !important;
+}
+.mini-clock-time,
+.weather-main {
+  color: var(--status-text-color) !important;
+}
+.layout-dashboard .hero-image-card {
   display: none !important;
 }
-
-.ui-hide-section-titles .section-actions {
-  top: 8px !important;
-  right: 8px !important;
-  z-index: 3 !important;
+.layout-dashboard .hero {
+  display: flex !important;
+  min-height: 88px !important;
+  margin: 8px 0 24px !important;
+}
+.layout-dashboard .search {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: min(920px, 100%) !important;
+}
+.layout-dashboard .sections {
+  grid-template-columns: repeat(4, minmax(220px, 1fr)) !important;
+}
+.layout-dashboard .section {
+  min-height: 118px !important;
+}
+@media (max-width: 1100px) {
+  .color-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .layout-dashboard .sections {
+    grid-template-columns: repeat(2, minmax(220px, 1fr)) !important;
+  }
+}
+@media (max-width: 640px) {
+  .color-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .layout-dashboard .sections {
+    grid-template-columns: 1fr !important;
+  }
 }
 
-.ui-hide-section-titles .section:not(:hover):not(:focus-within) .section-actions {
-  opacity: 0 !important;
-  pointer-events: none !important;
+#settingsModal .settings-modal,
+#terminalModal .terminal-window,
+.modal-content {
+  background-color: color-mix(in srgb, var(--surface-strong) var(--window-opacity-percent, 92%), transparent) !important;
+}
+.terminal-result {
+  color: #d9e5f6 !important;
+}
+.terminal-help {
+  color: #b4befe !important;
+}
+.terminal-status {
+  color: #a6e3a1 !important;
+}
+.terminal-error {
+  color: #f38ba8 !important;
+}
+.command-output strong,
+.fetch-info strong {
+  color: var(--accent) !important;
 }
 
-.ui-hide-section-titles .links {
-  margin-top: 0 !important;
+#terminalModal .terminal-window {
+  background: rgba(0, 2, 5, var(--terminal-opacity, .94)) !important;
 }
-
-.ui-hide-section-titles.bookmark-list-layout .section,
-.ui-hide-section-titles.bookmark-grid-layout .section {
-  padding-top: 10px !important;
+#terminalModal .terminal-titlebar {
+  background: linear-gradient(180deg, rgba(17, 22, 34, var(--terminal-opacity, .94)), rgba(8, 12, 20, var(--terminal-opacity, .94))) !important;
 }
-
-/* Banner settings now live in Settings > Banner. The floating cog is gone. */
-.image-settings-btn {
-  display: none !important;
+#terminalModal .terminal-screen {
+  background: rgba(0, 2, 5, var(--terminal-opacity, .94)) !important;
 }
-
-#openCssManBtn {
-  margin-top: 8px;
-}
+.terminal-info { color: #7dd3fc; }
+.terminal-success, .terminal-success-text { color: #86efac !important; }
+.terminal-warning { color: #fde68a !important; }
+.terminal-error { color: #fca5a5 !important; }
+.terminal-muted { color: #94a3b8; }
+.terminal-result strong, .terminal-help strong { color: var(--accent); }
+.custom-text-only input:disabled { opacity: .35; cursor: not-allowed; }

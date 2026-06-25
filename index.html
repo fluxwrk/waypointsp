@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Waypoint</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="img/waypoint-icon-large.png">
 </head>
 <body>
   <div id="backgroundLayer" class="background-layer"></div>
@@ -81,7 +82,7 @@
         <div id="commandOutput" class="command-output" aria-live="polite"></div>
         <div class="terminal-command-line">
           <span id="commandPromptLabel">user@startpage:~$</span>
-          <input id="commandInput" spellcheck="false" autocomplete="off" placeholder="type help, stfetch, theme nord, banner desktop">
+          <input id="commandInput" spellcheck="false" autocomplete="off" placeholder="type help, fetch, theme nord, banner desktop">
         </div>
       </div>
     </div>
@@ -98,6 +99,7 @@
         <button class="settings-tab" type="button" data-settings-page="bookmarks">Bookmarks</button>
         <button class="settings-tab" type="button" data-settings-page="weather">Weather</button>
         <button class="settings-tab" type="button" data-settings-page="banner">Banner</button>
+        <button class="settings-tab" type="button" data-settings-page="textcolors">Text Colors</button>
         <button class="settings-tab" type="button" data-settings-page="advanced">Advanced</button>
         <button class="settings-tab" type="button" data-settings-page="backup">Backup</button>
       </div>
@@ -106,18 +108,19 @@
         <div class="terminal-control-grid">
           <label>Your Name<input id="userNameInput" placeholder="user" maxlength="32"></label>
           <label>Theme<select id="themeSelect"><option value="catppuccin">Catppuccin</option><option value="nord">Nord</option><option value="gruvbox">Gruvbox</option><option value="tokyoNight">Tokyo Night</option></select></label>
-          <label>Font<select id="fontSelect"><option value="system">System</option><option value="inter">Inter</option><option value="jetbrains">JetBrains Mono</option><option value="fira">Fira Sans</option><option value="roboto">Roboto</option><option value="mono">Monospace</option></select></label>
+          <label>Font<select id="fontSelect"><option value="system">System</option><option value="inter">Inter</option><option value="jetbrains">JetBrains Mono</option><option value="firacode">Fira Code</option><option value="plex">IBM Plex Sans</option><option value="source">Source Sans 3</option><option value="roboto">Roboto</option><option value="noto">Noto Sans</option><option value="ubuntu">Ubuntu</option><option value="opensans">Open Sans</option><option value="mono">Monospace</option></select></label>
           <label>UI Scale <span id="uiScaleValue"></span><input type="range" id="uiScaleSlider" min="85" max="120" value="100"></label>
-          <label>Accent Color<input id="accentColorInput" type="color"></label>
-          <label>Surface Color<input id="panelColorInput" type="color"></label>
-          <label>Text Color<input id="textColorInput" type="color"></label>
+          <label class="color-control">Accent Color<input id="accentColorInput" type="color"></label>
+          <label class="color-control">Surface Color<input id="panelColorInput" type="color"></label>
           <label>Use Custom Colors<select id="customColorsSelect"><option value="false">Theme Colors</option><option value="true">Custom Colors</option></select></label>
+          <label>Window Transparency <span id="windowTransparencyValue"></span><input type="range" id="windowTransparencySlider" min="60" max="100" value="92"></label>
         </div>
+        <div class="button-row settings-uploads"><button id="resetAppearanceBtn" class="ghost-btn" type="button">Reset Appearance</button></div>
       </div>
 
       <div class="settings-page" data-page="layout">
         <div class="terminal-control-grid">
-          <label>Layout Preset<select id="layoutPresetSelect"><option value="classic">Classic</option><option value="minimal">Minimal</option><option value="dashboard">Dashboard</option><option value="centered">Centered</option></select></label>
+          <label>Layout Preset<select id="layoutPresetSelect"><option value="classic">Classic</option><option value="dashboard">Dashboard</option><option value="minimal">Minimal</option><option value="centered">Centered</option></select></label>
           <label>Show Logo / Terminal Button<select id="showLogoSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Show Waypoint Name<select id="showWordmarkSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Show Clock<select id="showClockSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
@@ -126,6 +129,7 @@
           <label>Show Section Titles<select id="showSectionTitlesSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Shortcut<select id="shortcutSelect"><option value="none">Disabled</option><option value="altT">Alt+T</option><option value="ctrlShiftSpace">Ctrl+Shift+Space</option></select></label>
         </div>
+        <div class="button-row settings-uploads"><button id="resetLayoutBtn" class="ghost-btn" type="button">Reset Layout</button></div>
       </div>
 
       <div class="settings-page" data-page="bookmarks">
@@ -135,6 +139,7 @@
           <label>Bookmark Font Size <span id="bookmarkFontValue"></span><input type="range" id="bookmarkFontSlider" min="10" max="15" value="12"></label>
           <label>Icon Size <span id="bookmarkIconValue"></span><input type="range" id="bookmarkIconSlider" min="14" max="36" value="22"></label>
         </div>
+        <div class="button-row settings-uploads"><button id="resetBookmarksBtn" class="ghost-btn" type="button">Reset Bookmarks Settings</button></div>
       </div>
 
       <div class="settings-page" data-page="weather">
@@ -142,6 +147,7 @@
           <label>Weather Location<input id="weatherLocationInput" placeholder="City, Region, Country or ZIP" maxlength="80"></label>
           <label>Weather Unit<select id="weatherUnitSelect"><option value="auto">Auto</option><option value="fahrenheit">Fahrenheit</option><option value="celsius">Celsius</option></select></label>
         </div>
+        <div class="button-row settings-uploads"><button id="resetWeatherBtn" class="ghost-btn" type="button">Reset Weather</button></div>
       </div>
 
       <div class="settings-page" data-page="banner">
@@ -151,7 +157,7 @@
           <label>Banner Fit<select id="heroFitSelect"><option value="cover">Fill/Crop</option><option value="contain">Fit Entire Image</option></select></label>
           <label>Overlay <span id="overlayValue"></span><input type="range" id="overlaySlider" min="0" max="70" value="35"></label>
           <label>Blur <span id="blurValue"></span><input type="range" id="blurSlider" min="0" max="20" value="0"></label>
-          <label>Banner Height<select id="heroHeightPresetSelect"><option value="240">Compact</option><option value="300">Balanced</option><option value="330">Tall</option><option value="360">Showcase</option></select></label>
+          <label>Banner Height<select id="heroHeightPresetSelect"><option value="240">Compact</option><option value="300">Balanced</option><option value="330">Showcase</option><option value="360">Tall</option></select></label>
           <label>Banner Zoom <span id="heroZoomValue"></span><input type="range" id="heroZoomSlider" min="80" max="140" value="100"></label>
           <label>Banner Y <span id="heroYValue"></span><input type="range" id="heroYSlider" min="0" max="100" value="50"></label>
         </div>
@@ -160,21 +166,34 @@
           <label class="upload-btn">Upload Banner<input type="file" id="imageUpload" accept="image/*" hidden></label>
           <button id="resetBackgroundBtn" class="ghost-btn" type="button">Reset Wallpaper</button>
           <button id="resetHeroBtn" class="ghost-btn" type="button">Use Theme Banner</button>
+          <button id="resetBannerBtn" class="ghost-btn" type="button">Reset Banner</button>
         </div>
+      </div>
+
+      <div class="settings-page" data-page="textcolors">
+        <div class="terminal-control-grid color-grid">
+          <label>Use Text Colors<select id="customTextColorsSelect"><option value="false">Theme Text</option><option value="true">Custom Text</option></select></label>
+          <label class="color-control">Global Text<input id="globalTextColorInput" type="color"></label>
+          <label class="color-control custom-text-only">Section Titles<input id="sectionTitleColorInput" type="color"></label>
+          <label class="color-control custom-text-only">Bookmark Text<input id="bookmarkTextColorInput" type="color"></label>
+          <label class="color-control custom-text-only">Muted Text<input id="mutedTextColorInput" type="color"></label>
+          <label class="color-control custom-text-only">Terminal Prompt<input id="terminalTextColorInput" type="color"></label>
+          <label class="color-control custom-text-only">Clock / Weather<input id="statusTextColorInput" type="color"></label>
+        </div>
+        <div class="button-row settings-uploads"><button id="resetTextBtn" class="ghost-btn" type="button">Reset Text Colors</button></div>
       </div>
 
       <div class="settings-page" data-page="advanced">
         <div class="terminal-control-grid">
           <label>Search Engine<select id="searchEngineSelect"><option value="google">Google</option><option value="duckduckgo">DuckDuckGo</option><option value="brave">Brave</option><option value="bing">Bing</option><option value="custom">Custom</option></select></label>
           <label>Custom Search URL<input id="customSearchInput" placeholder="https://example.com/search?q=%s"></label>
+          <label>Terminal Transparency <span id="terminalTransparencyValue"></span><input type="range" id="terminalTransparencySlider" min="60" max="100" value="94"></label>
         </div>
         <label class="custom-css-label">Custom CSS<textarea id="customCssInput" spellcheck="false" placeholder=".brand-wordmark { display: none; }"></textarea></label>
-        <div class="custom-css-help">Custom CSS is applied last, so it can override Waypoint styling.<br>For more examples, open the terminal man page.</div>
         <div class="button-row settings-uploads">
-          <button id="openCssManBtn" class="ghost-btn" type="button">Open CSS Man Page</button>
-        </div>
-        <div class="button-row settings-uploads">
+          <button id="cssManBtn" class="ghost-btn" type="button">Open CSS Help</button>
           <button id="clearCustomCssBtn" class="ghost-btn" type="button">Clear Custom CSS</button>
+          <button id="resetAdvancedBtn" class="ghost-btn" type="button">Reset Advanced</button>
         </div>
       </div>
 
