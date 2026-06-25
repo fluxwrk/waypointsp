@@ -7,7 +7,7 @@
 ### A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.
 
 <p>
-  <img src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp?label=Release">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp">
   <img src="https://img.shields.io/github/license/waypointsp-dev/waypointsp">
   <img src="https://img.shields.io/github/last-commit/waypointsp-dev/waypointsp">
 </p>
