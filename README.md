@@ -1,9 +1,16 @@
 ﻿
 # Waypoint
 
-> **A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.**
+<div align="center">
 
-  
+    <img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
+
+### A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.
+
+![GitHub Release](https://img.shields.io/github/v/release/waypointsp-dev/waypointsp)
+![License](https://img.shields.io/github/license/waypointsp-dev/waypointsp)
+</div>
+
 
 ----------
 
@@ -50,7 +57,24 @@
 
 ## Screenshots
 
-> _(Coming soon)_
+<div align="center">
+
+![Dashboard](screenshots/maintokyo.png)
+
+</div>
+
+<details><summary><strong>More Screenshots</strong></summary>
+
+<div align="center">
+
+![Dashboard](screenshots/compactlistgruvbox.png)
+![Dashboard](screenshots/minimal.png)
+![Dashboard](screenshots/msettings.png)
+![Dashboard](screenshots/wpdemo.gif)
+
+</div>
+
+</details>
 
 ----------
 
