@@ -1,62 +1,274 @@
 {
-  "Development": [
-    { "name": "GitHub", "url": "https://github.com" },
-    { "name": "GitLab", "url": "https://gitlab.com" },
-    { "name": "Stack Overflow", "url": "https://stackoverflow.com" },
-    { "name": "MDN", "url": "https://developer.mozilla.org" },
-    { "name": "DevDocs", "url": "https://devdocs.io" },
-    { "name": "CodePen", "url": "https://codepen.io" },
-    { "name": "Can I Use", "url": "https://caniuse.com" },
-    { "name": "Regex101", "url": "https://regex101.com" }
+  "sections": [
+    {
+      "name": "Development",
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com"
+        },
+        {
+          "name": "GitLab",
+          "url": "https://gitlab.com"
+        },
+        {
+          "name": "Stack Overflow",
+          "url": "https://stackoverflow.com"
+        },
+        {
+          "name": "MDN",
+          "url": "https://developer.mozilla.org"
+        },
+        {
+          "name": "DevDocs",
+          "url": "https://devdocs.io"
+        },
+        {
+          "name": "CodePen",
+          "url": "https://codepen.io"
+        },
+        {
+          "name": "Can I Use",
+          "url": "https://caniuse.com"
+        },
+        {
+          "name": "Regex101",
+          "url": "https://regex101.com"
+        }
+      ]
+    },
+    {
+      "name": "Linux",
+      "links": [
+        {
+          "name": "CachyOS",
+          "url": "https://cachyos.org"
+        },
+        {
+          "name": "Arch Linux",
+          "url": "https://archlinux.org"
+        },
+        {
+          "name": "Arch Wiki",
+          "url": "https://wiki.archlinux.org"
+        },
+        {
+          "name": "AUR",
+          "url": "https://aur.archlinux.org"
+        },
+        {
+          "name": "Flathub",
+          "url": "https://flathub.org"
+        },
+        {
+          "name": "ProtonDB",
+          "url": "https://protondb.com"
+        },
+        {
+          "name": "KDE",
+          "url": "https://kde.org"
+        },
+        {
+          "name": "GNOME",
+          "url": "https://www.gnome.org"
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "links": [
+        {
+          "name": "YouTube",
+          "url": "https://youtube.com"
+        },
+        {
+          "name": "Jellyfin",
+          "url": "https://jellyfin.org"
+        },
+        {
+          "name": "Plex",
+          "url": "https://plex.tv"
+        },
+        {
+          "name": "Spotify",
+          "url": "https://spotify.com"
+        },
+        {
+          "name": "IMDb",
+          "url": "https://imdb.com"
+        },
+        {
+          "name": "Letterboxd",
+          "url": "https://letterboxd.com"
+        },
+        {
+          "name": "Bandcamp",
+          "url": "https://bandcamp.com"
+        },
+        {
+          "name": "MusicBrainz",
+          "url": "https://musicbrainz.org"
+        }
+      ]
+    },
+    {
+      "name": "Utilities",
+      "links": [
+        {
+          "name": "Google Drive",
+          "url": "https://drive.google.com"
+        },
+        {
+          "name": "Google Maps",
+          "url": "https://maps.google.com"
+        },
+        {
+          "name": "Gmail",
+          "url": "https://mail.google.com"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://wikipedia.org"
+        },
+        {
+          "name": "Speedtest",
+          "url": "https://speedtest.net"
+        },
+        {
+          "name": "Excalidraw",
+          "url": "https://excalidraw.com"
+        },
+        {
+          "name": "Photopea",
+          "url": "https://photopea.com"
+        },
+        {
+          "name": "TinyPNG",
+          "url": "https://tinypng.com"
+        }
+      ]
+    },
+    {
+      "name": "Community",
+      "links": [
+        {
+          "name": "Reddit",
+          "url": "https://reddit.com"
+        },
+        {
+          "name": "Discord",
+          "url": "https://discord.com"
+        },
+        {
+          "name": "Hacker News",
+          "url": "https://news.ycombinator.com"
+        },
+        {
+          "name": "Lobsters",
+          "url": "https://lobste.rs"
+        },
+        {
+          "name": "Phoronix",
+          "url": "https://phoronix.com"
+        },
+        {
+          "name": "OMG! Linux",
+          "url": "https://www.omglinux.com"
+        },
+        {
+          "name": "XDA",
+          "url": "https://xda-developers.com"
+        },
+        {
+          "name": "Lemmy",
+          "url": "https://join-lemmy.org"
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "links": [
+        {
+          "name": "ChatGPT",
+          "url": "https://chatgpt.com"
+        },
+        {
+          "name": "Claude",
+          "url": "https://claude.ai"
+        },
+        {
+          "name": "Gemini",
+          "url": "https://gemini.google.com"
+        },
+        {
+          "name": "Perplexity",
+          "url": "https://perplexity.ai"
+        },
+        {
+          "name": "Hugging Face",
+          "url": "https://huggingface.co"
+        },
+        {
+          "name": "Ollama",
+          "url": "https://ollama.com"
+        },
+        {
+          "name": "LM Studio",
+          "url": "https://lmstudio.ai"
+        },
+        {
+          "name": "OpenRouter",
+          "url": "https://openrouter.ai"
+        }
+      ]
+    }
   ],
-  "Linux": [
-    { "name": "CachyOS", "url": "https://cachyos.org" },
-    { "name": "Arch Linux", "url": "https://archlinux.org" },
-    { "name": "Arch Wiki", "url": "https://wiki.archlinux.org" },
-    { "name": "AUR", "url": "https://aur.archlinux.org" },
-    { "name": "Flathub", "url": "https://flathub.org" },
-    { "name": "ProtonDB", "url": "https://protondb.com" },
-    { "name": "KDE", "url": "https://kde.org" },
-    { "name": "GNOME", "url": "https://www.gnome.org" }
-  ],
-  "Media": [
-    { "name": "YouTube", "url": "https://youtube.com" },
-    { "name": "Jellyfin", "url": "https://jellyfin.org" },
-    { "name": "Plex", "url": "https://plex.tv" },
-    { "name": "Spotify", "url": "https://spotify.com" },
-    { "name": "IMDb", "url": "https://imdb.com" },
-    { "name": "Letterboxd", "url": "https://letterboxd.com" },
-    { "name": "Bandcamp", "url": "https://bandcamp.com" },
-    { "name": "MusicBrainz", "url": "https://musicbrainz.org" }
-  ],
-  "Utilities": [
-    { "name": "Google Drive", "url": "https://drive.google.com" },
-    { "name": "Google Maps", "url": "https://maps.google.com" },
-    { "name": "Gmail", "url": "https://mail.google.com" },
-    { "name": "Wikipedia", "url": "https://wikipedia.org" },
-    { "name": "Speedtest", "url": "https://speedtest.net" },
-    { "name": "Excalidraw", "url": "https://excalidraw.com" },
-    { "name": "Photopea", "url": "https://photopea.com" },
-    { "name": "TinyPNG", "url": "https://tinypng.com" }
-  ],
-  "Community": [
-    { "name": "Reddit", "url": "https://reddit.com" },
-    { "name": "Discord", "url": "https://discord.com" },
-    { "name": "Hacker News", "url": "https://news.ycombinator.com" },
-    { "name": "Lobsters", "url": "https://lobste.rs" },
-    { "name": "Phoronix", "url": "https://phoronix.com" },
-    { "name": "OMG! Linux", "url": "https://www.omglinux.com" },
-    { "name": "XDA", "url": "https://xda-developers.com" },
-    { "name": "Lemmy", "url": "https://join-lemmy.org" }
-  ],
-  "AI": [
-    { "name": "ChatGPT", "url": "https://chatgpt.com" },
-    { "name": "Claude", "url": "https://claude.ai" },
-    { "name": "Gemini", "url": "https://gemini.google.com" },
-    { "name": "Perplexity", "url": "https://perplexity.ai" },
-    { "name": "Hugging Face", "url": "https://huggingface.co" },
-    { "name": "Ollama", "url": "https://ollama.com" },
-    { "name": "LM Studio", "url": "https://lmstudio.ai" },
-    { "name": "OpenRouter", "url": "https://openrouter.ai" }
-  ]
+  "settings": {
+    "theme": "catppuccin",
+    "backgroundMode": "wallpaper",
+    "overlay": 0,
+    "blur": 5,
+    "heroHeight": 240,
+    "heroZoom": 100,
+    "heroY": 50,
+    "heroStyle": "auto",
+    "heroFit": "cover",
+    "bookmarkLayout": "grid",
+    "userName": "demouser",
+    "weatherLocation": "10012",
+    "weatherUnit": "auto",
+    "searchEngine": "google",
+    "customSearchUrl": "",
+    "shortcut": "ctrlShiftSpace",
+    "fontFamily": "source",
+    "uiScale": 100,
+    "useCustomColors": false,
+    "customAccent": "#00d084",
+    "customPanel": "#09111a",
+    "customText": "#d8dee9",
+    "windowTransparency": 100,
+    "terminalTransparency": 60,
+    "useCustomTextColors": false,
+    "sectionTitleColor": "#d8dee9",
+    "bookmarkTextColor": "#d8dee9",
+    "mutedTextColor": "#9aa4b8",
+    "terminalTextColor": "#d9e5f6",
+    "statusTextColor": "#d8dee9",
+    "layoutPreset": "classic",
+    "showLogo": true,
+    "showWordmark": true,
+    "showClock": true,
+    "showWeather": true,
+    "showSearch": true,
+    "showSectionTitles": true,
+    "bookmarkColumns": "auto",
+    "bookmarkFontSize": 13,
+    "bookmarkIconSize": 36,
+    "customCss": "",
+    "terminalLeft": null,
+    "terminalTop": null,
+    "settingsLeft": null,
+    "settingsTop": null,
+    "lastModified": "2026-06-25T07:27:50.176Z"
+  }
 }
