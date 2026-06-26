@@ -93,6 +93,74 @@ const defaultData = {
     }
   ],
   "settings": {
+    "theme": "nord",
+    "backgroundMode": "wallpaper",
+    "overlay": 35,
+    "blur": 0,
+    "heroHeight": 240,
+    "heroZoom": 100,
+    "heroY": 50,
+    "heroStyle": "auto",
+    "heroFit": "cover",
+    "bookmarkLayout": "list",
+    "userName": "user",
+    "weatherLocation": "",
+    "weatherUnit": "auto",
+    "searchEngine": "google",
+    "customSearchUrl": "",
+    "shortcut": "ctrlShiftSpace",
+    "fontFamily": "source",
+    "uiScale": 100,
+    "useCustomColors": false,
+    "customAccent": "#00d084",
+    "customPanel": "#09111a",
+    "customText": "#d8dee9",
+    "windowTransparency": 100,
+    "terminalTransparency": 92,
+    "useCustomTextColors": false,
+    "sectionTitleColor": "#d8dee9",
+    "bookmarkTextColor": "#d8dee9",
+    "mutedTextColor": "#9aa4b8",
+    "terminalTextColor": "#d9e5f6",
+    "statusTextColor": "#d8dee9",
+    "layoutPreset": "classic",
+    "showLogo": true,
+    "showWordmark": true,
+    "showClock": true,
+    "showWeather": true,
+    "showSearch": true,
+    "showSectionTitles": true,
+    "bookmarkColumns": "auto",
+    "bookmarkFontSize": 13,
+    "bookmarkIconSize": 22,
+    "customCss": "",
+    "terminalLeft": null,
+    "terminalTop": null,
+    "settingsLeft": null,
+    "settingsTop": null,
+    "lastModified": null
+  }
+};
+
+const bundledDemoData = {
+  "sections": [
+    {
+      "name": "Getting Started",
+      "links": [
+        {
+          "name": "Welcome",
+          "url": "waypoint:welcome",
+          "icon": "\ud83d\udcd6"
+        },
+        {
+          "name": "Settings",
+          "url": "waypoint:settings",
+          "icon": "\u2699\ufe0f"
+        }
+      ]
+    }
+  ],
+  "settings": {
     "theme": "catppuccin",
     "backgroundMode": "wallpaper",
     "overlay": 0,
@@ -142,7 +210,7 @@ const defaultData = {
   }
 };
 
-let data = loadData();
+let data;
 let activeSection = 0;
 let editingLink = null;
 let draggedSectionIndex = null;
@@ -181,7 +249,7 @@ function favicon(url) { try { if (isWaypointUrl(url)) return ""; const host = ne
 function getTheme() { return THEMES[data.settings.theme] || THEMES.nord; }
 function countBookmarks() { return data.sections.reduce((sum, section) => sum + section.links.length, 0); }
 
-function loadData() {
+function loadStoredProfile() {
   const saved = safeParse(localStorage.getItem(KEY));
   if (saved) return normalizeData(saved);
   for (const oldKey of OLD_KEYS) {
@@ -192,28 +260,25 @@ function loadData() {
       return migrated;
     }
   }
-  return structuredClone(defaultData);
+  return null;
 }
 
-function hasStoredProfile() {
-  if (localStorage.getItem(KEY)) return true;
-  return OLD_KEYS.some(oldKey => localStorage.getItem(oldKey));
-}
-
-async function loadDemoProfileOnFirstLaunch() {
-  if (hasStoredProfile()) return false;
+async function loadDemoProfile() {
   try {
     const response = await fetch("demo.json", { cache: "no-store" });
     if (!response.ok) throw new Error("demo profile unavailable");
-    const profile = await response.json();
-    data = normalizeData(profile);
-    save();
-    return true;
+    return normalizeData(await response.json());
   } catch {
-    data = normalizeData(defaultData);
-    save();
-    return false;
+    return normalizeData(bundledDemoData);
   }
+}
+
+async function loadInitialProfile() {
+  const stored = loadStoredProfile();
+  if (stored) return stored;
+  const demoProfile = await loadDemoProfile();
+  localStorage.setItem(KEY, JSON.stringify(demoProfile));
+  return demoProfile;
 }
 
 function normalizeData(input) {
@@ -567,7 +632,7 @@ function renderSections() {
 
   data.sections.forEach((section, sectionIndex) => {
     const sectionEl = document.createElement("article");
-    sectionEl.className = "section";
+    sectionEl.className = `section${section.links.length ? "" : " empty-section"}`;
     sectionEl.draggable = true;
     sectionEl.dataset.sectionIndex = sectionIndex;
     sectionEl.innerHTML = `
@@ -677,14 +742,30 @@ function setupSectionDrag(sectionEl, sectionIndex) {
     document.querySelectorAll(".dragging-section,.section-drop-before,.section-drop-after").forEach(el => el.classList.remove("dragging-section", "section-drop-before", "section-drop-after"));
   });
   sectionEl.addEventListener("dragover", event => {
+    if (draggedLink) {
+      event.preventDefault();
+      event.stopPropagation();
+      sectionEl.querySelector(".links")?.classList.add("drag-over");
+      return;
+    }
     if (draggedSectionIndex === null || draggedSectionIndex === sectionIndex) return;
     event.preventDefault();
     const before = event.offsetY < sectionEl.offsetHeight / 2;
     sectionEl.classList.toggle("section-drop-before", before);
     sectionEl.classList.toggle("section-drop-after", !before);
   });
-  sectionEl.addEventListener("dragleave", () => sectionEl.classList.remove("section-drop-before", "section-drop-after"));
+  sectionEl.addEventListener("dragleave", event => {
+    if (!sectionEl.contains(event.relatedTarget)) sectionEl.querySelector(".links")?.classList.remove("drag-over");
+    sectionEl.classList.remove("section-drop-before", "section-drop-after");
+  });
   sectionEl.addEventListener("drop", event => {
+    if (draggedLink) {
+      event.preventDefault();
+      event.stopPropagation();
+      sectionEl.querySelector(".links")?.classList.remove("drag-over");
+      moveLink(draggedLink.sectionIndex, draggedLink.linkIndex, sectionIndex, data.sections[sectionIndex].links.length);
+      return;
+    }
     if (draggedSectionIndex === null || draggedSectionIndex === sectionIndex) return;
     event.preventDefault();
     const before = event.offsetY < sectionEl.offsetHeight / 2;
@@ -1515,7 +1596,7 @@ function executeButtonCommand(command) {
 }
 
 function resetEverything() {
-  if (!confirm("Reset Waypoint to factory defaults? This clears bookmarks, settings, custom wallpaper, custom banner, and weather cache.")) return;
+  if (!confirm("Reset Waypoint to factory defaults? This clears bookmarks, settings, custom wallpaper, custom banner, and weather cache. It will not reload demo.json.")) return;
   localStorage.removeItem(KEY);
   localStorage.removeItem(CUSTOM_BG_KEY);
   localStorage.removeItem(CUSTOM_HERO_KEY);
@@ -1746,8 +1827,8 @@ function bindSetting(id, eventName, setter) { $(id)?.addEventListener(eventName,
 function bindNumber(id, key, after) { $(id)?.addEventListener("input", e => { data.settings[key] = Number(e.target.value); save(); after?.(); renderTerminal(); }); }
 
 async function initWaypoint() {
+  data = await loadInitialProfile();
   bindEvents();
-  await loadDemoProfileOnFirstLaunch();
   render();
   updateClock();
   setInterval(updateClock, 1000);
@@ -1875,12 +1956,29 @@ function centerText(text, width) {
   return " ".repeat(left) + value + " ".repeat(space - left);
 }
 
+function wrapGuideLine(line, width) {
+  const max = width - 2;
+  const value = String(line);
+  if (!value.trim()) return [""];
+  const indent = value.match(/^\s*/)?.[0] || "";
+  const words = value.trim().split(/\s+/);
+  const lines = [];
+  let current = indent + words.shift();
+  words.forEach(word => {
+    if ((current + " " + word).length <= max) current += " " + word;
+    else { lines.push(current); current = indent + word; }
+  });
+  lines.push(current);
+  return lines;
+}
+
 function boxLines(title, lines) {
-  const width = 88;
+  const width = 84;
   const top = `╔${"═".repeat(width)}╗`;
   const mid = `╠${"═".repeat(width)}╣`;
   const bottom = `╚${"═".repeat(width)}╝`;
-  const body = lines.map(line => `║ ${String(line).padEnd(width - 2, " ").slice(0, width - 2)} ║`);
+  const wrapped = lines.flatMap(line => wrapGuideLine(line, width));
+  const body = wrapped.map(line => `║ ${String(line).padEnd(width - 2, " ")} ║`);
   return [top, `║${centerText(title, width)}║`, mid, ...body, bottom].join("\n");
 }
 

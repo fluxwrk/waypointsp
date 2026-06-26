@@ -2589,11 +2589,11 @@ label {
 .link.internal-link img[hidden] { display: none !important; }
 
 #terminalModal .command-output:has(.welcome-tui) {
-  min-height: 420px;
-  max-height: min(70vh, 680px);
+  min-height: 460px;
+  max-height: min(74vh, 720px);
 }
 #terminalModal .terminal-window:has(.welcome-tui) {
-  width: min(1120px, calc(100vw - 48px));
+  width: min(1280px, calc(100vw - 32px));
 }
 
 .section-add-tile {
@@ -2640,7 +2640,7 @@ body.bookmark-grid-layout .section-add-tile {
   min-height: 104px !important;
 }
 .welcome-tui {
-  font-size: clamp(17px, 1.28vw, 21px) !important;
+  font-size: clamp(15px, 1.02vw, 17px) !important;
   line-height: 1.32 !important;
   letter-spacing: .005em;
 }
