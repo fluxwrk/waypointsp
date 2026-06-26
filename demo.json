@@ -1,0 +1,67 @@
+{
+  "sections": [
+    {
+      "name": "Getting Started",
+      "links": [
+        {
+          "name": "Welcome",
+          "url": "waypoint:welcome",
+          "icon": "📖"
+        },
+        {
+          "name": "Settings",
+          "url": "waypoint:settings",
+          "icon": "⚙️"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "theme": "catppuccin",
+    "backgroundMode": "wallpaper",
+    "overlay": 0,
+    "blur": 5,
+    "heroHeight": 240,
+    "heroZoom": 100,
+    "heroY": 50,
+    "heroStyle": "auto",
+    "heroFit": "cover",
+    "bookmarkLayout": "grid",
+    "userName": "demouser",
+    "weatherLocation": "10012",
+    "weatherUnit": "auto",
+    "searchEngine": "google",
+    "customSearchUrl": "",
+    "shortcut": "ctrlShiftSpace",
+    "fontFamily": "source",
+    "uiScale": 100,
+    "useCustomColors": false,
+    "customAccent": "#00d084",
+    "customPanel": "#09111a",
+    "customText": "#d8dee9",
+    "windowTransparency": 100,
+    "terminalTransparency": 60,
+    "useCustomTextColors": false,
+    "sectionTitleColor": "#d8dee9",
+    "bookmarkTextColor": "#d8dee9",
+    "mutedTextColor": "#9aa4b8",
+    "terminalTextColor": "#d9e5f6",
+    "statusTextColor": "#d8dee9",
+    "layoutPreset": "classic",
+    "showLogo": true,
+    "showWordmark": true,
+    "showClock": true,
+    "showWeather": true,
+    "showSearch": true,
+    "showSectionTitles": true,
+    "bookmarkColumns": "auto",
+    "bookmarkFontSize": 13,
+    "bookmarkIconSize": 36,
+    "customCss": "",
+    "terminalLeft": null,
+    "terminalTop": null,
+    "settingsLeft": null,
+    "settingsTop": null,
+    "lastModified": "2026-06-25T07:27:50.176Z"
+  }
+}

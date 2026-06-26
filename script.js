@@ -75,277 +75,70 @@ const THEMES = {
 };
 
 const defaultData = {
-  sections: [
+  "sections": [
     {
-        name: "Development",
-        links: [
-            {
-                name: "GitHub",
-                url: "https://github.com"
-            },
-            {
-                name: "GitLab",
-                url: "https://gitlab.com"
-            },
-            {
-                name: "Stack Overflow",
-                url: "https://stackoverflow.com"
-            },
-            {
-                name: "MDN",
-                url: "https://developer.mozilla.org"
-            },
-            {
-                name: "DevDocs",
-                url: "https://devdocs.io"
-            },
-            {
-                name: "CodePen",
-                url: "https://codepen.io"
-            },
-            {
-                name: "Can I Use",
-                url: "https://caniuse.com"
-            },
-            {
-                name: "Regex101",
-                url: "https://regex101.com"
-            }
-        ]
-    },
-    {
-        name: "Linux",
-        links: [
-            {
-                name: "CachyOS",
-                url: "https://cachyos.org"
-            },
-            {
-                name: "Arch Linux",
-                url: "https://archlinux.org"
-            },
-            {
-                name: "Arch Wiki",
-                url: "https://wiki.archlinux.org"
-            },
-            {
-                name: "AUR",
-                url: "https://aur.archlinux.org"
-            },
-            {
-                name: "Flathub",
-                url: "https://flathub.org"
-            },
-            {
-                name: "ProtonDB",
-                url: "https://protondb.com"
-            },
-            {
-                name: "KDE",
-                url: "https://kde.org"
-            },
-            {
-                name: "GNOME",
-                url: "https://www.gnome.org"
-            }
-        ]
-    },
-    {
-        name: "Media",
-        links: [
-            {
-                name: "YouTube",
-                url: "https://youtube.com"
-            },
-            {
-                name: "Jellyfin",
-                url: "https://jellyfin.org"
-            },
-            {
-                name: "Plex",
-                url: "https://plex.tv"
-            },
-            {
-                name: "Spotify",
-                url: "https://spotify.com"
-            },
-            {
-                name: "IMDb",
-                url: "https://imdb.com"
-            },
-            {
-                name: "Letterboxd",
-                url: "https://letterboxd.com"
-            },
-            {
-                name: "Bandcamp",
-                url: "https://bandcamp.com"
-            },
-            {
-                name: "MusicBrainz",
-                url: "https://musicbrainz.org"
-            }
-        ]
-    },
-    {
-        name: "Utilities",
-        links: [
-            {
-                name: "Google Drive",
-                url: "https://drive.google.com"
-            },
-            {
-                name: "Google Maps",
-                url: "https://maps.google.com"
-            },
-            {
-                name: "Gmail",
-                url: "https://mail.google.com"
-            },
-            {
-                name: "Wikipedia",
-                url: "https://wikipedia.org"
-            },
-            {
-                name: "Speedtest",
-                url: "https://speedtest.net"
-            },
-            {
-                name: "Excalidraw",
-                url: "https://excalidraw.com"
-            },
-            {
-                name: "Photopea",
-                url: "https://photopea.com"
-            },
-            {
-                name: "TinyPNG",
-                url: "https://tinypng.com"
-            }
-        ]
-    },
-    {
-        name: "Community",
-        links: [
-            {
-                name: "Reddit",
-                url: "https://reddit.com"
-            },
-            {
-                name: "Discord",
-                url: "https://discord.com"
-            },
-            {
-                name: "Hacker News",
-                url: "https://news.ycombinator.com"
-            },
-            {
-                name: "Lobsters",
-                url: "https://lobste.rs"
-            },
-            {
-                name: "Phoronix",
-                url: "https://phoronix.com"
-            },
-            {
-                name: "OMG! Linux",
-                url: "https://www.omglinux.com"
-            },
-            {
-                name: "XDA",
-                url: "https://xda-developers.com"
-            },
-            {
-                name: "Lemmy",
-                url: "https://join-lemmy.org"
-            }
-        ]
-    },
-    {
-        name: "AI",
-        links: [
-            {
-                name: "ChatGPT",
-                url: "https://chatgpt.com"
-            },
-            {
-                name: "Claude",
-                url: "https://claude.ai"
-            },
-            {
-                name: "Gemini",
-                url: "https://gemini.google.com"
-            },
-            {
-                name: "Perplexity",
-                url: "https://perplexity.ai"
-            },
-            {
-                name: "Hugging Face",
-                url: "https://huggingface.co"
-            },
-            {
-                name: "Ollama",
-                url: "https://ollama.com"
-            },
-            {
-                name: "LM Studio",
-                url: "https://lmstudio.ai"
-            },
-            {
-                name: "OpenRouter",
-                url: "https://openrouter.ai"
-            }
-        ]
+      "name": "Getting Started",
+      "links": [
+        {
+          "name": "Welcome",
+          "url": "waypoint:welcome",
+          "icon": "📖"
+        },
+        {
+          "name": "Settings",
+          "url": "waypoint:settings",
+          "icon": "⚙️"
+        }
+      ]
     }
-],
-  settings: {
-    theme: "nord",
-    backgroundMode: "wallpaper",
-    overlay: 35,
-    blur: 0,
-    heroHeight: 330,
-    heroZoom: 100,
-    heroY: 50,
-    heroStyle: "auto",
-    heroFit: "cover",
-    bookmarkLayout: "list",
-    userName: "",
-    weatherLocation: "",
-    weatherUnit: "auto",
-    searchEngine: "google",
-    customSearchUrl: "",
-    shortcut: "none",
-    fontFamily: "system",
-    uiScale: 100,
-    useCustomColors: false,
-    customAccent: "#00d084",
-    customPanel: "#09111a",
-    customText: "#d8dee9",
-    windowTransparency: 92,
-    terminalTransparency: 94,
-    useCustomTextColors: false,
-    sectionTitleColor: "#d8dee9",
-    bookmarkTextColor: "#d8dee9",
-    mutedTextColor: "#9aa4b8",
-    terminalTextColor: "#d9e5f6",
-    statusTextColor: "#d8dee9",
-    layoutPreset: "classic",
-    showLogo: true,
-    showWordmark: true,
-    showClock: true,
-    showWeather: true,
-    showSearch: true,
-    showSectionTitles: true,
-    bookmarkColumns: "auto",
-    bookmarkFontSize: 12,
-    bookmarkIconSize: 22,
-    customCss: "",
-    terminalLeft: null,
-    terminalTop: null,
-    settingsLeft: null,
-    settingsTop: null,
-    lastModified: null
+  ],
+  "settings": {
+    "theme": "catppuccin",
+    "backgroundMode": "wallpaper",
+    "overlay": 0,
+    "blur": 5,
+    "heroHeight": 240,
+    "heroZoom": 100,
+    "heroY": 50,
+    "heroStyle": "auto",
+    "heroFit": "cover",
+    "bookmarkLayout": "grid",
+    "userName": "demouser",
+    "weatherLocation": "10012",
+    "weatherUnit": "auto",
+    "searchEngine": "google",
+    "customSearchUrl": "",
+    "shortcut": "ctrlShiftSpace",
+    "fontFamily": "source",
+    "uiScale": 100,
+    "useCustomColors": false,
+    "customAccent": "#00d084",
+    "customPanel": "#09111a",
+    "customText": "#d8dee9",
+    "windowTransparency": 100,
+    "terminalTransparency": 60,
+    "useCustomTextColors": false,
+    "sectionTitleColor": "#d8dee9",
+    "bookmarkTextColor": "#d8dee9",
+    "mutedTextColor": "#9aa4b8",
+    "terminalTextColor": "#d9e5f6",
+    "statusTextColor": "#d8dee9",
+    "layoutPreset": "classic",
+    "showLogo": true,
+    "showWordmark": true,
+    "showClock": true,
+    "showWeather": true,
+    "showSearch": true,
+    "showSectionTitles": true,
+    "bookmarkColumns": "auto",
+    "bookmarkFontSize": 13,
+    "bookmarkIconSize": 36,
+    "customCss": "",
+    "terminalLeft": null,
+    "terminalTop": null,
+    "settingsLeft": null,
+    "settingsTop": null,
+    "lastModified": "2026-06-25T07:27:50.176Z"
   }
 };
 
@@ -363,8 +156,28 @@ function safeParse(value) { try { return JSON.parse(value); } catch { return nul
 function escapeHtml(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
 function sanitizeUserName(value) { return String(value || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 32); }
 function displayUserName() { return data.settings.userName || "user"; }
-function normalizeUrl(url) { const t = String(url || "").trim(); if (!t) return ""; return /^https?:\/\//i.test(t) ? t : `https://${t}`; }
-function favicon(url) { try { return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(new URL(url).hostname)}&sz=32`; } catch { return ""; } }
+const INTERNAL_ACTIONS = {
+  welcome: { icon: "📖", label: "Welcome", aliases: ["guide", "tutorial"], run: () => startWelcomeGuide() },
+  settings: { icon: "⚙️", label: "Settings", aliases: [], run: () => openSettingsPage("appearance") },
+  terminal: { icon: "▣", label: "Terminal", aliases: [], run: () => openModal("terminalModal") }
+};
+function isWaypointUrl(url) { return /^waypoint:/i.test(String(url || "").trim()); }
+function waypointActionKey(url) { return String(url || "").replace(/^waypoint:/i, "").trim().toLowerCase(); }
+function internalActionForUrl(url) {
+  const key = waypointActionKey(url);
+  if (INTERNAL_ACTIONS[key]) return INTERNAL_ACTIONS[key];
+  return Object.values(INTERNAL_ACTIONS).find(action => action.aliases.includes(key)) || null;
+}
+function waypointIcon(url) { return internalActionForUrl(url)?.icon || "◆"; }
+function cleanInternalLinkName(name, url) {
+  const action = internalActionForUrl(url);
+  if (!action) return String(name || url || "").trim();
+  const raw = String(name || action.label).trim();
+  const cleaned = raw.startsWith(action.icon) ? raw.slice(action.icon.length).trim() : raw;
+  return cleaned || action.label;
+}
+function normalizeUrl(url) { const t = String(url || "").trim(); if (!t) return ""; if (isWaypointUrl(t)) return t; return /^https?:\/\//i.test(t) ? t : `https://${t}`; }
+function favicon(url) { try { if (isWaypointUrl(url)) return ""; const host = new URL(url).hostname; return host ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32` : ""; } catch { return ""; } }
 function getTheme() { return THEMES[data.settings.theme] || THEMES.nord; }
 function countBookmarks() { return data.sections.reduce((sum, section) => sum + section.links.length, 0); }
 
@@ -382,11 +195,37 @@ function loadData() {
   return structuredClone(defaultData);
 }
 
+function hasStoredProfile() {
+  if (localStorage.getItem(KEY)) return true;
+  return OLD_KEYS.some(oldKey => localStorage.getItem(oldKey));
+}
+
+async function loadDemoProfileOnFirstLaunch() {
+  if (hasStoredProfile()) return false;
+  try {
+    const response = await fetch("demo.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("demo profile unavailable");
+    const profile = await response.json();
+    data = normalizeData(profile);
+    save();
+    return true;
+  } catch {
+    data = normalizeData(defaultData);
+    save();
+    return false;
+  }
+}
+
 function normalizeData(input) {
   const normalized = structuredClone(defaultData);
 
   const normalizeLinks = links => Array.isArray(links)
-    ? links.filter(link => link && link.url).map(link => ({ name: String(link.name || link.url), url: normalizeUrl(link.url), icon: typeof link.icon === "string" ? link.icon : "" }))
+    ? links.filter(link => link && link.url).map(link => {
+      const url = normalizeUrl(link.url);
+      const icon = isWaypointUrl(url) ? waypointIcon(url) : typeof link.icon === "string" && link.icon ? link.icon : "";
+      const name = isWaypointUrl(url) ? cleanInternalLinkName(link.name || link.url, url) : String(link.name || link.url);
+      return { name, url, icon };
+    })
     : [];
 
   if (Array.isArray(input.sections)) {
@@ -765,14 +604,20 @@ function renderSections() {
       row.draggable = true;
       row.dataset.sectionIndex = sectionIndex;
       row.dataset.linkIndex = linkIndex;
+      const iconSource = isWaypointUrl(link.url) ? waypointIcon(link.url) : link.icon || favicon(link.url);
+      const internalClass = isWaypointUrl(link.url) ? " internal-link" : "";
+      const displayName = isWaypointUrl(link.url) ? cleanInternalLinkName(link.name, link.url) : link.name;
+      row.className += internalClass;
       row.innerHTML = `
-        <img src="${escapeHtml(link.icon || favicon(link.url))}" alt="" aria-hidden="true">
-        <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(link.name)}</a>
+        <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "")}</span>
+        <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
+        <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
         <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
         <span class="delete-link" title="Delete link" aria-label="Delete link">×</span>
       `;
       row.addEventListener("click", event => {
         if (event.target.closest(".delete-link") || event.target.closest(".edit-link") || event.defaultPrevented) return;
+        if (handleWaypointLink(link.url)) return;
         window.location.href = link.url;
       });
       row.querySelector(".edit-link").addEventListener("click", event => {
@@ -797,6 +642,25 @@ function renderSections() {
 
     container.appendChild(sectionEl);
   });
+
+  const addTile = document.createElement("button");
+  addTile.className = "section-add-tile";
+  addTile.type = "button";
+  addTile.title = "Add Section";
+  addTile.setAttribute("aria-label", "Add Section");
+  addTile.innerHTML = `<span aria-hidden="true">+</span>`;
+  addTile.addEventListener("click", () => addSection());
+  container.appendChild(addTile);
+}
+
+function handleWaypointLink(url) {
+  if (!isWaypointUrl(url)) return false;
+  const action = internalActionForUrl(url);
+  if (action) { action.run(); return true; }
+  const key = waypointActionKey(url);
+  pushTerminal(terminalBlock(commandResult(`Unknown Waypoint action: ${escapeHtml(key)}`, "terminal-warning")));
+  openModal("terminalModal");
+  return true;
 }
 
 function setupSectionDrag(sectionEl, sectionIndex) {
@@ -944,7 +808,9 @@ function saveLink() {
   const name = $("linkName")?.value.trim();
   const rawUrl = $("linkUrl")?.value.trim();
   if (!name || !rawUrl) return;
-  const nextLink = { name, url: normalizeUrl(rawUrl), icon: pendingLinkIcon || "" };
+  const normalizedUrl = normalizeUrl(rawUrl);
+  const nextName = isWaypointUrl(normalizedUrl) ? cleanInternalLinkName(name, normalizedUrl) : name;
+  const nextLink = { name: nextName, url: normalizedUrl, icon: isWaypointUrl(normalizedUrl) ? waypointIcon(normalizedUrl) : pendingLinkIcon || "" };
   if (editingLink) data.sections[editingLink.sectionIndex].links[editingLink.linkIndex] = nextLink;
   else data.sections[activeSection].links.push(nextLink);
   editingLink = null;
@@ -1006,7 +872,8 @@ function addLinkByCommand(sectionName, linkName, url) {
   if (sectionIndex < 0) return `No section named <strong>${escapeHtml(sectionName)}</strong>.`;
   const safeUrl = normalizeUrl(url);
   if (!safeUrl) return "Missing URL.";
-  data.sections[sectionIndex].links.push({ name: String(linkName).trim() || safeUrl, url: safeUrl });
+  const safeName = isWaypointUrl(safeUrl) ? cleanInternalLinkName(linkName, safeUrl) : String(linkName).trim() || safeUrl;
+  data.sections[sectionIndex].links.push({ name: safeName, url: safeUrl, icon: isWaypointUrl(safeUrl) ? waypointIcon(safeUrl) : "" });
   save();
   render();
   return `Added <strong>${escapeHtml(linkName)}</strong> to <strong>${escapeHtml(data.sections[sectionIndex].name)}</strong>.`;
@@ -1794,6 +1661,7 @@ function bindEvents() {
   document.querySelectorAll("[data-command]").forEach(btn => btn.addEventListener("click", () => executeButtonCommand(btn.dataset.command)));
 
   $("commandInput")?.addEventListener("keydown", e => {
+    if (handleWelcomeGuideKey(e)) return;
     if (e.key === "Enter") { runCommand(e.target.value); e.target.value = ""; }
   });
 
@@ -1862,6 +1730,7 @@ function bindEvents() {
   $("resetHeroBtn")?.addEventListener("click", () => { localStorage.removeItem(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
 
   document.addEventListener("keydown", event => {
+    if (welcomeGuideState.active && event.key === "Escape") return;
     if (event.key === "Escape") return closeAllModals();
     if (event.target.matches("input, textarea, select") || event.target.isContentEditable) return;
     if (data.settings.shortcut === "altT" && event.altKey && !event.ctrlKey && !event.shiftKey && event.key.toLowerCase() === "t") {
@@ -1876,12 +1745,16 @@ function bindEvents() {
 function bindSetting(id, eventName, setter) { $(id)?.addEventListener(eventName, e => setter(e.target.value)); }
 function bindNumber(id, key, after) { $(id)?.addEventListener("input", e => { data.settings[key] = Number(e.target.value); save(); after?.(); renderTerminal(); }); }
 
-bindEvents();
-render();
-updateClock();
-setInterval(updateClock, 1000);
-refreshWeather(false);
-setInterval(() => refreshWeather(false), 30 * 60 * 1000);
+async function initWaypoint() {
+  bindEvents();
+  await loadDemoProfileOnFirstLaunch();
+  render();
+  updateClock();
+  setInterval(updateClock, 1000);
+  refreshWeather(false);
+  setInterval(() => refreshWeather(false), 30 * 60 * 1000);
+}
+initWaypoint();
 
 
 function terminalMarkup(text, className = "") {
@@ -1910,6 +1783,148 @@ function currentConfigText() {
     `Bookmarks: ${countBookmarks()}`
   ].join("\n");
 }
+const WELCOME_GUIDE = [
+  {
+    title: "Getting Started",
+    body: [
+      "Waypoint is a Linux-inspired browser start page.",
+      "Use it as a dashboard, launcher, bookmark manager, and command center.",
+      "Click links normally, or open the terminal and control Waypoint with commands.",
+      "Your configuration is stored locally in this browser."
+    ]
+  },
+  {
+    title: "Managing Bookmarks",
+    body: [
+      "Graphical interface:",
+      "  • Click + on a section to add a bookmark.",
+      "  • Click ✎ to edit a bookmark.",
+      "  • Click × to remove a bookmark or section.",
+      "  • Drag bookmarks to reorder or move them between sections.",
+      "  • Rename a section by clicking its title.",
+      "",
+      "Terminal examples:",
+      "  add section \"Media\"",
+      "  add link \"Media\" \"Jellyfin\" https://jellyfin.org",
+      "  remove section \"Media\""
+    ]
+  },
+  {
+    title: "Terminal Commands",
+    body: [
+      "The terminal is a real Waypoint control surface.",
+      "Useful commands:",
+      "  help",
+      "  fetch",
+      "  ls themes",
+      "  ls config",
+      "  help add",
+      "  help theme",
+      "  help layout",
+      "",
+      "You can reopen this guide anytime with:",
+      "  welcome"
+    ]
+  },
+  {
+    title: "Appearance & Settings",
+    body: [
+      "Open Settings from the ⚙️ bookmark, or type:",
+      "  settings",
+      "",
+      "Common terminal customizations:",
+      "  theme nord",
+      "  preset minimal",
+      "  layout compact",
+      "  font jetbrains",
+      "  window transparency 92",
+      "  terminal transparency 85"
+    ]
+  },
+  {
+    title: "Import & Export",
+    body: [
+      "Waypoint profiles are JSON files.",
+      "Export includes bookmarks, themes, colors, layout, weather, fonts, and terminal settings.",
+      "",
+      "Commands:",
+      "  export",
+      "  import",
+      "",
+      "The live demo only loads demo.json on first launch. After that, your own local setup is preserved."
+    ]
+  },
+  {
+    title: "About Waypoint",
+    body: [
+      "Waypoint is built with HTML, CSS, and JavaScript.",
+      "No backend. No account. No tracking.",
+      "Everything you change is saved locally in your browser.",
+      "",
+      "Press Esc to leave this guide."
+    ]
+  }
+];
+
+let welcomeGuideState = { active: false, mode: "menu", index: 0 };
+
+function centerText(text, width) {
+  const value = String(text);
+  const space = Math.max(0, width - value.length);
+  const left = Math.floor(space / 2);
+  return " ".repeat(left) + value + " ".repeat(space - left);
+}
+
+function boxLines(title, lines) {
+  const width = 88;
+  const top = `╔${"═".repeat(width)}╗`;
+  const mid = `╠${"═".repeat(width)}╣`;
+  const bottom = `╚${"═".repeat(width)}╝`;
+  const body = lines.map(line => `║ ${String(line).padEnd(width - 2, " ").slice(0, width - 2)} ║`);
+  return [top, `║${centerText(title, width)}║`, mid, ...body, bottom].join("\n");
+}
+
+function renderWelcomeGuide() {
+  const out = $("commandOutput");
+  if (!out) return;
+  if (welcomeGuideState.mode === "menu") {
+    const rows = WELCOME_GUIDE.map((item, i) => i === welcomeGuideState.index ? `► ${item.title}  ←` : `  ${item.title}`);
+    const content = boxLines("Waypoint Guide", ["", ...rows, "", "↑↓ Move   Enter Select   Esc Exit"]);
+    out.innerHTML = `<pre class="welcome-tui">${escapeHtml(content)}</pre>`;
+  } else {
+    const page = WELCOME_GUIDE[welcomeGuideState.index];
+    const lines = [...page.body, "", "← Back   Esc Exit"];
+    const content = boxLines(page.title, lines);
+    out.innerHTML = `<pre class="welcome-tui welcome-tui-page">${escapeHtml(content)}</pre>`;
+  }
+}
+
+function startWelcomeGuide() {
+  welcomeGuideState = { active: true, mode: "menu", index: 0 };
+  openModal("terminalModal");
+  renderWelcomeGuide();
+  setTimeout(() => $("commandInput")?.focus(), 50);
+}
+
+function stopWelcomeGuide() {
+  welcomeGuideState.active = false;
+  pushTerminal(terminalBlock(commandResult("Welcome guide closed. Type help to see commands.")));
+}
+
+function handleWelcomeGuideKey(event) {
+  if (!welcomeGuideState.active) return false;
+  const handled = () => { event.preventDefault(); event.stopPropagation(); };
+  if (event.key === "Escape") { handled(); stopWelcomeGuide(); return true; }
+  if (welcomeGuideState.mode === "menu") {
+    if (event.key === "ArrowDown") { handled(); welcomeGuideState.index = (welcomeGuideState.index + 1) % WELCOME_GUIDE.length; renderWelcomeGuide(); return true; }
+    if (event.key === "ArrowUp") { handled(); welcomeGuideState.index = (welcomeGuideState.index - 1 + WELCOME_GUIDE.length) % WELCOME_GUIDE.length; renderWelcomeGuide(); return true; }
+    if (event.key === "Enter" || event.key === "ArrowRight") { handled(); welcomeGuideState.mode = "page"; renderWelcomeGuide(); return true; }
+  } else {
+    if (event.key === "ArrowLeft" || event.key === "Backspace" || event.key === "Enter") { handled(); welcomeGuideState.mode = "menu"; renderWelcomeGuide(); return true; }
+  }
+  return false;
+}
+
 function buildHelpText(topic = "") {
   const t = String(topic || "").trim().toLowerCase();
   const pages = {
@@ -1936,6 +1951,7 @@ function buildHelpText(topic = "") {
     "help             Show help or command help",
     "ls               List options and configuration",
     "settings         Open Settings",
+    "welcome          Open the Waypoint guide",
     "theme            Manage themes",
     "preset           Manage page layout presets",
     "layout           Manage bookmark layout",
@@ -2004,6 +2020,7 @@ function runCommand(commandRaw) {
   const done = html => pushTerminal(terminalBlock(blocks.join("") + (html || "")));
   const textOut = (text, cls) => done(commandResult(text, cls));
   if (head === "help") return done(terminalPre(buildHelpText(arg), "terminal-help"));
+  if (["welcome", "guide", "tutorial"].includes(head)) { startWelcomeGuide(); return; }
   if (head === "man") return done(fail("The man command was removed. Use help <topic> instead."));
   if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
   if (head === "fetch") return done(buildFastfetchHtml());

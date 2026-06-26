@@ -2256,7 +2256,7 @@ html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-book
 .layout-centered .toolbar-right { justify-content: center !important; margin-left: 0 !important; }
 .layout-centered .brand-wordmark { justify-self: center !important; margin: 0 !important; }
 .layout-dashboard .hero-image-card { min-height: 330px !important; }
-.fetch-output { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 26px; margin: 0; color: #d9e5f6; font: 800 13px/1.35 var(--mono); white-space: pre; }
+.fetch-output { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 26px; margin: 0; color: #d9e5f6; font: 850 clamp(15px, 1.15vw, 18px)/1.35 var(--mono); white-space: pre; }
 .fetch-logo { color: var(--waypoint-green, var(--accent)); text-shadow: 0 0 20px color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 62%); }
 .fetch-info strong { color: var(--waypoint-green, var(--accent)); }
 @media (max-width: 640px) { .fetch-output { grid-template-columns: 1fr; gap: 10px; font-size: 12px; } .settings-tabs { gap: 6px; } .settings-tab { padding: 8px 9px; } }
@@ -2311,7 +2311,7 @@ html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-book
   gap: 26px;
   margin: 8px 0 0;
   color: #d9e5f6;
-  font: 800 13px/1.35 var(--mono);
+  font: 850 clamp(15px, 1.15vw, 18px)/1.35 var(--mono);
   white-space: pre;
 }
 .fetch-logo {
@@ -2568,3 +2568,86 @@ label {
 .terminal-muted { color: #94a3b8; }
 .terminal-result strong, .terminal-help strong { color: var(--accent); }
 .custom-text-only input:disabled { opacity: .35; cursor: not-allowed; }
+.welcome-tui {
+  margin: 0;
+  padding: 2px 0 0;
+  color: #d9e5f6;
+  font: 850 clamp(15px, 1.15vw, 18px)/1.35 var(--mono);
+  white-space: pre;
+}
+.welcome-tui::selection { background: color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 55%); }
+.link.internal-link .link-icon-fallback {
+  width: var(--bookmark-icon-size, 22px);
+  height: var(--bookmark-icon-size, 22px);
+  min-width: var(--bookmark-icon-size, 22px);
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--bookmark-icon-size, 22px) * .82);
+  line-height: 1;
+}
+.link:not(.internal-link) .link-icon-fallback { display: none; }
+.link.internal-link img[hidden] { display: none !important; }
+
+#terminalModal .command-output:has(.welcome-tui) {
+  min-height: 420px;
+  max-height: min(70vh, 680px);
+}
+#terminalModal .terminal-window:has(.welcome-tui) {
+  width: min(1120px, calc(100vw - 48px));
+}
+
+.section-add-tile {
+  min-height: 220px;
+  border: 1px dashed color-mix(in srgb, var(--accent), transparent 58%);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--panel), transparent 64%);
+  color: color-mix(in srgb, var(--accent), var(--text) 18%);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .10);
+  backdrop-filter: blur(18px);
+  display: grid;
+  place-items: center;
+  font: 900 34px var(--mono);
+  opacity: 0;
+  transform: scale(.985);
+  transition: opacity .16s ease, transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+  cursor: pointer;
+}
+.sections:hover .section-add-tile,
+.section-add-tile:focus-visible {
+  opacity: .72;
+  transform: scale(1);
+}
+.section-add-tile:hover,
+.section-add-tile:focus-visible {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--accent), transparent 18%);
+  background: color-mix(in srgb, var(--accent-soft), transparent 35%);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .20), 0 0 26px color-mix(in srgb, var(--accent), transparent 82%);
+  outline: 0;
+}
+.section-add-tile span {
+  line-height: 1;
+  transform: translateY(-1px);
+}
+body.bookmark-list-layout .section-add-tile {
+  min-height: 104px !important;
+  padding: 10px 12px !important;
+}
+body.bookmark-grid-layout .section-add-tile {
+  min-height: 132px !important;
+}
+.ui-hide-section-titles .section-add-tile {
+  min-height: 104px !important;
+}
+.welcome-tui {
+  font-size: clamp(17px, 1.28vw, 21px) !important;
+  line-height: 1.32 !important;
+  letter-spacing: .005em;
+}
+#terminalModal .command-output:has(.welcome-tui) {
+  min-height: 500px;
+  max-height: min(76vh, 760px);
+}
+#terminalModal .terminal-window:has(.welcome-tui) {
+  width: min(1280px, calc(100vw - 36px));
+}
