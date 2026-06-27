@@ -15,6 +15,31 @@ All notable changes to Waypoint will be documented in this file.
 
 ---
 
+## [1.3.0] - 2026-06-26
+
+### Added
+- Added interactive Welcome TUI guide.
+- Added internal `waypoint:` bookmark actions.
+- Added built-in Welcome and Settings starter bookmarks.
+- Added `demo.json` first-launch profile support.
+- Added hover/focus Add Section tile for creating sections from the homepage.
+
+### Changed
+- First launch now loads the full `demo.json` profile and saves it to local storage.
+- User changes now persist through the same profile save/load path after first launch.
+- Factory Reset now restores internal Waypoint defaults instead of reloading the demo profile.
+- Improved terminal Welcome guide sizing, spacing, and layout.
+- Centralized internal bookmark action handling for future built-in actions.
+
+### Fixed
+- Fixed first-launch profile loading only applying bookmarks instead of full appearance/profile settings.
+- Fixed second-launch failures caused by persisted demo profile data.
+- Fixed duplicate icons on internal bookmarks.
+- Fixed drag-and-drop into empty bookmark sections.
+- Fixed TUI text clipping in the Import/Export guide page.
+
+---
+
 ## [1.2.7] - 2026-06-24
 
 ### Fixed
