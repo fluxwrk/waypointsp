@@ -2665,3 +2665,40 @@ body.bookmark-grid-layout .section-add-tile {
 .hero.hero-size-small .search {
   width: min(720px, calc(100% - 54px)) !important;
 }
+
+
+/* v1.4.0-dev3 search/banner relationship */
+.hero:not(.banner-hidden) {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.hero:not(.banner-hidden) .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+}
+
+.hero.hero-size-small:not(.banner-hidden) .search {
+  width: min(720px, calc(100% - 54px)) !important;
+}
+
+.hero.hero-size-large:not(.banner-hidden) .search {
+  width: min(820px, calc(100% - 220px)) !important;
+}
+
+@media (max-width: 900px) {
+  .hero:not(.banner-hidden) .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero:not(.banner-hidden) .search {
+    width: calc(100% - 24px) !important;
+  }
+}

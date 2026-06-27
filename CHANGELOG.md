@@ -16,6 +16,7 @@ All notable changes to Waypoint will be documented in this file.
 ### Fixed
 - Fixed Dashboard and Minimal layout presets permanently hiding UI elements that users later tried to re-enable.
 - Fixed terminal `show banner` and `hide banner` using the old banner visibility path instead of Banner Size.
+- Fixed Dashboard and Minimal placing search below the banner after the banner was re-enabled.
 
 ---
 
