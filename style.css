@@ -2651,3 +2651,21 @@ body.bookmark-grid-layout .section-add-tile {
 #terminalModal .terminal-window:has(.welcome-tui) {
   width: min(1280px, calc(100vw - 36px));
 }
+
+
+/* v1.4.0-dev1 banner size presets */
+.hero-image-card {
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+}
+.hero.hero-size-small .hero-image-card {
+  width: min(860px, 100%) !important;
+}
+.hero.hero-size-medium .hero-image-card {
+  width: min(1180px, 100%) !important;
+}
+.hero.hero-size-large .hero-image-card {
+  width: 100% !important;
+}
+.hero.hero-size-small .search {
+  width: min(720px, calc(100% - 54px)) !important;
+}

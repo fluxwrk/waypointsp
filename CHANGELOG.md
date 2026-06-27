@@ -5,10 +5,12 @@ All notable changes to Waypoint will be documented in this file.
 ## [Unreleased]
 
 ### Added
--
+- Added banner size presets: Hidden, Small, Medium, and Large.
+- Added banner size support to profile settings and terminal banner commands.
 
 ### Changed
--
+- Banner height presets are now presented as simpler banner size options.
+- Existing `heroHeight` profile values are normalized into the new banner size system for compatibility.
 
 ### Fixed
 -

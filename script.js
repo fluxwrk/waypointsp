@@ -98,6 +98,7 @@ const defaultData = {
     "overlay": 35,
     "blur": 0,
     "heroHeight": 240,
+    "heroSize": "medium",
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
@@ -166,6 +167,7 @@ const bundledDemoData = {
     "overlay": 0,
     "blur": 5,
     "heroHeight": 240,
+    "heroSize": "medium",
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
@@ -249,6 +251,31 @@ function favicon(url) { try { if (isWaypointUrl(url)) return ""; const host = ne
 function getTheme() { return THEMES[data.settings.theme] || THEMES.nord; }
 function countBookmarks() { return data.sections.reduce((sum, section) => sum + section.links.length, 0); }
 
+const HERO_SIZES = {
+  hidden: { label: "Hidden", height: 0 },
+  small: { label: "Small", height: 160 },
+  medium: { label: "Medium", height: 240 },
+  large: { label: "Large", height: 330 }
+};
+function normalizeHeroSize(value, heroHeight, heroStyle) {
+  const raw = String(value || "").toLowerCase();
+  if (HERO_SIZES[raw]) return raw;
+  if (heroStyle === "hidden") return "hidden";
+  const height = Number(heroHeight);
+  if (Number.isFinite(height)) {
+    if (height <= 200) return "small";
+    if (height <= 270) return "medium";
+    return "large";
+  }
+  return "large";
+}
+function heroHeightForSize(size, fallbackHeight) {
+  if (size === "hidden") return 0;
+  if (HERO_SIZES[size]) return HERO_SIZES[size].height;
+  return clamp(Number(fallbackHeight), 160, 360, 330);
+}
+function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
+
 function loadStoredProfile() {
   const saved = safeParse(localStorage.getItem(KEY));
   if (saved) return normalizeData(saved);
@@ -320,7 +347,9 @@ function normalizeData(input) {
 
   normalized.settings.overlay = clamp(Number(normalized.settings.overlay ?? normalized.settings.backgroundDim), 0, 70, 35);
   normalized.settings.blur = clamp(Number(normalized.settings.blur ?? normalized.settings.backgroundBlur), 0, 20, 0);
-  normalized.settings.heroHeight = clamp(Number(normalized.settings.heroHeight), 220, 360, 330);
+  normalized.settings.heroSize = normalizeHeroSize(normalized.settings.heroSize, normalized.settings.heroHeight, normalized.settings.heroStyle);
+  if (normalized.settings.heroStyle === "hidden") normalized.settings.heroStyle = "auto";
+  normalized.settings.heroHeight = heroHeightForSize(normalized.settings.heroSize, normalized.settings.heroHeight);
   normalized.settings.heroZoom = clamp(Number(normalized.settings.heroZoom), 80, 140, 100);
   normalized.settings.heroY = clamp(Number(normalized.settings.heroY), 0, 100, 50);
   normalized.settings.heroFit = ["cover", "contain"].includes(normalized.settings.heroFit) ? normalized.settings.heroFit : "cover";
@@ -491,10 +520,16 @@ function applyHero() {
   const card = $("heroImageCard");
   const img = $("heroImage");
   if (!card || !img) return;
-  const isBannerHidden = data.settings.heroStyle === "hidden";
+  const heroSize = normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
+  const isBannerHidden = heroSize === "hidden";
+  data.settings.heroSize = heroSize;
+  data.settings.heroHeight = heroHeightForSize(heroSize, data.settings.heroHeight);
   card.classList.toggle("hidden-banner", isBannerHidden);
-  document.querySelector(".hero")?.classList.toggle("banner-hidden", isBannerHidden);
+  const hero = document.querySelector(".hero");
+  hero?.classList.toggle("banner-hidden", isBannerHidden);
+  ["hidden", "small", "medium", "large"].forEach(size => hero?.classList.toggle(`hero-size-${size}`, heroSize === size));
   card.style.setProperty("--hero-height", `${data.settings.heroHeight}px`);
+  card.style.setProperty("--hero-min-height", `${data.settings.heroHeight}px`);
   card.style.setProperty("--hero-zoom", String(data.settings.heroZoom / 100));
   card.style.setProperty("--hero-y", `${data.settings.heroY}%`);
   card.style.setProperty("--hero-fit", data.settings.heroFit || "cover");
@@ -545,7 +580,7 @@ function syncControls() {
   setValue("customCssInput", s.customCss || "");
   setValue("overlaySlider", s.overlay);
   setValue("blurSlider", s.blur);
-  setValue("heroHeightPresetSelect", s.heroHeight);
+  setValue("heroHeightPresetSelect", s.heroSize || normalizeHeroSize(null, s.heroHeight, s.heroStyle));
   setValue("heroZoomSlider", s.heroZoom);
   setValue("heroYSlider", s.heroY);
   setText("overlayValue", `${s.overlay}%`);
@@ -558,6 +593,15 @@ function syncControls() {
 }
 function setValue(id, value) { const el = $(id); if (!el) return; if (document.activeElement === el) return; if (el.value !== String(value)) el.value = value; }
 function setText(id, value) { const el = $(id); if (el) el.textContent = value; }
+
+function setBannerSize(size) {
+  if (!HERO_SIZES[size]) return false;
+  data.settings.heroSize = size;
+  data.settings.heroHeight = heroHeightForSize(size, data.settings.heroHeight);
+  save();
+  render();
+  return true;
+}
 
 function updateLogoPrompt() {
   const text = `${displayUserName()}@waypoint:~$`;
@@ -1520,10 +1564,21 @@ function runCommand(commandRaw) {
     return done(buildStatusLines(`Applying theme: ${getTheme().label}`));
   }
   if (head === "banner") {
-    const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", hidden: "hidden", hide: "hidden", auto: "auto", default: "auto" };
+    const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", auto: "auto", default: "auto" };
+    const sizeMap = { hidden: "hidden", hide: "hidden", small: "small", compact: "small", medium: "medium", balanced: "medium", large: "large", tall: "large", showcase: "large" };
+    if (arg === "size") {
+      const size = parts[1];
+      if (!sizeMap[size]) return textOut("Usage: banner size hidden|small|medium|large");
+      setBannerSize(sizeMap[size]);
+      return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
+    }
+    if (sizeMap[arg]) {
+      setBannerSize(sizeMap[arg]);
+      return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
+    }
     if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
     if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
-    if (!map[arg]) return textOut(`Unknown banner option: ${arg}\nUsage: banner auto|desktop|atmosphere|custom|hidden|fit|fill`);
+    if (!map[arg]) return textOut(`Unknown banner option: ${arg}\nUsage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large|fit|fill`);
     data.settings.heroStyle = map[arg];
     save(); render();
     return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
@@ -1785,13 +1840,13 @@ function bindEvents() {
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
-  bindSetting("heroStyleSelect", "change", value => { data.settings.heroStyle = value; save(); render(); });
+  bindSetting("heroStyleSelect", "change", value => { if (value === "hidden") { data.settings.heroSize = "hidden"; data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight); data.settings.heroStyle = "auto"; } else { data.settings.heroStyle = value; } save(); render(); });
   bindSetting("heroFitSelect", "change", value => { data.settings.heroFit = value; save(); render(); });
   bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); render(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
-  bindSetting("heroHeightPresetSelect", "change", value => { data.settings.heroHeight = Number(value); save(); applyHero(); renderTerminal(); });
+  bindSetting("heroHeightPresetSelect", "change", value => { data.settings.heroSize = value; data.settings.heroHeight = heroHeightForSize(value, data.settings.heroHeight); save(); applyHero(); renderTerminal(); });
   bindNumber("heroZoomSlider", "heroZoom", () => applyHero());
   bindNumber("heroYSlider", "heroY", () => applyHero());
 
@@ -2218,10 +2273,21 @@ function runCommand(commandRaw) {
     return done(buildStatusLines(`Setting weather location: ${data.settings.weatherLocation}`, ["Saving location", "Fetching forecast", "Done"]));
   }
   if (head === "banner") {
-    const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", hidden: "hidden", hide: "hidden", auto: "auto", default: "auto" };
+    const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", auto: "auto", default: "auto" };
+    const sizeMap = { hidden: "hidden", hide: "hidden", small: "small", compact: "small", medium: "medium", balanced: "medium", large: "large", tall: "large", showcase: "large" };
+    if (arg === "size") {
+      const size = parts[1];
+      if (!sizeMap[size]) return textOut("Usage: banner size hidden|small|medium|large", "terminal-warning");
+      setBannerSize(sizeMap[size]);
+      return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
+    }
+    if (sizeMap[arg]) {
+      setBannerSize(sizeMap[arg]);
+      return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
+    }
     if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
     if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
-    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|fit|fill", "terminal-warning");
+    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large|fit|fill", "terminal-warning");
     data.settings.heroStyle = map[arg]; save(); render();
     return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
   }
@@ -2277,7 +2343,7 @@ function resetCategory(target) {
   else if (target === "layout") ["layoutPreset", "showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles", "shortcut"].forEach(k => data.settings[k] = d[k]);
   else if (target === "bookmarks") ["bookmarkLayout", "bookmarkColumns", "bookmarkFontSize", "bookmarkIconSize"].forEach(k => data.settings[k] = d[k]);
   else if (target === "weather") ["weatherLocation", "weatherUnit"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroHeight", "heroZoom", "heroY", "heroStyle", "heroFit"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroZoom", "heroY", "heroStyle", "heroFit"].forEach(k => data.settings[k] = d[k]);
   else if (target === "text" || target === "textcolors") ["useCustomTextColors", "sectionTitleColor", "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor", "customText"].forEach(k => data.settings[k] = d[k]);
   else if (target === "advanced") ["searchEngine", "customSearchUrl", "customCss", "terminalTransparency"].forEach(k => data.settings[k] = d[k]);
   else if (target === "all" || target === "everything") { data = structuredClone(defaultData); localStorage.removeItem(CUSTOM_BG_KEY); localStorage.removeItem(CUSTOM_HERO_KEY); localStorage.removeItem(WEATHER_CACHE_KEY); }
