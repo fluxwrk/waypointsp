@@ -11,9 +11,11 @@ All notable changes to Waypoint will be documented in this file.
 ### Changed
 - Banner height presets are now presented as simpler banner size options.
 - Existing `heroHeight` profile values are normalized into the new banner size system for compatibility.
+- Layout presets now apply visibility defaults once instead of permanently overriding user visibility settings.
 
 ### Fixed
--
+- Fixed Dashboard and Minimal layout presets permanently hiding UI elements that users later tried to re-enable.
+- Fixed terminal `show banner` and `hide banner` using the old banner visibility path instead of Banner Size.
 
 ---
 

@@ -276,6 +276,57 @@ function heroHeightForSize(size, fallbackHeight) {
 }
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
 
+const LAYOUT_PRESET_DEFAULTS = {
+  classic: {
+    showLogo: true,
+    showWordmark: true,
+    showClock: true,
+    showWeather: true,
+    showSearch: true,
+    showSectionTitles: true,
+    heroSize: "medium"
+  },
+  dashboard: {
+    showLogo: true,
+    showWordmark: true,
+    showClock: true,
+    showWeather: true,
+    showSearch: true,
+    showSectionTitles: true,
+    heroSize: "hidden"
+  },
+  minimal: {
+    showLogo: false,
+    showWordmark: false,
+    showClock: false,
+    showWeather: false,
+    showSearch: true,
+    showSectionTitles: true,
+    heroSize: "hidden"
+  },
+  centered: {
+    showLogo: true,
+    showWordmark: true,
+    showClock: true,
+    showWeather: true,
+    showSearch: true,
+    showSectionTitles: true,
+    heroSize: "medium"
+  }
+};
+
+function applyLayoutPresetDefaults(preset) {
+  if (!LAYOUT_PRESET_DEFAULTS[preset]) return false;
+  data.settings.layoutPreset = preset;
+  const defaults = LAYOUT_PRESET_DEFAULTS[preset];
+  ["showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles"].forEach(key => {
+    data.settings[key] = defaults[key];
+  });
+  data.settings.heroSize = defaults.heroSize;
+  data.settings.heroHeight = heroHeightForSize(defaults.heroSize, data.settings.heroHeight);
+  return true;
+}
+
 function loadStoredProfile() {
   const saved = safeParse(localStorage.getItem(KEY));
   if (saved) return normalizeData(saved);
@@ -1493,9 +1544,9 @@ function runCommand(commandRaw) {
   }
   if (head === "preset") {
     if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut("Usage: preset classic|dashboard|minimal|centered");
-    data.settings.layoutPreset = arg;
+    applyLayoutPresetDefaults(arg);
     save(); render();
-    return done(buildStatusLines(`Applying layout preset: ${arg}`));
+    return done(buildStatusLines(`Applying layout preset defaults: ${arg}`));
   }
   if (head === "font") {
     if (!["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(arg)) return textOut("Usage: font system|inter|jetbrains|fira|roboto|mono");
@@ -1825,7 +1876,7 @@ function bindEvents() {
   bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
-  bindSetting("layoutPresetSelect", "change", value => { data.settings.layoutPreset = value; save(); render(); });
+  bindSetting("layoutPresetSelect", "change", value => { applyLayoutPresetDefaults(value); save(); render(); });
   bindSetting("showLogoSelect", "change", value => { data.settings.showLogo = value === "true"; save(); render(); });
   bindSetting("showWordmarkSelect", "change", value => { data.settings.showWordmark = value === "true"; save(); render(); });
   bindSetting("showClockSelect", "change", value => { data.settings.showClock = value === "true"; save(); render(); });
@@ -2185,19 +2236,21 @@ function runCommand(commandRaw) {
     return textOut(`Opened Settings > ${page}.`, "terminal-success-text");
   }
   if (["show", "hide"].includes(head)) {
-    const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles", banner: "heroStyle" };
+    const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles", banner: "heroSize" };
     const key = keyMap[arg];
     if (!key) return textOut(buildHelpText("visibility"), "terminal-warning");
-    if (key === "heroStyle") data.settings.heroStyle = head === "show" ? "auto" : "hidden";
-    else data.settings[key] = head === "show";
+    if (key === "heroSize") {
+      data.settings.heroSize = head === "show" ? "medium" : "hidden";
+      data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
+    } else data.settings[key] = head === "show";
     save(); render();
     return done(buildStatusLines(`${head === "show" ? "Showing" : "Hiding"}: ${arg}`));
   }
   if (head === "preset") {
     if (!arg) return textOut(`Current preset: ${data.settings.layoutPreset}`);
     if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut(buildHelpText("preset"), "terminal-warning");
-    data.settings.layoutPreset = arg; save(); render();
-    return done(buildStatusLines(`Applying layout preset: ${arg}`));
+    applyLayoutPresetDefaults(arg); save(); render();
+    return done(buildStatusLines(`Applying layout preset defaults: ${arg}`));
   }
   if (head === "font") {
     if (!arg) return textOut(`Current font: ${data.settings.fontFamily}`);

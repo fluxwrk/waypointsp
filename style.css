@@ -2249,7 +2249,6 @@ body.bookmark-list-layout .link img, body.bookmark-grid-layout .link img { width
 html[data-bookmark-columns="2"] body.bookmark-list-layout .links, html[data-bookmark-columns="2"] body.bookmark-grid-layout .links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 html[data-bookmark-columns="3"] body.bookmark-list-layout .links, html[data-bookmark-columns="3"] body.bookmark-grid-layout .links { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
 html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-bookmark-columns="4"] body.bookmark-grid-layout .links { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
-.layout-minimal .brand-wordmark, .layout-minimal #clock, .layout-minimal #weatherWidget, .layout-minimal .hero-image-card { display: none !important; }
 .layout-minimal .hero { display: flex !important; min-height: 78px !important; margin: 6px 0 22px !important; }
 .layout-minimal .search { position: relative !important; top: auto !important; left: auto !important; transform: none !important; width: min(780px, 100%) !important; }
 .layout-centered .toolbar { grid-template-columns: 1fr !important; justify-items: center !important; }
@@ -2491,9 +2490,6 @@ label {
 .mini-clock-time,
 .weather-main {
   color: var(--status-text-color) !important;
-}
-.layout-dashboard .hero-image-card {
-  display: none !important;
 }
 .layout-dashboard .hero {
   display: flex !important;
