@@ -1,10 +1,10 @@
+# Waypoint
+
 <div align="center">
 
 <img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
 
-# Waypoint
-
-### A Linux-inspired browser start page with a built-in command terminal, powerful customization, and a clean, modern interface.
+### A Linux-inspired browser start page with a built-in command terminal and powerful customization.
 
 <p>
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp">
@@ -18,54 +18,13 @@
 
 ## Features
 
-### Linux-Inspired Interface
-
-- Built-in terminal with realistic command output
-- `fetch` system information command
-- Interactive Welcome TUI guide
-- Comprehensive help system
-- Command history and Linux-style prompt
-- Terminal transparency and customization
-- Internal `waypoint:` actions for built-in shortcuts
-
-### Powerful Customization
-
-- Multiple layout presets
-- Compact and Grid bookmark layouts
-- Theme support
-- Custom accent and surface colors
-- Advanced text color customization
-- Custom fonts
-- UI scaling
-- Window transparency
-- Terminal transparency
+- Linux-inspired command terminal
+- Themes, fonts, and advanced color customization
+- Drag-and-drop bookmark organization
+- Built-in weather, clock, and hero banner
 - Custom CSS support
-
-### Dashboard
-
-- Search bar with multiple search engine support
-- Weather widget
-- Live clock
-- Hero banner
-- Bookmark sections
-- Drag-and-drop organization
-- Hover controls for adding links, sections, and managing bookmarks
-
-### First-Run Experience
-
-- Demo profile loads on first launch
-- Welcome and Settings starter bookmarks
-- Full profile persistence in local browser storage
-- Factory reset restores internal Waypoint defaults
-- Import and export full profiles as JSON
-
-### Power User Features
-
-- Terminal configuration commands
-- `ls` command for discovering themes, layouts, fonts, visibility options, search engines, and current config
-- Per-category settings reset
-- Custom CSS manual through terminal help
-- Responsive layout
+- Import and export profiles
+- Local-first configuration with no backend
 
 ---
 
@@ -73,28 +32,26 @@
 
 <div align="center">
 
-![Dashboard](screenshots/maintokyo.png)
+![Waypoint](screenshots/maintokyo.png)
 
 </div>
 
-<details><summary><strong>More Screenshots</strong></summary>
+<details>
+<summary><strong>More Screenshots</strong></summary>
 
 <div align="center">
 
-![Dashboard](screenshots/compactlistgruvbox.png)
-![Dashboard](screenshots/minimal.png)
-![Dashboard](screenshots/msettings.png)
-![Dashboard](screenshots/wpdemo.gif)
+![Compact Layout](screenshots/compactlistgruvbox.png)
+
+![Minimal Layout](screenshots/minimal.png)
+
+![Settings](screenshots/settings.png)
+
+![Demo](screenshots/wpdemo.gif)
 
 </div>
 
 </details>
-
----
-
-## Live Demo
-
-Waypoint can be hosted as a static site. The demo profile is loaded only on first launch. After that, each user's configuration is stored locally in their own browser.
 
 ---
 
@@ -106,7 +63,7 @@ Clone the repository:
 git clone https://github.com/waypointsp-dev/waypointsp.git
 ```
 
-Or download the latest release from the **Releases** page.
+Or download the latest release from the Releases page.
 
 Open `index.html` in your browser.
 
@@ -116,49 +73,15 @@ No installation required.
 
 ## Terminal
 
-Waypoint includes a built-in Linux-inspired command terminal.
+Waypoint includes a built-in Linux-inspired command terminal for configuration, navigation, and system information.
 
-Examples:
-
-```text
-fetch
-help
-welcome
-ls themes
-theme nord
-layout compact
-font "JetBrains Mono"
-hide weather
-show clock
-engine duckduckgo
-export
-```
+Use `help` inside the terminal to browse available commands and documentation.
 
 ---
 
 ## Customization
 
-Waypoint supports:
-
-- Themes
-- Fonts
-- Layout presets
-- Bookmark layouts
-- Custom colors
-- Text color controls
-- Custom CSS
-- Window transparency
-- Terminal transparency
-- First-launch demo profile configuration
-
-Designed to be customized without editing source code.
-
----
-
-## Branches
-
-- `main` contains the latest stable release.
-- `dev` contains active development builds and may include unfinished or unstable features.
+Customize nearly every aspect of Waypoint, including themes, fonts, layouts, colors, transparency, bookmark organization, and custom CSS without editing the source code.
 
 ---
 
@@ -166,15 +89,14 @@ Designed to be customized without editing source code.
 
 ### Completed
 
-- ✅ v1.0 — Foundation
-- ✅ v1.1 — Personalization
-- ✅ v1.2 — Terminal Upgrade
-- ✅ v1.3 — First Experience & Onboarding
+- ✅ v1.0 Foundation
+- ✅ v1.1 Personalization
+- ✅ v1.2 Terminal Upgrade
+- ✅ v1.3 First Experience & Onboarding
 
-### Planned
+### In Progress
 
-- 🚧 v1.4 — Layouts & Profiles
-- 🔲 v1.5 — Power User
+- 🚧 v1.4 Layouts & Profiles
 
 ---
 
