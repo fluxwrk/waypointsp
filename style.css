@@ -2703,29 +2703,58 @@ body.bookmark-grid-layout .section-add-tile {
   }
 }
 
-/* v1.4.0-dev4 banner preset consistency */
-.layout-dashboard .hero:not(.banner-hidden),
-.layout-minimal .hero:not(.banner-hidden) {
-  min-height: auto !important;
+
+/* v1.4.0-dev5 hotfix: keep Dashboard from overriding visible banner presets */
+.layout-dashboard .hero:not(.banner-hidden) {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  min-height: unset !important;
+  margin: 0 0 24px !important;
 }
 
-.layout-dashboard .hero:not(.banner-hidden) .hero-image-card,
-.layout-minimal .hero:not(.banner-hidden) .hero-image-card {
+.layout-dashboard .hero:not(.banner-hidden) .hero-image-card {
   height: var(--hero-height, 240px) !important;
   min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
 }
 
-.layout-dashboard .hero.hero-size-small:not(.banner-hidden) .hero-image-card,
-.layout-minimal .hero.hero-size-small:not(.banner-hidden) .hero-image-card {
+.layout-dashboard .hero.hero-size-small:not(.banner-hidden) .hero-image-card {
   width: min(860px, 100%) !important;
 }
 
-.layout-dashboard .hero.hero-size-medium:not(.banner-hidden) .hero-image-card,
-.layout-minimal .hero.hero-size-medium:not(.banner-hidden) .hero-image-card {
+.layout-dashboard .hero.hero-size-medium:not(.banner-hidden) .hero-image-card {
   width: min(1180px, 100%) !important;
 }
 
-.layout-dashboard .hero.hero-size-large:not(.banner-hidden) .hero-image-card,
-.layout-minimal .hero.hero-size-large:not(.banner-hidden) .hero-image-card {
+.layout-dashboard .hero.hero-size-large:not(.banner-hidden) .hero-image-card {
   width: 100% !important;
+}
+
+.layout-dashboard .hero:not(.banner-hidden) .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+}
+
+.layout-dashboard .hero.hero-size-small:not(.banner-hidden) .search {
+  width: min(720px, calc(100% - 54px)) !important;
+}
+
+.layout-dashboard .hero.hero-size-large:not(.banner-hidden) .search {
+  width: min(820px, calc(100% - 220px)) !important;
+}
+
+@media (max-width: 900px) {
+  .layout-dashboard .hero:not(.banner-hidden) .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .layout-dashboard .hero:not(.banner-hidden) .search {
+    width: calc(100% - 24px) !important;
+  }
 }

@@ -14,10 +14,10 @@ All notable changes to Waypoint will be documented in this file.
 - Layout presets now apply visibility defaults once instead of permanently overriding user visibility settings.
 
 ### Fixed
+- Fixed Dashboard banner size preset regression after the widget foundation build.
 - Fixed Dashboard and Minimal layout presets permanently hiding UI elements that users later tried to re-enable.
 - Fixed terminal `show banner` and `hide banner` using the old banner visibility path instead of Banner Size.
 - Fixed Dashboard and Minimal placing search below the banner after the banner was re-enabled.
-- Fixed Dashboard banner size presets being overridden by layout-specific banner spacing.
 
 ---
 

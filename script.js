@@ -131,6 +131,7 @@ const defaultData = {
     "showWeather": true,
     "showSearch": true,
     "showSectionTitles": true,
+    "widgets": {},
     "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 22,
@@ -200,6 +201,7 @@ const bundledDemoData = {
     "showWeather": true,
     "showSearch": true,
     "showSectionTitles": true,
+    "widgets": {},
     "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 36,
@@ -275,6 +277,81 @@ function heroHeightForSize(size, fallbackHeight) {
   return clamp(Number(fallbackHeight), 160, 360, 330);
 }
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
+
+const WIDGET_REGISTRY = [
+  { id: "logo", label: "Logo / Terminal Button", selector: "#logoBtn", area: "toolbar", visibleKey: "showLogo", movable: true, resizable: false },
+  { id: "wordmark", label: "Waypoint Wordmark", selector: ".brand-wordmark", area: "toolbar", visibleKey: "showWordmark", movable: true, resizable: false },
+  { id: "clock", label: "Clock", selector: "#clock", area: "toolbar", visibleKey: "showClock", movable: true, resizable: false },
+  { id: "weather", label: "Weather", selector: "#weatherWidget", area: "toolbar", visibleKey: "showWeather", movable: true, resizable: false },
+  { id: "search", label: "Search", selector: "#searchForm", area: "hero", visibleKey: "showSearch", movable: true, resizable: true },
+  { id: "hero", label: "Hero Banner", selector: "#heroImageCard", area: "hero", visibleKey: "heroSize", movable: true, resizable: true },
+  { id: "sections", label: "Bookmark Sections", selector: "#sections", area: "content", visibleKey: "showSectionTitles", movable: true, resizable: false }
+];
+
+function defaultWidgetState() {
+  return Object.fromEntries(WIDGET_REGISTRY.map(widget => [widget.id, {
+    area: widget.area,
+    order: WIDGET_REGISTRY.findIndex(item => item.id === widget.id),
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+    customPlacement: false,
+    customSize: false
+  }]));
+}
+
+function normalizeWidgetState(input) {
+  const normalized = defaultWidgetState();
+  if (!input || typeof input !== "object") return normalized;
+  for (const widget of WIDGET_REGISTRY) {
+    const incoming = input[widget.id];
+    if (!incoming || typeof incoming !== "object") continue;
+    normalized[widget.id] = {
+      ...normalized[widget.id],
+      area: ["toolbar", "hero", "content", "floating"].includes(incoming.area) ? incoming.area : normalized[widget.id].area,
+      order: Number.isFinite(Number(incoming.order)) ? Number(incoming.order) : normalized[widget.id].order,
+      x: Number.isFinite(Number(incoming.x)) ? Number(incoming.x) : null,
+      y: Number.isFinite(Number(incoming.y)) ? Number(incoming.y) : null,
+      width: Number.isFinite(Number(incoming.width)) ? Number(incoming.width) : null,
+      height: Number.isFinite(Number(incoming.height)) ? Number(incoming.height) : null,
+      customPlacement: incoming.customPlacement === true,
+      customSize: incoming.customSize === true
+    };
+  }
+  return normalized;
+}
+
+function widgetVisible(widget) {
+  if (widget.visibleKey === "heroSize") return data.settings.heroSize !== "hidden";
+  return data.settings[widget.visibleKey] !== false;
+}
+
+function widgetSummaryText() {
+  return cleanList("Waypoint Widgets", WIDGET_REGISTRY.map(widget => {
+    const state = data.settings.widgets?.[widget.id] || {};
+    const flags = [widget.area, widgetVisible(widget) ? "visible" : "hidden"];
+    if (state.customPlacement) flags.push("custom placement");
+    if (state.customSize) flags.push("custom size");
+    return `${widget.id.padEnd(10)} ${widget.label} (${flags.join(", ")})`;
+  }));
+}
+
+function applyWidgetFoundation() {
+  document.body.classList.add("widget-foundation-ready");
+  for (const widget of WIDGET_REGISTRY) {
+    const el = document.querySelector(widget.selector);
+    if (!el) continue;
+    const state = data.settings.widgets?.[widget.id] || {};
+    el.classList.add("waypoint-widget");
+    el.dataset.widgetId = widget.id;
+    el.dataset.widgetLabel = widget.label;
+    el.dataset.widgetArea = state.area || widget.area;
+    el.dataset.widgetVisible = String(widgetVisible(widget));
+    el.dataset.widgetMovable = String(widget.movable);
+    el.dataset.widgetResizable = String(widget.resizable);
+  }
+}
 
 const LAYOUT_PRESET_DEFAULTS = {
   classic: {
@@ -428,6 +505,7 @@ function normalizeData(input) {
   normalized.settings.statusTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.statusTextColor || "") ? normalized.settings.statusTextColor : "#d8dee9";
   normalized.settings.layoutPreset = ["classic", "minimal", "dashboard", "centered"].includes(normalized.settings.layoutPreset) ? normalized.settings.layoutPreset : "classic";
   ["showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles"].forEach(key => { normalized.settings[key] = normalized.settings[key] !== false && normalized.settings[key] !== "false"; });
+  normalized.settings.widgets = normalizeWidgetState(normalized.settings.widgets);
   normalized.settings.bookmarkColumns = ["auto", "2", "3", "4"].includes(String(normalized.settings.bookmarkColumns)) ? String(normalized.settings.bookmarkColumns) : "auto";
   normalized.settings.bookmarkFontSize = clamp(Number(normalized.settings.bookmarkFontSize), 10, 15, 12);
   normalized.settings.bookmarkIconSize = clamp(Number(normalized.settings.bookmarkIconSize), 14, 36, 22);
@@ -715,6 +793,7 @@ function render() {
   updateLogoPrompt();
   syncControls();
   renderSections();
+  applyWidgetFoundation();
   renderTerminal();
   updateWeatherWidget();
   applySearchEngine();
@@ -727,7 +806,10 @@ function renderSections() {
 
   data.sections.forEach((section, sectionIndex) => {
     const sectionEl = document.createElement("article");
-    sectionEl.className = `section${section.links.length ? "" : " empty-section"}`;
+    sectionEl.className = `section waypoint-widget-section${section.links.length ? "" : " empty-section"}`;
+    sectionEl.dataset.widgetId = `section-${sectionIndex}`;
+    sectionEl.dataset.widgetLabel = `Bookmark Section: ${section.name || `Section ${sectionIndex + 1}`}`;
+    sectionEl.dataset.widgetArea = "content";
     sectionEl.draggable = true;
     sectionEl.dataset.sectionIndex = sectionIndex;
     sectionEl.innerHTML = `
@@ -1530,6 +1612,7 @@ function runCommand(commandRaw) {
     return textOut(`No manual entry for ${arg || "nothing"}. Try: man css`);
   }
   if (head === "fetch") return done(buildFastfetchHtml());
+  if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
   if (head === "settings") {
     openSettingsPage(arg || "appearance");
     return textOut(`Opened Settings${arg ? ` > ${arg}` : " > appearance"}.`);
@@ -2146,7 +2229,8 @@ function buildHelpText(topic = "") {
     colors: `colors\n\nChange interface colors.\n\nSyntax:\n  accent <hex>\n  surface <hex>\n  text <hex>\n  titlecolor <hex>\n\nExamples:\n  accent #00d084\n  surface #09111a`,
     transparency: `transparency\n\nChange window or terminal transparency.\n\nSyntax:\n  window transparency <60-100>\n  terminal transparency <60-100>`,
     css: buildCssManualText(),
-    ls: `ls\n\nList available options or current configuration.\n\nSyntax:\n  ls\n  ls <category>\n\nCategories:\n  commands\n  themes\n  layouts\n  fonts\n  visibility\n  search\n  config`,
+    widgets: `widgets\n\nList Waypoint's registered UI widgets.\n\nThis is the foundation for future edit layout, dragging, and resizing features.\n\nSyntax:\n  widgets\n  ls widgets`,
+    ls: `ls\n\nList available options or current configuration.\n\nSyntax:\n  ls\n  ls <category>\n\nCategories:\n  commands\n  themes\n  layouts\n  fonts\n  visibility\n  search\n  widgets\n  config`,
     reset: `reset\n\nReset a category of settings.\n\nSyntax:\n  reset appearance\n  reset layout\n  reset bookmarks\n  reset weather\n  reset banner\n  reset text\n  reset advanced\n  reset all`
   };
   if (t) return pages[t] || `No help topic for '${t}'.\n\nType help to see commands.`;
@@ -2168,6 +2252,7 @@ function buildHelpText(topic = "") {
     "text             Set global text color",
     "window           Set window transparency",
     "terminal         Set terminal settings",
+    "widgets          List registered UI widgets",
     "add              Add sections or bookmarks",
     "rename           Rename sections",
     "remove / delete  Remove sections",
@@ -2184,13 +2269,14 @@ function buildCssManualText() {
 function listCommand(category = "") {
   const c = String(category || "").trim().toLowerCase();
   const maps = {
-    "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "config"]),
+    "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "widgets", "config"]),
     commands: buildHelpText(),
     themes: cleanList("Available Themes", ["catppuccin", "nord", "gruvbox", "tokyo-night"]),
     layouts: cleanList("Available Layouts", ["classic", "dashboard", "minimal", "centered", "compact bookmark layout", "grid bookmark layout"]),
     fonts: cleanList("Available Fonts", ["system", "inter", "jetbrains", "firacode", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"]),
     visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "sections", "banner"]),
     search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
+    widgets: widgetSummaryText(),
     config: `Current Configuration\n\n${currentConfigText()}`
   };
   return maps[c] || `ls: unknown list '${c}'\n\nTry: ls`;
@@ -2228,6 +2314,7 @@ function runCommand(commandRaw) {
   if (head === "man") return done(fail("The man command was removed. Use help <topic> instead."));
   if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
   if (head === "fetch") return done(buildFastfetchHtml());
+  if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
   if (head === "settings") {
     const pageMap = { text: "textcolors", textcolor: "textcolors", textcolors: "textcolors", colors: "textcolors", appearance: "appearance", layout: "layout", bookmarks: "bookmarks", weather: "weather", banner: "banner", advanced: "advanced", backup: "backup" };
     const page = arg ? pageMap[arg.replace(/\s+/g, "")] : "appearance";

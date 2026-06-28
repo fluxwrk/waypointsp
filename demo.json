@@ -6,12 +6,12 @@
         {
           "name": "Welcome",
           "url": "waypoint:welcome",
-          "icon": "📖"
+          "icon": "\ud83d\udcd6"
         },
         {
           "name": "Settings",
           "url": "waypoint:settings",
-          "icon": "⚙️"
+          "icon": "\u2699\ufe0f"
         }
       ]
     }
@@ -63,6 +63,7 @@
     "settingsLeft": null,
     "settingsTop": null,
     "lastModified": "2026-06-25T07:27:50.176Z",
-    "heroSize": "medium"
+    "heroSize": "medium",
+    "widgets": {}
   }
 }
