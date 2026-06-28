@@ -327,6 +327,50 @@ function widgetVisible(widget) {
   return data.settings[widget.visibleKey] !== false;
 }
 
+let editLayoutActive = false;
+
+function ensureEditLayoutBar() {
+  let bar = document.getElementById("editLayoutBar");
+  if (bar) return bar;
+  bar = document.createElement("div");
+  bar.id = "editLayoutBar";
+  bar.className = "edit-layout-bar hidden";
+  bar.innerHTML = `
+    <strong>Edit Layout</strong>
+    <span>Inspecting widgets</span>
+    <button id="doneEditLayoutBtn" type="button">Done</button>
+    <button id="resetWidgetLayoutBtn" type="button">Reset Layout</button>
+  `;
+  document.body.appendChild(bar);
+  bar.querySelector("#doneEditLayoutBtn")?.addEventListener("click", () => setEditLayoutMode(false));
+  bar.querySelector("#resetWidgetLayoutBtn")?.addEventListener("click", () => resetWidgetLayout());
+  return bar;
+}
+
+function updateEditLayoutBar() {
+  const bar = ensureEditLayoutBar();
+  bar.classList.toggle("hidden", !editLayoutActive);
+}
+
+function setEditLayoutMode(active) {
+  editLayoutActive = !!active;
+  if (editLayoutActive) closeAllModals();
+  document.body.classList.toggle("edit-layout-active", editLayoutActive);
+  updateEditLayoutBar();
+  applyWidgetFoundation();
+}
+
+function toggleEditLayoutMode() {
+  setEditLayoutMode(!editLayoutActive);
+}
+
+function resetWidgetLayout() {
+  data.settings.widgets = normalizeWidgetState({});
+  save();
+  render();
+  setEditLayoutMode(true);
+}
+
 function widgetSummaryText() {
   return cleanList("Waypoint Widgets", WIDGET_REGISTRY.map(widget => {
     const state = data.settings.widgets?.[widget.id] || {};
@@ -351,6 +395,12 @@ function applyWidgetFoundation() {
     el.dataset.widgetMovable = String(widget.movable);
     el.dataset.widgetResizable = String(widget.resizable);
   }
+  document.querySelectorAll(".waypoint-widget-section").forEach(sectionEl => {
+    sectionEl.classList.add("waypoint-widget");
+    sectionEl.dataset.widgetVisible = "true";
+    sectionEl.dataset.widgetMovable = "true";
+    sectionEl.dataset.widgetResizable = "false";
+  });
 }
 
 const LAYOUT_PRESET_DEFAULTS = {
@@ -794,6 +844,7 @@ function render() {
   syncControls();
   renderSections();
   applyWidgetFoundation();
+  updateEditLayoutBar();
   renderTerminal();
   updateWeatherWidget();
   applySearchEngine();
@@ -1966,6 +2017,7 @@ function bindEvents() {
   bindSetting("showWeatherSelect", "change", value => { data.settings.showWeather = value === "true"; save(); render(); });
   bindSetting("showSearchSelect", "change", value => { data.settings.showSearch = value === "true"; save(); render(); });
   bindSetting("showSectionTitlesSelect", "change", value => { data.settings.showSectionTitles = value === "true"; save(); render(); });
+  $("editLayoutBtn")?.addEventListener("click", toggleEditLayoutMode);
   bindSetting("bookmarkColumnsSelect", "change", value => { data.settings.bookmarkColumns = value; save(); render(); });
   bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
   bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
@@ -2001,6 +2053,7 @@ function bindEvents() {
 
   document.addEventListener("keydown", event => {
     if (welcomeGuideState.active && event.key === "Escape") return;
+    if (event.key === "Escape" && editLayoutActive) return setEditLayoutMode(false);
     if (event.key === "Escape") return closeAllModals();
     if (event.target.matches("input, textarea, select") || event.target.isContentEditable) return;
     if (data.settings.shortcut === "altT" && event.altKey && !event.ctrlKey && !event.shiftKey && event.key.toLowerCase() === "t") {

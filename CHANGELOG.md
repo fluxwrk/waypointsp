@@ -5,6 +5,8 @@ All notable changes to Waypoint will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Added Edit Layout inspector mode for visualizing registered widget boundaries.
+- Added an Edit Layout button to Layout settings and a floating Done/Reset Layout inspector bar.
 - Added banner size presets: Hidden, Small, Medium, and Large.
 - Added banner size support to profile settings and terminal banner commands.
 
