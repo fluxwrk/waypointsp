@@ -405,10 +405,13 @@ function canonicalizeWorkspace(workspace = data.settings.workspace) {
   }
 
   const heroHidden = workspace.slots.hero === "hidden";
+  const searchVisible = workspace.slots.search !== "hidden";
 
-  // Search has two real homes. When the banner is hidden, Hero Search becomes Standalone Search.
-  // When the banner is visible, Standalone Search remains a valid explicit user choice.
-  if (workspace.slots.search === "hero-search" && heroHidden) workspace.slots.search = "standalone-search";
+  // Search has two valid homes, but the current Workspace UI only exposes banner visibility,
+  // not an independent search-placement selector. Keep the relationship deterministic:
+  // banner hidden + search visible = standalone search; banner visible + search visible = hero search.
+  // This prevents Dashboard/Minimal from stranding search below the banner after the banner is re-enabled.
+  if (searchVisible) workspace.slots.search = heroHidden ? "standalone-search" : "hero-search";
 
   workspace.display = workspace.display || {};
   if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
@@ -437,6 +440,13 @@ function setWidgetSlot(widgetId, slotId) {
   if (!WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId)) return false;
   data.settings.workspace.slots[widgetId] = slotId;
   data.settings.workspace.modified = true;
+
+  // Banner visibility controls the current valid search home. This mirrors the Workspace
+  // validator so updates are correct immediately, before the next render pass.
+  if (widgetId === "hero" && data.settings.workspace.slots.search !== "hidden") {
+    data.settings.workspace.slots.search = slotId === "hidden" ? "standalone-search" : "hero-search";
+  }
+
   syncLegacyVisibilityFromWorkspace();
   return true;
 }

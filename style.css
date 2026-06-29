@@ -2940,3 +2940,44 @@ body.edit-layout-active .waypoint-widget-section:hover::after { opacity: 1; }
   body.workspace-search-hero .hero:not(.banner-hidden) .search { width: calc(100% - 24px) !important; }
   body.workspace-search-standalone .hero .search { width: 100% !important; }
 }
+
+
+/* v1.4.0-dev9 hotfix1: Centered template presentation */
+body.workspace-template-centered .page-shell {
+  width: min(1320px, calc(100% - 56px)) !important;
+}
+body.workspace-template-centered .toolbar {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  margin-bottom: 24px !important;
+  text-align: center !important;
+}
+body.workspace-template-centered .logo-mark {
+  margin: 0 auto !important;
+}
+body.workspace-template-centered .brand-wordmark {
+  justify-self: center !important;
+  align-self: center !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+body.workspace-template-centered .toolbar-right {
+  margin-left: 0 !important;
+  justify-content: center !important;
+}
+body.workspace-template-centered .hero-image-card {
+  width: min(var(--hero-width, 1040px), 100%) !important;
+}
+body.workspace-template-centered .sections {
+  width: min(1120px, 100%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* v1.4.0-dev9 hotfix1: banner-visible search resolves to Hero Search */
+body.workspace-search-hero .hero:not(.banner-hidden) .search {
+  order: initial !important;
+}

@@ -4,6 +4,12 @@ All notable changes to Waypoint will be documented in this file.
 
 ## [Unreleased]
 
+
+### Fixed
+- Fixed Dashboard and Minimal re-enabling the banner while leaving Search below the banner.
+- Fixed the Centered template having no visible distinction from Classic.
+
+
 ### Added
 - Added v1.4.0-dev9 Workspace Completion groundwork.
 - Added Workspace validation before rendering so invalid widget slots are normalized safely.
