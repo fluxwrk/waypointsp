@@ -125,6 +125,7 @@ const defaultData = {
     "terminalTextColor": "#d9e5f6",
     "statusTextColor": "#d8dee9",
     "layoutPreset": "classic",
+    "workspace": null,
     "showLogo": true,
     "showWordmark": true,
     "showClock": true,
@@ -195,6 +196,7 @@ const bundledDemoData = {
     "terminalTextColor": "#d9e5f6",
     "statusTextColor": "#d8dee9",
     "layoutPreset": "classic",
+    "workspace": null,
     "showLogo": true,
     "showWordmark": true,
     "showClock": true,
@@ -279,14 +281,182 @@ function heroHeightForSize(size, fallbackHeight) {
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
 
 const WIDGET_REGISTRY = [
-  { id: "logo", label: "Logo / Terminal Button", selector: "#logoBtn", area: "toolbar", visibleKey: "showLogo", movable: true, resizable: false },
-  { id: "wordmark", label: "Waypoint Wordmark", selector: ".brand-wordmark", area: "toolbar", visibleKey: "showWordmark", movable: true, resizable: false },
-  { id: "clock", label: "Clock", selector: "#clock", area: "toolbar", visibleKey: "showClock", movable: true, resizable: false },
-  { id: "weather", label: "Weather", selector: "#weatherWidget", area: "toolbar", visibleKey: "showWeather", movable: true, resizable: false },
+  { id: "logo", label: "Logo / Terminal Button", selector: "#logoBtn", area: "header", visibleKey: "showLogo", movable: true, resizable: false },
+  { id: "wordmark", label: "Waypoint Wordmark", selector: ".brand-wordmark", area: "header", visibleKey: "showWordmark", movable: true, resizable: false },
+  { id: "clock", label: "Clock", selector: "#clock", area: "header", visibleKey: "showClock", movable: true, resizable: false },
+  { id: "weather", label: "Weather", selector: "#weatherWidget", area: "header", visibleKey: "showWeather", movable: true, resizable: false },
   { id: "search", label: "Search", selector: "#searchForm", area: "hero", visibleKey: "showSearch", movable: true, resizable: true },
-  { id: "hero", label: "Hero Banner", selector: "#heroImageCard", area: "hero", visibleKey: "heroSize", movable: true, resizable: true },
-  { id: "sections", label: "Bookmark Sections", selector: "#sections", area: "content", visibleKey: "showSectionTitles", movable: true, resizable: false }
+  { id: "hero", label: "Banner", selector: "#heroImageCard", area: "hero", visibleKey: "heroSize", movable: false, resizable: true },
+  { id: "sections", label: "Content Region", selector: "#sections", area: "content", visibleKey: "showSectionTitles", movable: false, resizable: false }
 ];
+
+const WORKSPACE_SLOTS = {
+  "hidden": { label: "Hidden", region: "hidden", accepts: ["logo", "wordmark", "clock", "weather", "search", "hero"] },
+  "header-left": { label: "Header Left", region: "header", accepts: ["logo", "wordmark", "clock", "weather"] },
+  "header-center": { label: "Header Center", region: "header", accepts: ["logo", "wordmark", "clock", "weather"] },
+  "header-right": { label: "Header Right", region: "header", accepts: ["logo", "wordmark", "clock", "weather"] },
+  "hero-banner": { label: "Hero Banner", region: "hero", accepts: ["hero"] },
+  "hero-search": { label: "Hero Search", region: "hero", accepts: ["search"] },
+  "standalone-search": { label: "Standalone Search", region: "search", accepts: ["search"] },
+  "content-sections": { label: "Content Sections", region: "content", accepts: ["sections"] }
+};
+
+const WORKSPACE_WIDGETS = {
+  logo: { label: "Logo / Terminal Button", defaultSlot: "header-left", allowedSlots: ["header-left", "header-center", "header-right", "hidden"] },
+  wordmark: { label: "Waypoint Wordmark", defaultSlot: "header-left", allowedSlots: ["header-left", "header-center", "header-right", "hidden"] },
+  clock: { label: "Clock", defaultSlot: "header-right", allowedSlots: ["header-left", "header-center", "header-right", "hidden"] },
+  weather: { label: "Weather", defaultSlot: "header-right", allowedSlots: ["header-left", "header-center", "header-right", "hidden"] },
+  search: { label: "Search", defaultSlot: "hero-search", allowedSlots: ["hero-search", "standalone-search", "hidden"] },
+  hero: { label: "Banner", defaultSlot: "hero-banner", allowedSlots: ["hero-banner", "hidden"] },
+  sections: { label: "Bookmark Sections", defaultSlot: "content-sections", allowedSlots: ["content-sections"] }
+};
+
+const WORKSPACE_TEMPLATES = {
+  classic: {
+    label: "Classic",
+    description: "Balanced default Waypoint layout.",
+    slots: { logo: "header-left", wordmark: "header-left", clock: "header-right", weather: "header-right", search: "hero-search", hero: "hero-banner", sections: "content-sections" },
+    display: { showSectionTitles: true }
+  },
+  dashboard: {
+    label: "Dashboard",
+    description: "Dense bookmark-first workspace with standalone search.",
+    slots: { logo: "header-left", wordmark: "header-left", clock: "header-right", weather: "header-right", search: "standalone-search", hero: "hidden", sections: "content-sections" },
+    display: { showSectionTitles: true }
+  },
+  minimal: {
+    label: "Minimal",
+    description: "Search-focused layout with visual chrome hidden.",
+    slots: { logo: "hidden", wordmark: "hidden", clock: "hidden", weather: "hidden", search: "standalone-search", hero: "hidden", sections: "content-sections" },
+    display: { showSectionTitles: true }
+  },
+  centered: {
+    label: "Centered",
+    description: "Centered header and hero presentation.",
+    slots: { logo: "header-center", wordmark: "header-center", clock: "header-center", weather: "header-center", search: "hero-search", hero: "hero-banner", sections: "content-sections" },
+    display: { showSectionTitles: true }
+  }
+};
+
+function defaultWorkspace(templateId = "classic") {
+  const template = WORKSPACE_TEMPLATES[templateId] || WORKSPACE_TEMPLATES.classic;
+  return {
+    version: 1,
+    template: WORKSPACE_TEMPLATES[templateId] ? templateId : "classic",
+    modified: false,
+    slots: { ...template.slots },
+    display: { showSectionTitles: template.display?.showSectionTitles !== false }
+  };
+}
+
+function legacyTemplateFromSettings(settings = {}) {
+  const preset = String(settings.layoutPreset || "classic");
+  return WORKSPACE_TEMPLATES[preset] ? preset : "classic";
+}
+
+function normalizeWorkspace(input, settings = {}) {
+  const base = defaultWorkspace(legacyTemplateFromSettings(settings));
+  const incoming = input && typeof input === "object" ? input : {};
+  const template = WORKSPACE_TEMPLATES[incoming.template] ? incoming.template : base.template;
+  const normalized = defaultWorkspace(template);
+  normalized.modified = incoming.modified === true;
+  const incomingSlots = incoming.slots && typeof incoming.slots === "object" ? incoming.slots : {};
+
+  for (const widgetId of Object.keys(WORKSPACE_WIDGETS)) {
+    let slot = incomingSlots[widgetId] || normalized.slots[widgetId] || WORKSPACE_WIDGETS[widgetId].defaultSlot;
+    if (!WORKSPACE_WIDGETS[widgetId].allowedSlots.includes(slot)) slot = WORKSPACE_WIDGETS[widgetId].defaultSlot;
+    if (!WORKSPACE_SLOTS[slot]?.accepts.includes(widgetId)) slot = WORKSPACE_WIDGETS[widgetId].defaultSlot;
+    normalized.slots[widgetId] = slot;
+  }
+
+  if (!input || typeof input !== "object") {
+    if (settings.showLogo === false || settings.showLogo === "false") normalized.slots.logo = "hidden";
+    if (settings.showWordmark === false || settings.showWordmark === "false") normalized.slots.wordmark = "hidden";
+    if (settings.showClock === false || settings.showClock === "false") normalized.slots.clock = "hidden";
+    if (settings.showWeather === false || settings.showWeather === "false") normalized.slots.weather = "hidden";
+    if (settings.showSearch === false || settings.showSearch === "false") normalized.slots.search = "hidden";
+    if (normalizeHeroSize(settings.heroSize, settings.heroHeight, settings.heroStyle) === "hidden") normalized.slots.hero = "hidden";
+    normalized.display.showSectionTitles = settings.showSectionTitles !== false && settings.showSectionTitles !== "false";
+  } else {
+    normalized.display.showSectionTitles = incoming.display?.showSectionTitles !== false;
+  }
+
+  return normalized;
+}
+
+function slotForWidget(widgetId) {
+  return data.settings.workspace?.slots?.[widgetId] || WORKSPACE_WIDGETS[widgetId]?.defaultSlot || "hidden";
+}
+function widgetIsHidden(widgetId) { return slotForWidget(widgetId) === "hidden"; }
+function slotLabel(slotId) { return WORKSPACE_SLOTS[slotId]?.label || slotId || "Unknown"; }
+function regionLabel(slotId) {
+  const region = WORKSPACE_SLOTS[slotId]?.region || "unknown";
+  return { header: "Header", hero: "Hero", search: "Search", content: "Content", hidden: "Hidden" }[region] || region;
+}
+function canonicalizeWorkspace(workspace = data.settings.workspace) {
+  if (!workspace || typeof workspace !== "object") workspace = data.settings.workspace = defaultWorkspace();
+  if (!workspace.slots || typeof workspace.slots !== "object") workspace.slots = {};
+
+  for (const widgetId of Object.keys(WORKSPACE_WIDGETS)) {
+    let slot = workspace.slots[widgetId] || WORKSPACE_WIDGETS[widgetId].defaultSlot;
+    if (!WORKSPACE_WIDGETS[widgetId].allowedSlots.includes(slot)) slot = WORKSPACE_WIDGETS[widgetId].defaultSlot;
+    if (!WORKSPACE_SLOTS[slot]?.accepts.includes(widgetId)) slot = WORKSPACE_WIDGETS[widgetId].defaultSlot;
+    workspace.slots[widgetId] = slot;
+  }
+
+  const heroHidden = workspace.slots.hero === "hidden";
+
+  // Search has two real homes. When the banner is hidden, Hero Search becomes Standalone Search.
+  // When the banner is visible, Standalone Search remains a valid explicit user choice.
+  if (workspace.slots.search === "hero-search" && heroHidden) workspace.slots.search = "standalone-search";
+
+  workspace.display = workspace.display || {};
+  if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
+  return workspace;
+}
+
+function syncLegacyVisibilityFromWorkspace() {
+  const workspace = canonicalizeWorkspace();
+  const heroHidden = workspace.slots.hero === "hidden";
+
+  // Legacy fields now mirror Workspace only for old controls/imports.
+  // They are not allowed to drive layout.
+  data.settings.showLogo = workspace.slots.logo !== "hidden";
+  data.settings.showWordmark = workspace.slots.wordmark !== "hidden";
+  data.settings.showClock = workspace.slots.clock !== "hidden";
+  data.settings.showWeather = workspace.slots.weather !== "hidden";
+  data.settings.showSearch = workspace.slots.search !== "hidden";
+  data.settings.showSectionTitles = workspace.display?.showSectionTitles !== false;
+
+  data.settings.heroSize = heroHidden ? "hidden" : (data.settings.heroSize === "hidden" ? "medium" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle));
+  data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
+  data.settings.layoutPreset = workspace.template || "classic";
+}
+function setWidgetSlot(widgetId, slotId) {
+  if (!WORKSPACE_WIDGETS[widgetId] || !WORKSPACE_WIDGETS[widgetId].allowedSlots.includes(slotId)) return false;
+  if (!WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId)) return false;
+  data.settings.workspace.slots[widgetId] = slotId;
+  data.settings.workspace.modified = true;
+  syncLegacyVisibilityFromWorkspace();
+  return true;
+}
+function setWidgetVisible(widgetId, visible) {
+  const fallback = WORKSPACE_WIDGETS[widgetId]?.defaultSlot;
+  return setWidgetSlot(widgetId, visible ? fallback : "hidden");
+}
+function applyWorkspaceTemplate(templateId) {
+  if (!WORKSPACE_TEMPLATES[templateId]) return false;
+  data.settings.workspace = defaultWorkspace(templateId);
+  syncLegacyVisibilityFromWorkspace();
+  return true;
+}
+function workspaceSummaryText() {
+  const workspace = data.settings.workspace || defaultWorkspace();
+  const rows = Object.keys(WORKSPACE_WIDGETS).map(id => `${id.padEnd(10)} ${WORKSPACE_WIDGETS[id].label} -> ${slotLabel(workspace.slots[id])}`);
+  rows.unshift(`Template: ${WORKSPACE_TEMPLATES[workspace.template]?.label || workspace.template}${workspace.modified ? " (modified)" : ""}`);
+  rows.push(`Section titles: ${workspace.display?.showSectionTitles === false ? "hidden" : "visible"}`);
+  return cleanList("Waypoint Workspace", rows);
+}
 
 function defaultWidgetState() {
   return Object.fromEntries(WIDGET_REGISTRY.map(widget => [widget.id, {
@@ -309,7 +479,7 @@ function normalizeWidgetState(input) {
     if (!incoming || typeof incoming !== "object") continue;
     normalized[widget.id] = {
       ...normalized[widget.id],
-      area: ["toolbar", "hero", "content", "floating"].includes(incoming.area) ? incoming.area : normalized[widget.id].area,
+      area: ["header", "toolbar", "hero", "content", "floating"].includes(incoming.area) ? incoming.area : normalized[widget.id].area,
       order: Number.isFinite(Number(incoming.order)) ? Number(incoming.order) : normalized[widget.id].order,
       x: Number.isFinite(Number(incoming.x)) ? Number(incoming.x) : null,
       y: Number.isFinite(Number(incoming.y)) ? Number(incoming.y) : null,
@@ -323,6 +493,7 @@ function normalizeWidgetState(input) {
 }
 
 function widgetVisible(widget) {
+  if (WORKSPACE_WIDGETS[widget.id]) return !widgetIsHidden(widget.id);
   if (widget.visibleKey === "heroSize") return data.settings.heroSize !== "hidden";
   return data.settings[widget.visibleKey] !== false;
 }
@@ -365,20 +536,25 @@ function toggleEditLayoutMode() {
 }
 
 function resetWidgetLayout() {
+  const templateId = data.settings.workspace?.template || "classic";
+  data.settings.workspace = defaultWorkspace(templateId);
   data.settings.widgets = normalizeWidgetState({});
+  syncLegacyVisibilityFromWorkspace();
   save();
   render();
   setEditLayoutMode(true);
 }
 
 function widgetSummaryText() {
-  return cleanList("Waypoint Widgets", WIDGET_REGISTRY.map(widget => {
+  const rows = WIDGET_REGISTRY.map(widget => {
     const state = data.settings.widgets?.[widget.id] || {};
-    const flags = [widget.area, widgetVisible(widget) ? "visible" : "hidden"];
+    const slot = slotForWidget(widget.id);
+    const flags = [regionLabel(slot), slotLabel(slot), widgetVisible(widget) ? "visible" : "hidden"];
     if (state.customPlacement) flags.push("custom placement");
     if (state.customSize) flags.push("custom size");
     return `${widget.id.padEnd(10)} ${widget.label} (${flags.join(", ")})`;
-  }));
+  });
+  return cleanList("Waypoint Widgets", rows);
 }
 
 function applyWidgetFoundation() {
@@ -389,10 +565,13 @@ function applyWidgetFoundation() {
     const state = data.settings.widgets?.[widget.id] || {};
     el.classList.add("waypoint-widget");
     el.dataset.widgetId = widget.id;
-    el.dataset.widgetLabel = widget.label;
-    el.dataset.widgetArea = state.area || widget.area;
+    const slot = slotForWidget(widget.id);
+    el.dataset.widgetLabel = `${widget.label} • ${slotLabel(slot)} • ${widget.movable ? "Movable" : "Locked"}`;
+    el.dataset.widgetArea = regionLabel(slot).toLowerCase();
+    el.dataset.widgetSlot = slot;
+    el.dataset.widgetRegion = regionLabel(slot);
     el.dataset.widgetVisible = String(widgetVisible(widget));
-    el.dataset.widgetMovable = String(widget.movable);
+    el.dataset.widgetMovable = String(widget.movable && widgetVisible(widget));
     el.dataset.widgetResizable = String(widget.resizable);
   }
   document.querySelectorAll(".waypoint-widget-section").forEach(sectionEl => {
@@ -403,55 +582,10 @@ function applyWidgetFoundation() {
   });
 }
 
-const LAYOUT_PRESET_DEFAULTS = {
-  classic: {
-    showLogo: true,
-    showWordmark: true,
-    showClock: true,
-    showWeather: true,
-    showSearch: true,
-    showSectionTitles: true,
-    heroSize: "medium"
-  },
-  dashboard: {
-    showLogo: true,
-    showWordmark: true,
-    showClock: true,
-    showWeather: true,
-    showSearch: true,
-    showSectionTitles: true,
-    heroSize: "hidden"
-  },
-  minimal: {
-    showLogo: false,
-    showWordmark: false,
-    showClock: false,
-    showWeather: false,
-    showSearch: true,
-    showSectionTitles: true,
-    heroSize: "hidden"
-  },
-  centered: {
-    showLogo: true,
-    showWordmark: true,
-    showClock: true,
-    showWeather: true,
-    showSearch: true,
-    showSectionTitles: true,
-    heroSize: "medium"
-  }
-};
-
+// Legacy preset API retained as a compatibility wrapper.
+// Presets are now Workspace Templates applied once into the active workspace.
 function applyLayoutPresetDefaults(preset) {
-  if (!LAYOUT_PRESET_DEFAULTS[preset]) return false;
-  data.settings.layoutPreset = preset;
-  const defaults = LAYOUT_PRESET_DEFAULTS[preset];
-  ["showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles"].forEach(key => {
-    data.settings[key] = defaults[key];
-  });
-  data.settings.heroSize = defaults.heroSize;
-  data.settings.heroHeight = heroHeightForSize(defaults.heroSize, data.settings.heroHeight);
-  return true;
+  return applyWorkspaceTemplate(preset);
 }
 
 function loadStoredProfile() {
@@ -554,7 +688,19 @@ function normalizeData(input) {
   normalized.settings.terminalTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.terminalTextColor || "") ? normalized.settings.terminalTextColor : "#d9e5f6";
   normalized.settings.statusTextColor = /^#[0-9a-f]{6}$/i.test(normalized.settings.statusTextColor || "") ? normalized.settings.statusTextColor : "#d8dee9";
   normalized.settings.layoutPreset = ["classic", "minimal", "dashboard", "centered"].includes(normalized.settings.layoutPreset) ? normalized.settings.layoutPreset : "classic";
-  ["showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles"].forEach(key => { normalized.settings[key] = normalized.settings[key] !== false && normalized.settings[key] !== "false"; });
+  normalized.settings.workspace = normalizeWorkspace(normalized.settings.workspace, normalized.settings);
+  // Mirror workspace visibility into legacy fields during normalization.
+  normalized.settings.showLogo = normalized.settings.workspace.slots.logo !== "hidden";
+  normalized.settings.showWordmark = normalized.settings.workspace.slots.wordmark !== "hidden";
+  normalized.settings.showClock = normalized.settings.workspace.slots.clock !== "hidden";
+  normalized.settings.showWeather = normalized.settings.workspace.slots.weather !== "hidden";
+  normalized.settings.showSearch = normalized.settings.workspace.slots.search !== "hidden";
+  normalized.settings.showSectionTitles = normalized.settings.workspace.display?.showSectionTitles !== false;
+  if (normalized.settings.workspace.slots.hero === "hidden") {
+    normalized.settings.heroSize = "hidden";
+    normalized.settings.heroHeight = heroHeightForSize("hidden", normalized.settings.heroHeight);
+  }
+  normalized.settings.layoutPreset = normalized.settings.workspace.template;
   normalized.settings.widgets = normalizeWidgetState(normalized.settings.widgets);
   normalized.settings.bookmarkColumns = ["auto", "2", "3", "4"].includes(String(normalized.settings.bookmarkColumns)) ? String(normalized.settings.bookmarkColumns) : "auto";
   normalized.settings.bookmarkFontSize = clamp(Number(normalized.settings.bookmarkFontSize), 10, 15, 12);
@@ -595,13 +741,28 @@ function colorMix(hexA, hexB, weightB = .5) {
 function applyPersonalization() {
   const s = data.settings;
   const body = document.body;
-  ["classic", "minimal", "dashboard", "centered"].forEach(p => body.classList.toggle(`layout-${p}`, s.layoutPreset === p));
-  body.classList.toggle("ui-hide-logo", s.showLogo === false);
-  body.classList.toggle("ui-hide-wordmark", s.showWordmark === false);
-  body.classList.toggle("ui-hide-clock", s.showClock === false);
-  body.classList.toggle("ui-hide-weather", s.showWeather === false);
-  body.classList.toggle("ui-hide-search", s.showSearch === false);
-  body.classList.toggle("ui-hide-section-titles", s.showSectionTitles === false);
+  const templateId = s.workspace?.template || s.layoutPreset || "classic";
+  ["classic", "minimal", "dashboard", "centered"].forEach(p => {
+    // Layout presets have been replaced by workspace templates.
+    // Do not toggle legacy layout-* classes here; those old CSS rules
+    // permanently override search/banner placement and caused Dashboard regressions.
+    body.classList.remove(`layout-${p}`);
+    body.classList.toggle(`workspace-template-${p}`, templateId === p);
+  });
+  body.classList.toggle("workspace-modified", s.workspace?.modified === true);
+  const workspace = canonicalizeWorkspace();
+  const currentHeroSlot = workspace.slots.hero;
+  const currentSearchSlot = workspace.slots.search;
+  body.classList.toggle("workspace-search-standalone", currentSearchSlot === "standalone-search");
+  body.classList.toggle("workspace-search-hero", currentSearchSlot === "hero-search");
+  body.classList.toggle("workspace-banner-hidden", currentHeroSlot === "hidden");
+  body.dataset.workspaceTemplate = templateId;
+  body.classList.toggle("ui-hide-logo", workspace.slots.logo === "hidden");
+  body.classList.toggle("ui-hide-wordmark", workspace.slots.wordmark === "hidden");
+  body.classList.toggle("ui-hide-clock", workspace.slots.clock === "hidden");
+  body.classList.toggle("ui-hide-weather", workspace.slots.weather === "hidden");
+  body.classList.toggle("ui-hide-search", currentSearchSlot === "hidden");
+  body.classList.toggle("ui-hide-section-titles", workspace.display?.showSectionTitles === false);
   document.documentElement.style.setProperty("--ui-scale", String(s.uiScale / 100));
   document.documentElement.style.setProperty("--bookmark-font-size", `${s.bookmarkFontSize}px`);
   document.documentElement.style.setProperty("--bookmark-icon-size", `${s.bookmarkIconSize}px`);
@@ -699,8 +860,9 @@ function applyHero() {
   const card = $("heroImageCard");
   const img = $("heroImage");
   if (!card || !img) return;
-  const heroSize = normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
-  const isBannerHidden = heroSize === "hidden";
+  const workspace = canonicalizeWorkspace();
+  const isBannerHidden = workspace.slots.hero === "hidden";
+  const heroSize = isBannerHidden ? "hidden" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
   data.settings.heroSize = heroSize;
   data.settings.heroHeight = heroHeightForSize(heroSize, data.settings.heroHeight);
   card.classList.toggle("hidden-banner", isBannerHidden);
@@ -741,7 +903,9 @@ function syncControls() {
   setValue("mutedTextColorInput", s.mutedTextColor);
   setValue("terminalTextColorInput", s.terminalTextColor);
   setValue("statusTextColorInput", s.statusTextColor);
-  setValue("layoutPresetSelect", s.layoutPreset);
+  setValue("workspaceTemplateSelect", s.workspace?.template || s.layoutPreset || "classic");
+  setText("workspaceTemplateStatus", `${WORKSPACE_TEMPLATES[s.workspace?.template || "classic"]?.label || "Classic"}${s.workspace?.modified ? " (modified)" : ""}`);
+  setText("workspaceTemplateDescription", WORKSPACE_TEMPLATES[s.workspace?.template || "classic"]?.description || "Workspace template");
   setValue("showLogoSelect", String(s.showLogo !== false));
   setValue("showWordmarkSelect", String(s.showWordmark !== false));
   setValue("showClockSelect", String(s.showClock !== false));
@@ -777,6 +941,7 @@ function setBannerSize(size) {
   if (!HERO_SIZES[size]) return false;
   data.settings.heroSize = size;
   data.settings.heroHeight = heroHeightForSize(size, data.settings.heroHeight);
+  setWidgetSlot("hero", size === "hidden" ? "hidden" : "hero-banner");
   save();
   render();
   return true;
@@ -835,6 +1000,7 @@ function closeModal(id) { $(id)?.classList.add("hidden"); }
 function closeAllModals() { document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden")); }
 
 function render() {
+  syncLegacyVisibilityFromWorkspace();
   document.body.classList.toggle("bookmark-list-layout", (data.settings.bookmarkLayout || "list") === "list");
   document.body.classList.toggle("bookmark-grid-layout", (data.settings.bookmarkLayout || "list") === "grid");
   applyTheme();
@@ -1217,7 +1383,7 @@ function buildFastfetchHtml() {
   const rows = [
     ["Version", "1.2.1"],
     ["Theme", theme.label],
-    ["Preset", data.settings.layoutPreset],
+    ["Workspace", `${WORKSPACE_TEMPLATES[data.settings.workspace?.template || "classic"]?.label || "Classic"}${data.settings.workspace?.modified ? "*" : ""}`],
     ["Font", data.settings.fontFamily],
     ["Bookmarks", countBookmarks()],
     ["Sections", data.sections.length],
@@ -1284,11 +1450,18 @@ function formatRelativeDate(date) {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-function exportJson() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+function exportJson(type = "complete") {
+  const payloads = {
+    complete: { version: 1, workspace: data.settings.workspace, bookmarks: { sections: data.sections }, settings: { ...data.settings, workspace: undefined } },
+    workspace: { version: 1, workspace: data.settings.workspace },
+    bookmarks: { version: 1, bookmarks: { sections: data.sections } },
+    settings: { version: 1, settings: { ...data.settings, workspace: undefined } }
+  };
+  const payload = payloads[type] || data;
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "waypoint.json";
+  a.download = type === "complete" ? "waypoint-backup.json" : `waypoint-${type}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -1298,7 +1471,19 @@ function importJsonFile(file) {
   reader.onload = () => {
     const parsed = safeParse(reader.result);
     if (!parsed) return alert("Invalid JSON file.");
-    data = normalizeData(parsed);
+    if (parsed.workspace && !parsed.settings && !parsed.sections && !parsed.bookmarks) {
+      data.settings.workspace = normalizeWorkspace(parsed.workspace, data.settings);
+      syncLegacyVisibilityFromWorkspace();
+    } else if (parsed.bookmarks && !parsed.settings && !parsed.workspace) {
+      data.sections = normalizeData({ sections: parsed.bookmarks.sections || [] }).sections;
+    } else if (parsed.settings && !parsed.sections && !parsed.bookmarks && !parsed.workspace) {
+      data.settings = normalizeData({ settings: parsed.settings }).settings;
+    } else if (parsed.workspace || parsed.bookmarks || parsed.settings) {
+      const merged = { sections: parsed.bookmarks?.sections || data.sections, settings: { ...data.settings, ...(parsed.settings || {}), workspace: parsed.workspace || data.settings.workspace } };
+      data = normalizeData(merged);
+    } else {
+      data = normalizeData(parsed);
+    }
     save();
     render();
   };
@@ -1523,9 +1708,9 @@ Examples:
   layout list
   layout grid
 
-Use preset for full page layout presets:
-  preset minimal
-  preset dashboard`;
+Use templates as workspace starting points:
+  template minimal
+  template dashboard`;
   if (t === "visibility" || t === "hide" || t === "show") return `show|hide <element>
 
 Toggle interface elements.
@@ -1568,7 +1753,7 @@ Common commands:
   settings                      Open Settings
   settings appearance           Open a Settings page
   theme nord                    Change theme
-  preset minimal                Change page layout preset
+  template minimal                Change workspace template
   layout list                   Change bookmark layout
   show weather                  Show a UI element
   hide title                    Hide a UI element
@@ -1644,187 +1829,6 @@ function buildStatusLines(action, steps = ["Updating configuration", "Refreshing
 function commandResult(text) {
   return terminalPre(text, "terminal-result");
 }
-
-function runCommand(commandRaw) {
-  const command = commandRaw.trim();
-  if (!command) return;
-  const lower = command.toLowerCase();
-  const [head, ...rest] = lower.split(/\s+/);
-  const arg = rest.join(" ");
-  if (head === "clear") { terminalBuffer = []; renderTerminalBuffer(); return; }
-  if (["q", "quit", "exit"].includes(lower)) { closeModal("terminalModal"); return; }
-  const blocks = [terminalEcho(command)];
-  const done = html => pushTerminal(terminalBlock(blocks.join("") + (html || "")));
-  const textOut = text => done(commandResult(text));
-
-  if (head === "help") return done(terminalPre(buildHelpText(arg), "terminal-help"));
-  if (head === "man") {
-    if (arg === "css") return done(terminalPre(buildCssManualText(), "terminal-help"));
-    return textOut(`No manual entry for ${arg || "nothing"}. Try: man css`);
-  }
-  if (head === "fetch") return done(buildFastfetchHtml());
-  if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
-  if (head === "settings") {
-    openSettingsPage(arg || "appearance");
-    return textOut(`Opened Settings${arg ? ` > ${arg}` : " > appearance"}.`);
-  }
-  if (["show", "hide"].includes(head)) {
-    const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles" };
-    const key = keyMap[arg];
-    if (!key) return textOut("Usage: show|hide logo|title|clock|weather|search|sections");
-    data.settings[key] = head === "show";
-    save(); render();
-    return done(buildStatusLines(`${head === "show" ? "Showing" : "Hiding"}: ${arg}`));
-  }
-  if (head === "preset") {
-    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut("Usage: preset classic|dashboard|minimal|centered");
-    applyLayoutPresetDefaults(arg);
-    save(); render();
-    return done(buildStatusLines(`Applying layout preset defaults: ${arg}`));
-  }
-  if (head === "font") {
-    if (!["system", "inter", "jetbrains", "fira", "roboto", "mono"].includes(arg)) return textOut("Usage: font system|inter|jetbrains|fira|roboto|mono");
-    data.settings.fontFamily = arg;
-    save(); render();
-    return done(buildStatusLines(`Setting font: ${arg}`));
-  }
-  if (head === "accent") {
-    const color = rest[0] || "";
-    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut("Usage: accent #00d084");
-    data.settings.customAccent = color;
-    data.settings.useCustomColors = true;
-    save(); render();
-    return done(buildStatusLines(`Setting accent color: ${color}`));
-  }
-  if (head === "surface") {
-    const color = rest[0] || "";
-    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut("Usage: surface #09111a");
-    data.settings.customPanel = color;
-    data.settings.useCustomColors = true;
-    save(); render();
-    return done(buildStatusLines(`Setting surface color: ${color}`));
-  }
-  if (head === "transparency") {
-    const amount = clamp(Number(rest[0]), 60, 100, NaN);
-    if (!Number.isFinite(amount)) return textOut("Usage: transparency 60-100");
-    data.settings.windowTransparency = amount;
-    save(); render();
-    return done(buildStatusLines(`Setting window transparency: ${amount}%`));
-  }
-  if (head === "titlecolor") {
-    const color = rest[0] || "";
-    if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut("Usage: titlecolor #d8dee9");
-    data.settings.sectionTitleColor = color;
-    data.settings.useCustomTextColors = true;
-    save(); render();
-    return done(buildStatusLines(`Setting section title color: ${color}`));
-  }
-  if (head === "name") {
-    const nextName = commandRaw.trim().replace(/^name\s*/i, "").trim();
-    data.settings.userName = sanitizeUserName(nextName);
-    save(); render();
-    return textOut(`Name set to ${displayUserName()}.`);
-  }
-  if (head === "searchengine" || head === "engine") {
-    const map = { google: "google", ddg: "duckduckgo", duckduckgo: "duckduckgo", brave: "brave", bing: "bing", custom: "custom" };
-    if (!arg) return textOut(`Search engine: ${labelSearch(data.settings.searchEngine)}`);
-    if (!map[arg]) return textOut("Usage: engine google|duckduckgo|brave|bing|custom");
-    data.settings.searchEngine = map[arg];
-    save(); render();
-    return done(buildStatusLines(`Setting search engine: ${labelSearch(data.settings.searchEngine)}`));
-  }
-  if (head === "customsearch") {
-    const url = commandRaw.trim().replace(/^customsearch\s*/i, "").trim();
-    if (!url) return textOut("Usage: customsearch https://example.com/search?q=%s");
-    data.settings.customSearchUrl = url.slice(0, 240);
-    data.settings.searchEngine = "custom";
-    save(); render();
-    return textOut("Custom search URL saved.");
-  }
-  if (head === "theme" && arg) {
-    const map = { catppuccin: "catppuccin", nord: "nord", gruvbox: "gruvbox", tokyo: "tokyoNight", "tokyo-night": "tokyoNight", tokyonight: "tokyoNight" };
-    if (!map[arg]) return textOut(`theme: unknown theme '${arg}'\n\nAvailable: nord, catppuccin, gruvbox, tokyo`);
-    data.settings.theme = map[arg];
-    save(); render();
-    return done(buildStatusLines(`Applying theme: ${getTheme().label}`));
-  }
-  if (head === "banner") {
-    const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", auto: "auto", default: "auto" };
-    const sizeMap = { hidden: "hidden", hide: "hidden", small: "small", compact: "small", medium: "medium", balanced: "medium", large: "large", tall: "large", showcase: "large" };
-    if (arg === "size") {
-      const size = parts[1];
-      if (!sizeMap[size]) return textOut("Usage: banner size hidden|small|medium|large");
-      setBannerSize(sizeMap[size]);
-      return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
-    }
-    if (sizeMap[arg]) {
-      setBannerSize(sizeMap[arg]);
-      return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
-    }
-    if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
-    if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
-    if (!map[arg]) return textOut(`Unknown banner option: ${arg}\nUsage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large|fit|fill`);
-    data.settings.heroStyle = map[arg];
-    save(); render();
-    return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
-  }
-  if (head === "layout") {
-    const map = { list: "list", compact: "list", row: "list", rows: "list", grid: "grid", cards: "grid" };
-    if (!arg) return textOut(`Bookmark layout: ${(data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"}`);
-    if (!map[arg]) return textOut("Usage: layout list|grid");
-    data.settings.bookmarkLayout = map[arg];
-    save(); render();
-    return done(buildStatusLines(`Setting bookmark layout: ${data.settings.bookmarkLayout === "list" ? "Compact List" : "Grid"}`));
-  }
-  if (head === "weather") {
-    const next = commandRaw.trim().replace(/^weather\s+/i, "").trim();
-    if (!next) return textOut("Usage: weather <city, region, country or ZIP>");
-    data.settings.weatherLocation = next;
-    save(); refreshWeather(true);
-    return done(buildStatusLines(`Setting weather location: ${data.settings.weatherLocation}`, ["Saving location", "Fetching forecast", "Done"]));
-  }
-  if (head === "wallpaper") {
-    const map = { theme: "wallpaper", wallpaper: "wallpaper", default: "wallpaper", gradient: "gradient", custom: "custom" };
-    if (!map[arg]) return textOut("Usage: wallpaper theme|gradient|custom");
-    data.settings.backgroundMode = map[arg];
-    save(); render();
-    return done(buildStatusLines(`Setting wallpaper: ${labelBackground(data.settings.backgroundMode)}`));
-  }
-  if (head === "add") {
-    if (arg.startsWith("section")) {
-      const sectionName = commandRaw.trim().replace(/^add\s+section\s*/i, "").trim() || "New Section";
-      data.sections.push({ name: sectionName, links: [] });
-      save(); render();
-      return textOut(`Section added: ${sectionName}`);
-    }
-    if (arg.startsWith("link")) {
-      const parsed = parseAddLinkCommand(commandRaw);
-      if (!parsed) return textOut('Usage: add link <section> <name> <url>\nTip: use quotes for multi-word names, like add link "Media" "YouTube Music" https://music.youtube.com');
-      const message = addLinkByCommand(parsed.sectionName, parsed.linkName, parsed.url).replace(/<[^>]+>/g, "");
-      return textOut(message);
-    }
-  }
-  if (head === "delete" && arg.startsWith("section")) {
-    const sectionName = commandRaw.trim().replace(/^delete\s+section\s*/i, "").trim();
-    if (!sectionName) return textOut("Usage: delete section <name>");
-    const message = deleteSectionByCommand(sectionName).replace(/<[^>]+>/g, "");
-    return textOut(message);
-  }
-  if (head === "rename" && arg.startsWith("section")) {
-    const body = commandRaw.trim().replace(/^rename\s+section\s*/i, "").trim();
-    const quoted = [...body.matchAll(/"([^"]+)"|'([^']+)'/g)].map(match => match[1] || match[2]);
-    if (quoted.length >= 2) return textOut(renameSectionByCommand(quoted[0], quoted[1]).replace(/<[^>]+>/g, ""));
-    const parts = body.split(/\s+/);
-    if (parts.length < 2) return textOut('Usage: rename section <old> <new>\nTip: use quotes for multi-word names.');
-    return textOut(renameSectionByCommand(parts[0], parts.slice(1).join(" ")).replace(/<[^>]+>/g, ""));
-  }
-  if (head === "import") { $("importFile")?.click(); return textOut("Choose a JSON file to import."); }
-  if (head === "export") { exportJson(); return textOut("Export started."); }
-  if (head === "reset") { resetEverything(); return; }
-  if (head === "search") { closeAllModals(); focusSearch(); return; }
-  return textOut(`${head}: command not found\n\nTry: help`);
-}
-
 
 function executeButtonCommand(command) {
   if (command === "fetch") runCommand("fetch");
@@ -1987,7 +1991,10 @@ function bindEvents() {
   });
 
   $("importFile")?.addEventListener("change", e => { const file = e.target.files[0]; if (file) importJsonFile(file); e.target.value = ""; });
-  $("exportBtn")?.addEventListener("click", exportJson);
+  $("exportBtn")?.addEventListener("click", () => exportJson("complete"));
+  $("exportWorkspaceBtn")?.addEventListener("click", () => exportJson("workspace"));
+  $("exportBookmarksBtn")?.addEventListener("click", () => exportJson("bookmarks"));
+  $("exportSettingsBtn")?.addEventListener("click", () => exportJson("settings"));
   $("importBtn")?.addEventListener("click", () => $("importFile")?.click());
 
   bindSetting("userNameInput", "input", value => { data.settings.userName = sanitizeUserName(value); save(); renderTerminal(); });
@@ -2010,13 +2017,13 @@ function bindEvents() {
   bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
-  bindSetting("layoutPresetSelect", "change", value => { applyLayoutPresetDefaults(value); save(); render(); });
-  bindSetting("showLogoSelect", "change", value => { data.settings.showLogo = value === "true"; save(); render(); });
-  bindSetting("showWordmarkSelect", "change", value => { data.settings.showWordmark = value === "true"; save(); render(); });
-  bindSetting("showClockSelect", "change", value => { data.settings.showClock = value === "true"; save(); render(); });
-  bindSetting("showWeatherSelect", "change", value => { data.settings.showWeather = value === "true"; save(); render(); });
-  bindSetting("showSearchSelect", "change", value => { data.settings.showSearch = value === "true"; save(); render(); });
-  bindSetting("showSectionTitlesSelect", "change", value => { data.settings.showSectionTitles = value === "true"; save(); render(); });
+  $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); render(); });
+  bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); render(); });
+  bindSetting("showWordmarkSelect", "change", value => { setWidgetVisible("wordmark", value === "true"); save(); render(); });
+  bindSetting("showClockSelect", "change", value => { setWidgetVisible("clock", value === "true"); save(); render(); });
+  bindSetting("showWeatherSelect", "change", value => { setWidgetVisible("weather", value === "true"); save(); render(); });
+  bindSetting("showSearchSelect", "change", value => { setWidgetVisible("search", value === "true"); save(); render(); });
+  bindSetting("showSectionTitlesSelect", "change", value => { data.settings.workspace.display.showSectionTitles = value === "true"; data.settings.workspace.modified = true; syncLegacyVisibilityFromWorkspace(); save(); render(); });
   $("editLayoutBtn")?.addEventListener("click", toggleEditLayoutMode);
   bindSetting("bookmarkColumnsSelect", "change", value => { data.settings.bookmarkColumns = value; save(); render(); });
   bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
@@ -2026,13 +2033,18 @@ function bindEvents() {
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
-  bindSetting("heroStyleSelect", "change", value => { if (value === "hidden") { data.settings.heroSize = "hidden"; data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight); data.settings.heroStyle = "auto"; } else { data.settings.heroStyle = value; } save(); render(); });
+  bindSetting("heroStyleSelect", "change", value => { if (value === "hidden") { data.settings.heroSize = "hidden"; data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight); data.settings.heroStyle = "auto"; setWidgetSlot("hero", "hidden"); } else { data.settings.heroStyle = value; if (slotForWidget("hero") === "hidden") setWidgetSlot("hero", "hero-banner"); } save(); render(); });
   bindSetting("heroFitSelect", "change", value => { data.settings.heroFit = value; save(); render(); });
   bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); render(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
-  bindSetting("heroHeightPresetSelect", "change", value => { data.settings.heroSize = value; data.settings.heroHeight = heroHeightForSize(value, data.settings.heroHeight); save(); applyHero(); renderTerminal(); });
+  bindSetting("heroHeightPresetSelect", "change", value => {
+    data.settings.heroSize = value;
+    data.settings.heroHeight = heroHeightForSize(value, data.settings.heroHeight);
+    setWidgetSlot("hero", value === "hidden" ? "hidden" : "hero-banner");
+    save(); render();
+  });
   bindNumber("heroZoomSlider", "heroZoom", () => applyHero());
   bindNumber("heroYSlider", "heroY", () => applyHero());
 
@@ -2093,7 +2105,7 @@ function currentConfigText() {
   const s = data.settings;
   return [
     `Theme: ${getTheme().label}`,
-    `Page preset: ${s.layoutPreset}`,
+    `Workspace template: ${s.workspace?.template || "classic"}${s.workspace?.modified ? " (modified)" : ""}`,
     `Bookmark layout: ${s.bookmarkLayout === "grid" ? "Grid Cards" : "Compact List"}`,
     `Font: ${s.fontFamily}`,
     `Search engine: ${labelSearch(s.searchEngine)}`,
@@ -2157,7 +2169,7 @@ const WELCOME_GUIDE = [
       "",
       "Common terminal customizations:",
       "  theme nord",
-      "  preset minimal",
+      "  template minimal",
       "  layout compact",
       "  font jetbrains",
       "  window transparency 92",
@@ -2168,7 +2180,7 @@ const WELCOME_GUIDE = [
     title: "Import & Export",
     body: [
       "Waypoint profiles are JSON files.",
-      "Export includes bookmarks, themes, colors, layout, weather, fonts, and terminal settings.",
+      "Export supports complete backups plus separate workspace, bookmarks, and settings files.",
       "",
       "Commands:",
       "  export",
@@ -2269,8 +2281,8 @@ function buildHelpText(topic = "") {
   const t = String(topic || "").trim().toLowerCase();
   const pages = {
     theme: `theme\n\nChange or view the current color theme.\n\nSyntax:\n  theme\n  theme <name>\n\nExamples:\n  theme nord\n  theme tokyo-night\n\nSee also:\n  ls themes`,
-    layout: `layout\n\nChange or view the bookmark layout.\n\nSyntax:\n  layout\n  layout compact\n  layout grid\n\nPreset layouts use the preset command.\n\nSee also:\n  help preset\n  ls layouts`,
-    preset: `preset\n\nChange or view the page layout preset.\n\nSyntax:\n  preset\n  preset <name>\n\nExamples:\n  preset classic\n  preset minimal\n\nSee also:\n  ls layouts`,
+    layout: `layout\n\nChange or view the bookmark layout.\n\nSyntax:\n  layout\n  layout compact\n  layout grid\n\nWorkspace templates use the template command.\n\nSee also:\n  help template\n  ls layouts`,
+    preset: `preset\n\nChange or view the workspace template.\n\nSyntax:\n  preset\n  preset <name>\n\nExamples:\n  preset classic\n  template minimal\n\nSee also:\n  ls layouts`,
     visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  sections\n  banner`,
     search: `engine\n\nChange or view the search engine.\n\nSyntax:\n  engine\n  engine <name>\n\nExamples:\n  engine google\n  engine duckduckgo\n\nSee also:\n  ls search`,
     weather: `weather\n\nSet, view, or refresh weather.\n\nSyntax:\n  weather\n  weather <location>\n  weather refresh\n\nExamples:\n  weather "New York, NY"\n  weather refresh`,
@@ -2294,7 +2306,7 @@ function buildHelpText(topic = "") {
     "settings         Open Settings",
     "welcome          Open the Waypoint guide",
     "theme            Manage themes",
-    "preset           Manage page layout presets",
+    "template         Apply workspace templates",
     "layout           Manage bookmark layout",
     "font             Manage fonts",
     "engine           Manage search engine",
@@ -2306,6 +2318,7 @@ function buildHelpText(topic = "") {
     "window           Set window transparency",
     "terminal         Set terminal settings",
     "widgets          List registered UI widgets",
+    "workspace        Show workspace slot assignments",
     "add              Add sections or bookmarks",
     "rename           Rename sections",
     "remove / delete  Remove sections",
@@ -2322,14 +2335,15 @@ function buildCssManualText() {
 function listCommand(category = "") {
   const c = String(category || "").trim().toLowerCase();
   const maps = {
-    "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "widgets", "config"]),
+    "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "widgets", "workspace", "config"]),
     commands: buildHelpText(),
     themes: cleanList("Available Themes", ["catppuccin", "nord", "gruvbox", "tokyo-night"]),
-    layouts: cleanList("Available Layouts", ["classic", "dashboard", "minimal", "centered", "compact bookmark layout", "grid bookmark layout"]),
+    layouts: cleanList("Available Templates", ["classic", "dashboard", "minimal", "centered"]),
     fonts: cleanList("Available Fonts", ["system", "inter", "jetbrains", "firacode", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"]),
     visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "sections", "banner"]),
     search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
     widgets: widgetSummaryText(),
+    workspace: workspaceSummaryText(),
     config: `Current Configuration\n\n${currentConfigText()}`
   };
   return maps[c] || `ls: unknown list '${c}'\n\nTry: ls`;
@@ -2368,6 +2382,7 @@ function runCommand(commandRaw) {
   if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
   if (head === "fetch") return done(buildFastfetchHtml());
   if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
+  if (head === "workspace") return done(terminalPre(workspaceSummaryText(), "terminal-help"));
   if (head === "settings") {
     const pageMap = { text: "textcolors", textcolor: "textcolors", textcolors: "textcolors", colors: "textcolors", appearance: "appearance", layout: "layout", bookmarks: "bookmarks", weather: "weather", banner: "banner", advanced: "advanced", backup: "backup" };
     const page = arg ? pageMap[arg.replace(/\s+/g, "")] : "appearance";
@@ -2376,21 +2391,32 @@ function runCommand(commandRaw) {
     return textOut(`Opened Settings > ${page}.`, "terminal-success-text");
   }
   if (["show", "hide"].includes(head)) {
-    const keyMap = { logo: "showLogo", terminal: "showLogo", button: "showLogo", title: "showWordmark", wordmark: "showWordmark", clock: "showClock", weather: "showWeather", search: "showSearch", sections: "showSectionTitles", titles: "showSectionTitles", banner: "heroSize" };
-    const key = keyMap[arg];
-    if (!key) return textOut(buildHelpText("visibility"), "terminal-warning");
-    if (key === "heroSize") {
-      data.settings.heroSize = head === "show" ? "medium" : "hidden";
-      data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
-    } else data.settings[key] = head === "show";
+    const widgetMap = {
+      logo: "logo", terminal: "logo", button: "logo",
+      title: "wordmark", wordmark: "wordmark",
+      clock: "clock", weather: "weather", search: "search",
+      banner: "hero"
+    };
+    const visible = head === "show";
+    if (["sections", "titles"].includes(arg)) {
+      data.settings.workspace.display.showSectionTitles = visible;
+      data.settings.workspace.modified = true;
+      syncLegacyVisibilityFromWorkspace();
+      save(); render();
+      return done(buildStatusLines(`${visible ? "Showing" : "Hiding"}: section titles`));
+    }
+    const widgetId = widgetMap[arg];
+    if (!widgetId) return textOut(buildHelpText("visibility"), "terminal-warning");
+    if (!setWidgetVisible(widgetId, visible)) return textOut(`Cannot ${head} ${arg}.`, "terminal-warning");
     save(); render();
-    return done(buildStatusLines(`${head === "show" ? "Showing" : "Hiding"}: ${arg}`));
+    return done(buildStatusLines(`${visible ? "Showing" : "Hiding"}: ${arg}`));
   }
-  if (head === "preset") {
-    if (!arg) return textOut(`Current preset: ${data.settings.layoutPreset}`);
-    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut(buildHelpText("preset"), "terminal-warning");
-    applyLayoutPresetDefaults(arg); save(); render();
-    return done(buildStatusLines(`Applying layout preset defaults: ${arg}`));
+  if (["template", "preset", "workspace"].includes(head)) {
+    if (head === "workspace" && !arg) return done(terminalPre(workspaceSummaryText(), "terminal-help"));
+    if (!arg) return textOut(`Current template: ${data.settings.workspace?.template || "classic"}${data.settings.workspace?.modified ? " (modified)" : ""}`);
+    if (!["classic", "minimal", "dashboard", "centered"].includes(arg)) return textOut(buildHelpText("template"), "terminal-warning");
+    applyWorkspaceTemplate(arg); save(); render();
+    return done(buildStatusLines(`Applying workspace template: ${arg}`));
   }
   if (head === "font") {
     if (!arg) return textOut(`Current font: ${data.settings.fontFamily}`);
@@ -2519,7 +2545,11 @@ function runCommand(commandRaw) {
     return textOut(renameSectionByCommand(parts[0], parts.slice(1).join(" ")).replace(/<[^>]+>/g, ""));
   }
   if (head === "import") { $("importFile")?.click(); return textOut("Choose a JSON file to import."); }
-  if (head === "export") { exportJson(); return textOut("Export started.", "terminal-success-text"); }
+  if (head === "export") {
+    const type = ["workspace", "bookmarks", "settings", "complete"].includes(arg) ? arg : "complete";
+    exportJson(type);
+    return textOut(`Export started: ${type}.`, "terminal-success-text");
+  }
   if (head === "reset") {
     const target = arg || "";
     if (!target) return textOut(buildHelpText("reset"), "terminal-warning");
@@ -2533,7 +2563,7 @@ function runCommand(commandRaw) {
 function resetCategory(target) {
   const d = structuredClone(defaultData.settings);
   if (target === "appearance") ["theme", "fontFamily", "uiScale", "useCustomColors", "customAccent", "customPanel", "customText", "windowTransparency"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "layout") ["layoutPreset", "showLogo", "showWordmark", "showClock", "showWeather", "showSearch", "showSectionTitles", "shortcut"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "layout" || target === "workspace") { data.settings.workspace = defaultWorkspace(d.workspace?.template || "classic"); data.settings.shortcut = d.shortcut; syncLegacyVisibilityFromWorkspace(); }
   else if (target === "bookmarks") ["bookmarkLayout", "bookmarkColumns", "bookmarkFontSize", "bookmarkIconSize"].forEach(k => data.settings[k] = d[k]);
   else if (target === "weather") ["weatherLocation", "weatherUnit"].forEach(k => data.settings[k] = d[k]);
   else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroZoom", "heroY", "heroStyle", "heroFit"].forEach(k => data.settings[k] = d[k]);
@@ -2544,7 +2574,7 @@ function resetCategory(target) {
   save(); render(); refreshWeather(false);
 }
 function addResetButtonEvents() {
-  const map = { resetAppearanceBtn: "appearance", resetLayoutBtn: "layout", resetBookmarksBtn: "bookmarks", resetWeatherBtn: "weather", resetBannerBtn: "banner", resetTextBtn: "text", resetAdvancedBtn: "advanced" };
+  const map = { resetAppearanceBtn: "appearance", resetLayoutBtn: "workspace", resetBookmarksBtn: "bookmarks", resetWeatherBtn: "weather", resetBannerBtn: "banner", resetTextBtn: "text", resetAdvancedBtn: "advanced" };
   Object.entries(map).forEach(([id, target]) => $(id)?.addEventListener("click", () => resetCategory(target)));
 }
 addResetButtonEvents();

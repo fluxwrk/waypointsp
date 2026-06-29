@@ -64,6 +64,23 @@
     "settingsTop": null,
     "lastModified": "2026-06-25T07:27:50.176Z",
     "heroSize": "medium",
-    "widgets": {}
+    "widgets": {},
+    "workspace": {
+      "version": 1,
+      "template": "classic",
+      "modified": false,
+      "slots": {
+        "logo": "header-left",
+        "wordmark": "header-left",
+        "clock": "header-right",
+        "weather": "header-right",
+        "search": "hero-search",
+        "hero": "hero-banner",
+        "sections": "content-sections"
+      },
+      "display": {
+        "showSectionTitles": true
+      }
+    }
   }
 }

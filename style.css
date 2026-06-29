@@ -2249,12 +2249,12 @@ body.bookmark-list-layout .link img, body.bookmark-grid-layout .link img { width
 html[data-bookmark-columns="2"] body.bookmark-list-layout .links, html[data-bookmark-columns="2"] body.bookmark-grid-layout .links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 html[data-bookmark-columns="3"] body.bookmark-list-layout .links, html[data-bookmark-columns="3"] body.bookmark-grid-layout .links { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
 html[data-bookmark-columns="4"] body.bookmark-list-layout .links, html[data-bookmark-columns="4"] body.bookmark-grid-layout .links { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
-.layout-minimal .hero { display: flex !important; min-height: 78px !important; margin: 6px 0 22px !important; }
-.layout-minimal .search { position: relative !important; top: auto !important; left: auto !important; transform: none !important; width: min(780px, 100%) !important; }
-.layout-centered .toolbar { grid-template-columns: 1fr !important; justify-items: center !important; }
-.layout-centered .toolbar-right { justify-content: center !important; margin-left: 0 !important; }
-.layout-centered .brand-wordmark { justify-self: center !important; margin: 0 !important; }
-.layout-dashboard .hero-image-card { min-height: 330px !important; }
+
+
+
+
+
+
 .fetch-output { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 26px; margin: 0; color: #d9e5f6; font: 850 clamp(15px, 1.15vw, 18px)/1.35 var(--mono); white-space: pre; }
 .fetch-logo { color: var(--waypoint-green, var(--accent)); text-shadow: 0 0 20px color-mix(in srgb, var(--waypoint-green, var(--accent)), transparent 62%); }
 .fetch-info strong { color: var(--waypoint-green, var(--accent)); }
@@ -2491,40 +2491,12 @@ label {
 .weather-main {
   color: var(--status-text-color) !important;
 }
-.layout-dashboard .hero {
-  display: flex !important;
-  min-height: 88px !important;
-  margin: 8px 0 24px !important;
-}
-.layout-dashboard .search {
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  transform: none !important;
-  width: min(920px, 100%) !important;
-}
-.layout-dashboard .sections {
-  grid-template-columns: repeat(4, minmax(220px, 1fr)) !important;
-}
-.layout-dashboard .section {
-  min-height: 118px !important;
-}
-@media (max-width: 1100px) {
-  .color-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-  .layout-dashboard .sections {
-    grid-template-columns: repeat(2, minmax(220px, 1fr)) !important;
-  }
-}
-@media (max-width: 640px) {
-  .color-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .layout-dashboard .sections {
-    grid-template-columns: 1fr !important;
-  }
-}
+
+
+
+
+
+
 
 #settingsModal .settings-modal,
 #terminalModal .terminal-window,
@@ -2704,59 +2676,7 @@ body.bookmark-grid-layout .section-add-tile {
 }
 
 
-/* v1.4.0-dev5 hotfix: keep Dashboard from overriding visible banner presets */
-.layout-dashboard .hero:not(.banner-hidden) {
-  position: relative !important;
-  display: grid !important;
-  place-items: center !important;
-  min-height: unset !important;
-  margin: 0 0 24px !important;
-}
 
-.layout-dashboard .hero:not(.banner-hidden) .hero-image-card {
-  height: var(--hero-height, 240px) !important;
-  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
-}
-
-.layout-dashboard .hero.hero-size-small:not(.banner-hidden) .hero-image-card {
-  width: min(860px, 100%) !important;
-}
-
-.layout-dashboard .hero.hero-size-medium:not(.banner-hidden) .hero-image-card {
-  width: min(1180px, 100%) !important;
-}
-
-.layout-dashboard .hero.hero-size-large:not(.banner-hidden) .hero-image-card {
-  width: 100% !important;
-}
-
-.layout-dashboard .hero:not(.banner-hidden) .search {
-  position: absolute !important;
-  z-index: 5 !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: min(780px, calc(100% - 220px)) !important;
-}
-
-.layout-dashboard .hero.hero-size-small:not(.banner-hidden) .search {
-  width: min(720px, calc(100% - 54px)) !important;
-}
-
-.layout-dashboard .hero.hero-size-large:not(.banner-hidden) .search {
-  width: min(820px, calc(100% - 220px)) !important;
-}
-
-@media (max-width: 900px) {
-  .layout-dashboard .hero:not(.banner-hidden) .search {
-    width: calc(100% - 54px) !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .layout-dashboard .hero:not(.banner-hidden) .search {
-    width: calc(100% - 24px) !important;
-  }
 }
 
 /* v1.4.0-dev6 edit layout inspector */
@@ -2845,4 +2765,178 @@ body.edit-layout-active .section::before {
     justify-content: center;
     border-radius: 18px;
   }
+}
+
+/* v1.4.0-dev8 workspace foundation */
+.workspace-summary-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(0,0,0,.16);
+}
+.workspace-summary-card span {
+  color: var(--muted);
+  font: 800 12px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.workspace-summary-card strong {
+  color: var(--accent);
+  font: 900 14px var(--mono);
+}
+body.edit-layout-active .waypoint-widget[data-widget-slot]::after,
+body.edit-layout-active .waypoint-widget-section::after {
+  content: attr(data-widget-region) " / " attr(data-widget-slot);
+  position: absolute;
+  right: 10px;
+  bottom: -28px;
+  z-index: 30;
+  padding: 4px 7px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 60%);
+  background: rgba(3, 6, 12, .88);
+  color: var(--muted);
+  font: 850 10px var(--mono);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+}
+body.edit-layout-active .waypoint-widget:hover::after,
+body.edit-layout-active .waypoint-widget-section:hover::after { opacity: 1; }
+body.workspace-search-standalone .hero:not(.banner-hidden) .search {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  order: -1;
+  margin-bottom: 18px;
+  width: min(780px, 100%) !important;
+}
+body.workspace-search-standalone .hero:not(.banner-hidden) {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+/* v1.4.0-dev8 hotfix3: Workspace renderer owns search/banner placement */
+body.workspace-search-hero .hero {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+}
+body.workspace-search-hero .hero .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  order: initial !important;
+  margin: 0 !important;
+  width: min(780px, calc(100% - 220px)) !important;
+}
+body.workspace-search-standalone .hero {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+body.workspace-search-standalone .hero .search {
+  position: relative !important;
+  z-index: 5 !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  order: -1 !important;
+  margin: 0 0 18px !important;
+  width: min(780px, 100%) !important;
+}
+body.workspace-banner-hidden .hero-image-card {
+  display: none !important;
+}
+body.workspace-banner-hidden .hero {
+  min-height: 76px !important;
+  margin: 4px 0 24px !important;
+}
+@media (max-width: 900px) {
+  body.workspace-search-hero .hero .search { width: calc(100% - 54px) !important; }
+}
+@media (max-width: 640px) {
+  body.workspace-search-hero .hero .search { width: calc(100% - 24px) !important; }
+  body.workspace-search-standalone .hero .search { width: 100% !important; }
+}
+
+
+/* v1.4.0-dev9 Workspace Completion: Workspace owns search/banner placement */
+.workspace-summary-card p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font: 700 13px/1.45 var(--sans);
+}
+body.workspace-search-hero .hero:not(.banner-hidden) {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+}
+body.workspace-search-hero .hero:not(.banner-hidden) .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.workspace-search-standalone .hero {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 18px !important;
+}
+body.workspace-search-standalone .hero:not(.banner-hidden) .hero-image-card { order: 1 !important; }
+body.workspace-search-standalone .hero:not(.banner-hidden) .search {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  order: 2 !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.workspace-search-standalone .hero.banner-hidden .search {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+}
+body.edit-layout-active .waypoint-widget[data-widget-slot]::after,
+body.edit-layout-active .waypoint-widget-section::after {
+  content: attr(data-widget-region) " / " attr(data-widget-slot);
+  position: absolute;
+  right: 10px;
+  bottom: -28px;
+  z-index: 30;
+  padding: 4px 7px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 60%);
+  background: rgba(3, 6, 12, .88);
+  color: var(--muted);
+  font: 850 10px var(--mono);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+}
+body.edit-layout-active .waypoint-widget:hover::after,
+body.edit-layout-active .waypoint-widget-section:hover::after { opacity: 1; }
+@media (max-width: 900px) {
+  body.workspace-search-hero .hero:not(.banner-hidden) .search { width: calc(100% - 54px) !important; }
+}
+@media (max-width: 640px) {
+  body.workspace-search-hero .hero:not(.banner-hidden) .search { width: calc(100% - 24px) !important; }
+  body.workspace-search-standalone .hero .search { width: 100% !important; }
 }

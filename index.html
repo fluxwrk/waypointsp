@@ -95,7 +95,7 @@
 
       <div class="settings-tabs" role="tablist" aria-label="Waypoint settings pages">
         <button class="settings-tab active" type="button" data-settings-page="appearance">Appearance</button>
-        <button class="settings-tab" type="button" data-settings-page="layout">Layout</button>
+        <button class="settings-tab" type="button" data-settings-page="layout">Workspace</button>
         <button class="settings-tab" type="button" data-settings-page="bookmarks">Bookmarks</button>
         <button class="settings-tab" type="button" data-settings-page="weather">Weather</button>
         <button class="settings-tab" type="button" data-settings-page="banner">Banner</button>
@@ -119,8 +119,13 @@
       </div>
 
       <div class="settings-page" data-page="layout">
+        <div class="workspace-summary-card">
+          <span>Current Workspace</span>
+          <strong id="workspaceTemplateStatus">Classic</strong>
+          <p id="workspaceTemplateDescription">Balanced default Waypoint layout.</p>
+        </div>
         <div class="terminal-control-grid">
-          <label>Layout Preset<select id="layoutPresetSelect"><option value="classic">Classic</option><option value="dashboard">Dashboard</option><option value="minimal">Minimal</option><option value="centered">Centered</option></select></label>
+          <label>Starting Template<select id="workspaceTemplateSelect"><option value="classic">Classic</option><option value="dashboard">Dashboard</option><option value="minimal">Minimal</option><option value="centered">Centered</option></select></label>
           <label>Show Logo / Terminal Button<select id="showLogoSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Show Waypoint Name<select id="showWordmarkSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Show Clock<select id="showClockSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
@@ -130,8 +135,9 @@
           <label>Shortcut<select id="shortcutSelect"><option value="none">Disabled</option><option value="altT">Alt+T</option><option value="ctrlShiftSpace">Ctrl+Shift+Space</option></select></label>
         </div>
         <div class="button-row settings-uploads">
-          <button id="editLayoutBtn" class="primary-btn" type="button">Edit Layout</button>
-          <button id="resetLayoutBtn" class="ghost-btn" type="button">Reset Layout</button>
+          <button id="applyWorkspaceTemplateBtn" class="ghost-btn" type="button">Use Selected Template</button>
+          <button id="editLayoutBtn" class="primary-btn" type="button">Customize Workspace</button>
+          <button id="resetLayoutBtn" class="ghost-btn" type="button">Reset Workspace</button>
         </div>
       </div>
 
@@ -202,7 +208,10 @@
 
       <div class="settings-page" data-page="backup">
         <div class="button-row settings-uploads">
-          <button id="exportBtn" class="ghost-btn" type="button">Export JSON</button>
+          <button id="exportBtn" class="ghost-btn" type="button">Export Complete Backup</button>
+          <button id="exportWorkspaceBtn" class="ghost-btn" type="button">Export Workspace</button>
+          <button id="exportBookmarksBtn" class="ghost-btn" type="button">Export Bookmarks</button>
+          <button id="exportSettingsBtn" class="ghost-btn" type="button">Export Settings</button>
           <button id="importBtn" class="ghost-btn" type="button">Import JSON</button>
           <button id="resetEverythingBtn" class="ghost-btn" type="button">Factory Reset</button>
         </div>

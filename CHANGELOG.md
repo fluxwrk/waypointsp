@@ -5,6 +5,21 @@ All notable changes to Waypoint will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Added v1.4.0-dev9 Workspace Completion groundwork.
+- Added Workspace validation before rendering so invalid widget slots are normalized safely.
+- Added Workspace template status and descriptions in Settings > Workspace.
+
+### Changed
+- Templates now act as explicit starting points instead of active layout modes.
+- Workspace now owns search/banner placement, visibility, and section title display.
+- The template selector no longer changes layout immediately; users must explicitly apply the selected template.
+- Standalone Search is now a valid Workspace slot below the banner instead of an accidental fallback state.
+
+### Fixed
+- Removed remaining legacy `layout-*` CSS behavior that could override Workspace rendering.
+- Fixed Search being forced back into Hero Search when Standalone Search is intentionally selected while the banner is visible.
+
+### Added
 - Added Edit Layout inspector mode for visualizing registered widget boundaries.
 - Added an Edit Layout button to Layout settings and a floating Done/Reset Layout inspector bar.
 - Added banner size presets: Hidden, Small, Medium, and Large.
