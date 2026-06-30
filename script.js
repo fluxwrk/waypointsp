@@ -146,30 +146,71 @@ const defaultData = {
 };
 
 const bundledDemoData = {
-  "sections": [
-    {
-      "name": "Getting Started",
-      "links": [
-        {
-          "name": "Welcome",
-          "url": "waypoint:welcome",
-          "icon": "\ud83d\udcd6"
-        },
-        {
-          "name": "Settings",
-          "url": "waypoint:settings",
-          "icon": "\u2699\ufe0f"
-        }
-      ]
+  "version": 1,
+  "workspace": {
+    "version": 1,
+    "template": "classic",
+    "modified": true,
+    "slots": {
+      "logo": "header-left-1",
+      "wordmark": "header-left-2",
+      "clock": "header-right-1",
+      "weather": "header-right-2",
+      "search": "hero-search",
+      "hero": "hero-banner",
+      "sections": "content-sections"
+    },
+    "display": {
+      "showSectionTitles": true,
+      "heroStyle": "topBar"
     }
-  ],
+  },
+  "bookmarks": {
+    "sections": [
+      {
+        "name": "Getting Started",
+        "links": [
+          {
+            "name": "Welcome",
+            "url": "waypoint:welcome",
+            "icon": "📖"
+          },
+          {
+            "name": "Settings",
+            "url": "waypoint:settings",
+            "icon": "⚙️"
+          }
+        ]
+      },
+      {
+        "name": "Favorites",
+        "links": [
+          {
+            "name": "GitHub",
+            "url": "https://github.com",
+            "icon": ""
+          },
+          {
+            "name": "YouTube",
+            "url": "https://youtube.com",
+            "icon": ""
+          },
+          {
+            "name": "Wikipedia",
+            "url": "https://wikipedia.org",
+            "icon": ""
+          }
+        ]
+      }
+    ]
+  },
   "settings": {
     "theme": "catppuccin",
     "backgroundMode": "wallpaper",
-    "overlay": 0,
+    "overlay": 2,
     "blur": 5,
-    "heroHeight": 240,
-    "heroSize": "medium",
+    "heroHeight": 210,
+    "heroSize": "small",
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
@@ -196,23 +237,94 @@ const bundledDemoData = {
     "terminalTextColor": "#d9e5f6",
     "statusTextColor": "#d8dee9",
     "layoutPreset": "classic",
-    "workspace": null,
     "showLogo": true,
     "showWordmark": true,
     "showClock": true,
     "showWeather": true,
     "showSearch": true,
     "showSectionTitles": true,
-    "widgets": {},
+    "widgets": {
+      "logo": {
+        "area": "header",
+        "order": 0,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "wordmark": {
+        "area": "header",
+        "order": 1,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "clock": {
+        "area": "header",
+        "order": 2,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "weather": {
+        "area": "header",
+        "order": 3,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "search": {
+        "area": "hero",
+        "order": 4,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "hero": {
+        "area": "hero",
+        "order": 5,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "sections": {
+        "area": "content",
+        "order": 6,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      }
+    },
     "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 36,
     "customCss": "",
     "terminalLeft": null,
     "terminalTop": null,
-    "settingsLeft": null,
-    "settingsTop": null,
-    "lastModified": "2026-06-25T07:27:50.176Z"
+    "settingsLeft": 0,
+    "settingsTop": 0,
+    "lastModified": "2026-06-30T06:30:43.287Z",
+    "workspaceHeroStyle": "topBar"
   }
 };
 
@@ -250,14 +362,32 @@ function cleanInternalLinkName(name, url) {
   const cleaned = raw.startsWith(action.icon) ? raw.slice(action.icon.length).trim() : raw;
   return cleaned || action.label;
 }
-function normalizeUrl(url) { const t = String(url || "").trim(); if (!t) return ""; if (isWaypointUrl(t)) return t; return /^https?:\/\//i.test(t) ? t : `https://${t}`; }
-function favicon(url) { try { if (isWaypointUrl(url)) return ""; const host = new URL(url).hostname; return host ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32` : ""; } catch { return ""; } }
+function normalizeUrl(url) {
+  const t = String(url || "").trim();
+  if (!t) return "";
+  if (isWaypointUrl(t)) return t;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(t)) return t;
+  return `https://${t}`;
+}
+function favicon(url) {
+  try {
+    const normalized = normalizeUrl(url);
+    if (!normalized || isWaypointUrl(normalized)) return "";
+    const parsed = new URL(normalized);
+    if (!["http:", "https:"].includes(parsed.protocol)) return "";
+    const host = parsed.hostname.replace(/^www\./i, "");
+    if (!host || host === "localhost" || !host.includes(".")) return "";
+    return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(parsed.origin)}&sz=64`;
+  } catch {
+    return "";
+  }
+}
 function getTheme() { return THEMES[data.settings.theme] || THEMES.nord; }
 function countBookmarks() { return data.sections.reduce((sum, section) => sum + section.links.length, 0); }
 
 const HERO_SIZES = {
   hidden: { label: "Hidden", height: 0 },
-  small: { label: "Small", height: 160 },
+  small: { label: "Small", height: 210 },
   medium: { label: "Medium", height: 240 },
   large: { label: "Large", height: 330 }
 };
@@ -267,8 +397,8 @@ function normalizeHeroSize(value, heroHeight, heroStyle) {
   if (heroStyle === "hidden") return "hidden";
   const height = Number(heroHeight);
   if (Number.isFinite(height)) {
-    if (height <= 200) return "small";
-    if (height <= 270) return "medium";
+    if (height <= 220) return "small";
+    if (height <= 280) return "medium";
     return "large";
   }
   return "large";
@@ -276,14 +406,14 @@ function normalizeHeroSize(value, heroHeight, heroStyle) {
 function heroHeightForSize(size, fallbackHeight) {
   if (size === "hidden") return 0;
   if (HERO_SIZES[size]) return HERO_SIZES[size].height;
-  return clamp(Number(fallbackHeight), 160, 360, 330);
+  return clamp(Number(fallbackHeight), 210, 360, 330);
 }
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
 
 const WORKSPACE_HERO_STYLES = {
   standard: { label: "Standard Hero", description: "Classic banner presentation with optional Hero Search." },
-  topBar: { label: "Top Bar", description: "OS-style top panel. Search becomes standalone." },
-  bottomBar: { label: "Bottom Bar", description: "OS-style bottom panel. Search becomes standalone." }
+  topBar: { label: "Top Bar", description: "OS-style top panel that replaces the standard header." },
+  bottomBar: { label: "Bottom Bar", description: "OS-style bottom panel that replaces the standard header." }
 };
 function normalizeWorkspaceHeroStyle(value) {
   return WORKSPACE_HERO_STYLES[value] ? value : "standard";
@@ -512,9 +642,8 @@ function canonicalizeWorkspace(workspace = data.settings.workspace) {
   if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
   workspace.display.heroStyle = normalizeWorkspaceHeroStyle(workspace.display.heroStyle);
 
-  if (workspaceUsesHeroBar(workspace)) {
-    workspace.slots.hero = "hidden";
-    if (["hero-search", "header-search"].includes(workspace.slots.search)) workspace.slots.search = "standalone-search";
+  if (workspaceUsesHeroBar(workspace) && workspace.slots.search === "header-search") {
+    workspace.slots.search = "standalone-search";
   }
 
   if (workspace.slots.hero === "hidden" && workspace.slots.search === "hero-search") {
@@ -537,7 +666,11 @@ function syncLegacyVisibilityFromWorkspace() {
   data.settings.showSearch = workspace.slots.search !== "hidden";
   data.settings.showSectionTitles = workspace.display?.showSectionTitles !== false;
 
-  data.settings.heroSize = heroHidden ? "hidden" : (data.settings.heroSize === "hidden" ? "medium" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle));
+  if (heroHidden) {
+    data.settings.heroSize = "hidden";
+  } else {
+    data.settings.heroSize = normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
+  }
   data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
   data.settings.layoutPreset = workspace.template || "classic";
   data.settings.workspaceHeroStyle = workspaceHeroStyle(workspace);
@@ -564,6 +697,17 @@ function setWidgetSlot(widgetId, slotId) {
   workspace.slots[widgetId] = slotId;
   workspace.modified = true;
 
+  if (widgetId === "hero") {
+    data.settings.bannerHiddenByWorkspace = slotId === "hidden";
+    if (slotId === "hidden") {
+      data.settings.heroSize = "hidden";
+      data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight);
+    } else if (data.settings.heroSize === "hidden") {
+      data.settings.heroSize = "medium";
+      data.settings.heroHeight = heroHeightForSize("medium", data.settings.heroHeight);
+    }
+  }
+
   if (widgetId === "hero" && slotId === "hidden" && workspace.slots.search === "hero-search") {
     workspace.slots.search = "standalone-search";
   }
@@ -581,9 +725,8 @@ function setWorkspaceHeroStyle(style) {
   const workspace = canonicalizeWorkspace();
   workspace.display.heroStyle = normalizeWorkspaceHeroStyle(style);
   workspace.modified = true;
-  if (workspaceUsesHeroBar(workspace)) {
-    workspace.slots.hero = "hidden";
-    if (["hero-search", "header-search"].includes(workspace.slots.search)) workspace.slots.search = "standalone-search";
+  if (workspaceUsesHeroBar(workspace) && workspace.slots.search === "header-search") {
+    workspace.slots.search = "standalone-search";
   }
   canonicalizeWorkspace(workspace);
   syncLegacyVisibilityFromWorkspace();
@@ -672,8 +815,8 @@ function workspaceSlotDescription(slotId) {
   return {
     "hidden": "Hide it for a cleaner page.",
     "header-search": "Place search in the center of the header. Unavailable for Top Bar and Bottom Bar styles.",
-    "hero-banner": "Show the banner image. Unavailable for Top Bar and Bottom Bar styles.",
-    "hero-search": "Place search on the banner. Unavailable when the banner is hidden or Hero uses a bar style.",
+    "hero-banner": "Show the banner image.",
+    "hero-search": "Place search on the banner. Unavailable when the banner is hidden.",
     "standalone-search": "Place search as its own row.",
     "content-sections": "Keep bookmark sections in the content area."
   }[slotId] || "Available location";
@@ -730,9 +873,11 @@ function selectWorkspaceWidget(widgetId) {
     const slot = el.dataset.widgetSlot;
     const isSelected = elWidgetId === widgetId;
     const isValidPeer = slot && validSlots.has(slot) && slot !== currentSlot;
+    const isSearchHost = widgetId === "search" && currentSlot === "hero-search" && elWidgetId === "hero" && slot === "hero-banner";
     el.classList.toggle("workspace-selected-widget", isSelected);
     el.classList.toggle("workspace-valid-widget", !isSelected && isValidPeer);
-    el.classList.toggle("workspace-muted-widget", !isSelected && !isValidPeer);
+    el.classList.toggle("workspace-host-widget", isSearchHost);
+    el.classList.toggle("workspace-muted-widget", !isSelected && !isValidPeer && !isSearchHost);
   });
   renderWorkspaceDesignerPanel(widgetId);
   updateEditLayoutBar();
@@ -753,9 +898,8 @@ function workspaceSlotIsUnavailable(widgetId, slotId) {
   if (slotId === "hidden") return false;
   const workspace = canonicalizeWorkspace();
   const barMode = workspaceUsesHeroBar(workspace);
-  if (barMode && widgetId === "search" && ["hero-search", "header-search"].includes(slotId)) return true;
-  if (barMode && widgetId === "hero" && slotId === "hero-banner") return true;
-  if (!barMode && widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return true;
+  if (barMode && widgetId === "search" && slotId === "header-search") return true;
+  if (widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return true;
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return true;
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspaceSlotOccupant(slotId, widgetId)) return true;
   if (widgetId === "search" && slotId === "header-search") {
@@ -769,9 +913,8 @@ function workspaceDestinationStatus(widgetId, slotId) {
   if (slotId === slotForWidget(widgetId)) return "Current";
   if (slotId === "hidden") return "Available";
   const workspace = canonicalizeWorkspace();
-  if (workspaceUsesHeroBar(workspace) && widgetId === "search" && ["hero-search", "header-search"].includes(slotId)) return "Unavailable in bar styles";
-  if (workspaceUsesHeroBar(workspace) && widgetId === "hero" && slotId === "hero-banner") return "Unavailable in bar styles";
-  if (!workspaceUsesHeroBar(workspace) && widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return "Banner is hidden";
+  if (workspaceUsesHeroBar(workspace) && widgetId === "search" && slotId === "header-search") return "Search cannot live in the bar";
+  if (widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return "Banner is hidden";
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return "Header Search uses center";
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && occupant) return `${workspaceWidgetLabel(occupant)} already here`;
   if (widgetId === "search" && slotId === "header-search") {
@@ -847,60 +990,45 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
 
   const selected = widgetId && WORKSPACE_WIDGETS[widgetId] ? widgetId : null;
   const currentSlot = selected ? slotForWidget(selected) : null;
-  const currentWidgetLabel = selected ? workspaceWidgetLabel(selected) : "Choose an item";
   const allItems = movableWorkspaceWidgetIds();
-  const visibleItems = allItems.filter(id => !widgetIsHidden(id));
-  const hiddenItems = allItems.filter(id => widgetIsHidden(id));
-  const renderItemRows = ids => ids.length ? ids.map(id => {
-    const hidden = widgetIsHidden(id);
-    const selectedClass = id === selected ? " selected" : "";
-    const hiddenClass = hidden ? " hidden-item" : "";
-    return `<button type="button" class="workspace-item-choice${selectedClass}${hiddenClass}" data-workspace-item="${escapeHtml(id)}">
-      <strong>${escapeHtml(workspaceWidgetLabel(id))}</strong>
-      <span>${escapeHtml(hidden ? "Hidden" : workspaceSlotTone(slotForWidget(id)))}</span>
-    </button>`;
-  }).join("") : `<p class="workspace-empty-note">Nothing here.</p>`;
-
+  const itemOptions = allItems.map(id => `<option value="${escapeHtml(id)}" ${id === selected ? "selected" : ""}>${escapeHtml(workspaceWidgetLabel(id))}${widgetIsHidden(id) ? " · Hidden" : ""}</option>`).join("");
   const destinationRows = selected ? workspaceDestinationSlots(selected).map(slotId => {
     const isCurrent = slotId === currentSlot;
     const unavailable = workspaceSlotIsUnavailable(selected, slotId);
     const status = workspaceDestinationStatus(selected, slotId);
     return `<button type="button" class="workspace-location-choice${isCurrent ? " current" : ""}${unavailable ? " unavailable" : ""}" data-workspace-slot="${escapeHtml(slotId)}" ${unavailable ? "disabled" : ""}>
       <strong>${escapeHtml(slotLabel(slotId))}</strong>
-      <span>${escapeHtml(workspaceSlotDescription(slotId))}</span>
-      <em>${escapeHtml(status)}</em>
+      <span>${escapeHtml(status)}</span>
     </button>`;
-  }).join("") : `<p class="workspace-empty-note">Select an item on the page or from this list to see where it can go.</p>`;
+  }).join("") : `<p class="workspace-empty-note">Select an item to edit placement.</p>`;
 
   panel.innerHTML = `
     <div class="workspace-panel-head">
       <div>
         <strong>Customize Workspace</strong>
-        <span>Pick an item, then choose where it belongs.</span>
+        <span>Choose a layout, item, and placement.</span>
       </div>
       <button type="button" class="workspace-panel-close" aria-label="Close Workspace Studio">×</button>
     </div>
-    <div class="workspace-panel-section workspace-hero-style-section">
-      <span class="workspace-panel-kicker">Hero Style</span>
-      <div class="workspace-hero-style-list">
-        ${Object.entries(WORKSPACE_HERO_STYLES).map(([styleId, style]) => `<button type="button" class="workspace-hero-style-choice${workspaceHeroStyle() === styleId ? " current" : ""}" data-workspace-hero-style="${escapeHtml(styleId)}">
-          <strong>${escapeHtml(style.label)}</strong>
-          <span>${escapeHtml(style.description)}</span>
-        </button>`).join("")}
+    <div class="workspace-panel-body">
+      <div class="workspace-panel-section workspace-hero-style-section">
+        <span class="workspace-panel-kicker">Page Layout</span>
+        <div class="workspace-hero-style-list">
+          ${Object.entries(WORKSPACE_HERO_STYLES).map(([styleId, style]) => `<button type="button" class="workspace-hero-style-choice${workspaceHeroStyle() === styleId ? " current" : ""}" data-workspace-hero-style="${escapeHtml(styleId)}" title="${escapeHtml(style.description)}">${escapeHtml(style.label)}</button>`).join("")}
+        </div>
       </div>
-    </div>
-    <div class="workspace-panel-section">
-      <span class="workspace-panel-kicker">Visible</span>
-      <div class="workspace-item-list">${renderItemRows(visibleItems)}</div>
-    </div>
-    <div class="workspace-panel-section">
-      <span class="workspace-panel-kicker">Hidden</span>
-      <div class="workspace-item-list">${renderItemRows(hiddenItems)}</div>
-    </div>
-    <div class="workspace-panel-section workspace-panel-selected">
-      <span class="workspace-panel-kicker">${escapeHtml(currentWidgetLabel)}</span>
-      ${selected ? `<p>${escapeHtml(workspaceWidgetHint(selected))}</p>` : ""}
-      <div class="workspace-location-list">${destinationRows}</div>
+      <div class="workspace-panel-section workspace-panel-selected">
+        <span class="workspace-panel-kicker">Item</span>
+        <select id="workspaceItemSelect" class="workspace-item-select">
+          <option value="">Choose an item</option>
+          ${itemOptions}
+        </select>
+        ${selected ? `<p>${escapeHtml(workspaceWidgetHint(selected))}</p>` : ""}
+      </div>
+      <div class="workspace-panel-section workspace-panel-selected">
+        <span class="workspace-panel-kicker">Placement</span>
+        <div class="workspace-location-list compact">${destinationRows}</div>
+      </div>
     </div>
     <div class="workspace-panel-footer">
       <button type="button" id="workspacePanelReset">Reset</button>
@@ -923,12 +1051,10 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
       if (editLayoutActive) renderWorkspaceDesignerPanel(selectedWorkspaceWidgetId);
     });
   });
-  panel.querySelectorAll("[data-workspace-item]").forEach(button => {
-    button.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      selectWorkspaceWidget(button.dataset.workspaceItem);
-    });
+  panel.querySelector("#workspaceItemSelect")?.addEventListener("change", event => {
+    const value = event.target.value;
+    if (value) selectWorkspaceWidget(value);
+    else clearWorkspaceSelection();
   });
   panel.querySelectorAll("[data-workspace-slot]").forEach(button => {
     button.addEventListener("click", event => {
@@ -1059,14 +1185,32 @@ function applyWorkspaceDomPlacement() {
   document.body.classList.toggle("workspace-header-center-exclusive", workspace.slots.search === "header-search");
 
   search.classList.toggle("workspace-hidden-item", workspace.slots.search === "hidden");
+  if (heroImage && heroImage.parentElement !== hero) hero.appendChild(heroImage);
+
+  const heroStyle = workspaceHeroStyle(workspace);
+  const barMode = workspaceUsesHeroBar(workspace);
+  const bannerVisible = workspace.slots.hero !== "hidden" && data.settings.heroSize !== "hidden";
+
   if (workspace.slots.search === "header-search") {
     moveElementToSlot(search, grid.querySelector('.workspace-header-center .workspace-header-search-slot'));
-  } else if (search.parentElement !== hero) {
-    hero.insertBefore(search, hero.firstElementChild || null);
+  } else if (workspace.slots.search === "hero-search") {
+    if (barMode && bannerVisible && heroImage) {
+      // In bar layouts, Hero Search belongs to the banner surface itself.
+      // This keeps the Hero region composed as Bar + Banner/Search instead of
+      // letting Search float over the page wallpaper.
+      moveElementToSlot(search, heroImage);
+    } else if (search.parentElement !== hero) {
+      hero.appendChild(search);
+    }
+    if (heroImage && heroImage.parentElement === hero && hero.firstElementChild !== heroImage) {
+      hero.insertBefore(heroImage, hero.firstElementChild || null);
+    }
+  } else {
+    if (search.parentElement !== hero) hero.insertBefore(search, hero.firstElementChild || null);
+    else if (hero.firstElementChild !== search) hero.insertBefore(search, hero.firstElementChild || null);
   }
-
-  if (heroImage && heroImage.parentElement !== hero) hero.appendChild(heroImage);
 }
+
 
 function applyWidgetFoundation() {
   applyWorkspaceDomPlacement();
@@ -1157,13 +1301,16 @@ function normalizeData(input) {
     })
     : [];
 
-  if (Array.isArray(input.sections)) {
-    normalized.sections = input.sections.map((section, index) => ({
+  const profileBookmarks = input?.bookmarks && typeof input.bookmarks === "object" ? input.bookmarks : null;
+  const incomingSections = Array.isArray(profileBookmarks?.sections) ? profileBookmarks.sections : input.sections;
+
+  if (Array.isArray(incomingSections)) {
+    normalized.sections = incomingSections.map((section, index) => ({
       name: String(section.name || `Section ${index + 1}`),
       links: normalizeLinks(section.links)
     }));
   } else if (input && typeof input === "object") {
-    const ignoredKeys = new Set(["settings", "version", "name", "profile", "theme", "layout", "bookmarks"]);
+    const ignoredKeys = new Set(["settings", "version", "name", "profile", "theme", "layout", "bookmarks", "workspace"]);
     const objectSections = Object.entries(input)
       .filter(([name, links]) => !ignoredKeys.has(name) && Array.isArray(links))
       .map(([name, links]) => ({ name: String(name), links: normalizeLinks(links) }))
@@ -1173,6 +1320,9 @@ function normalizeData(input) {
 
   const incomingSettings = input.settings && typeof input.settings === "object" ? input.settings : input;
   normalized.settings = { ...normalized.settings, ...incomingSettings };
+  if (input?.workspace && typeof input.workspace === "object") {
+    normalized.settings.workspace = input.workspace;
+  }
 
   if (!THEMES[normalized.settings.theme]) normalized.settings.theme = "nord";
   if (!["wallpaper", "gradient", "custom"].includes(normalized.settings.backgroundMode)) normalized.settings.backgroundMode = "wallpaper";
@@ -1278,6 +1428,7 @@ function applyPersonalization() {
   const workspace = canonicalizeWorkspace();
   const currentHeroSlot = workspace.slots.hero;
   const currentSearchSlot = workspace.slots.search;
+  const bannerVisuallyHidden = currentHeroSlot === "hidden" || s.heroSize === "hidden";
   const currentHeroStyle = workspaceHeroStyle(workspace);
   body.classList.toggle("workspace-hero-standard", currentHeroStyle === "standard");
   body.classList.toggle("workspace-hero-top-bar", currentHeroStyle === "topBar");
@@ -1287,7 +1438,7 @@ function applyPersonalization() {
   body.classList.toggle("workspace-search-hero", currentSearchSlot === "hero-search");
   body.classList.toggle("workspace-search-header", currentSearchSlot === "header-search");
   body.classList.toggle("workspace-header-center-exclusive", currentSearchSlot === "header-search");
-  body.classList.toggle("workspace-banner-hidden", currentHeroSlot === "hidden");
+  body.classList.toggle("workspace-banner-hidden", bannerVisuallyHidden);
   body.dataset.workspaceTemplate = templateId;
   body.classList.toggle("ui-hide-logo", workspace.slots.logo === "hidden");
   body.classList.toggle("ui-hide-wordmark", workspace.slots.wordmark === "hidden");
@@ -1393,7 +1544,7 @@ function applyHero() {
   const img = $("heroImage");
   if (!card || !img) return;
   const workspace = canonicalizeWorkspace();
-  const isBannerHidden = workspace.slots.hero === "hidden";
+  const isBannerHidden = workspace.slots.hero === "hidden" || data.settings.heroSize === "hidden";
   const heroSize = isBannerHidden ? "hidden" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
   data.settings.heroSize = heroSize;
   data.settings.heroHeight = heroHeightForSize(heroSize, data.settings.heroHeight);
@@ -1403,26 +1554,17 @@ function applyHero() {
   ["hidden", "small", "medium", "large"].forEach(size => hero?.classList.toggle(`hero-size-${size}`, heroSize === size));
   card.style.setProperty("--hero-height", `${data.settings.heroHeight}px`);
   card.style.setProperty("--hero-min-height", `${data.settings.heroHeight}px`);
-  card.style.setProperty("--hero-zoom", String(data.settings.heroZoom / 100));
-  card.style.setProperty("--hero-y", `${data.settings.heroY}%`);
   card.style.setProperty("--hero-fit", data.settings.heroFit || "cover");
   card.classList.toggle("fit-contain", data.settings.heroFit === "contain");
   const heroSrc = getHeroSrc();
   const theme = getTheme();
   card.style.backgroundImage = `url("${heroSrc}"), ${theme.gradient}`;
-  card.style.backgroundPosition = `center ${data.settings.heroY}%`;
+  card.style.backgroundPosition = "center center";
   card.style.backgroundSize = data.settings.heroFit === "contain" ? "contain, cover" : "cover, cover";
   card.style.backgroundRepeat = "no-repeat";
-  img.hidden = false;
-  img.onerror = () => {
-    img.hidden = true;
-    card.classList.add("hero-image-missing");
-  };
-  img.onload = () => {
-    img.hidden = false;
-    card.classList.remove("hero-image-missing");
-  };
-  img.src = heroSrc;
+  img.hidden = true;
+  img.removeAttribute("src");
+  card.classList.remove("hero-image-missing");
 }
 
 function syncControls() {
@@ -1475,12 +1617,8 @@ function syncControls() {
   setValue("overlaySlider", s.overlay);
   setValue("blurSlider", s.blur);
   setValue("heroHeightPresetSelect", s.heroSize || normalizeHeroSize(null, s.heroHeight, s.heroStyle));
-  setValue("heroZoomSlider", s.heroZoom);
-  setValue("heroYSlider", s.heroY);
   setText("overlayValue", `${s.overlay}%`);
   setText("blurValue", `${s.blur}px`);
-    setText("heroZoomValue", `${s.heroZoom}%`);
-  setText("heroYValue", `${s.heroY}%`);
   setText("uiScaleValue", `${s.uiScale}%`);
   setText("bookmarkFontValue", `${s.bookmarkFontSize}px`);
   setText("bookmarkIconValue", `${s.bookmarkIconSize}px`);
@@ -1489,22 +1627,21 @@ function syncControls() {
 
 function updateWorkspaceAwareSettings() {
   const workspace = canonicalizeWorkspace();
-  const barMode = workspaceUsesHeroBar(workspace);
-  const bannerUnavailable = barMode || workspace.slots.hero === "hidden";
-  const bannerControlIds = ["heroStyleSelect", "heroFitSelect", "heroHeightPresetSelect", "heroZoomSlider", "heroYSlider", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
+  const bannerUnavailable = workspace.slots.hero === "hidden" && data.settings.bannerHiddenByWorkspace === true;
+  const bannerControlIds = ["heroStyleSelect", "heroFitSelect", "heroHeightPresetSelect", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
   bannerControlIds.forEach(id => {
     const el = $(id);
     if (!el) return;
     el.disabled = bannerUnavailable;
     const label = el.closest("label") || el;
     label.classList?.toggle("workspace-setting-unavailable", bannerUnavailable);
-    if (bannerUnavailable) el.title = barMode ? "Unavailable while Hero Style uses Top Bar or Bottom Bar." : "Unavailable while the banner is hidden.";
+    if (bannerUnavailable) el.title = "Unavailable while the Banner widget is hidden in Workspace.";
     else el.removeAttribute("title");
   });
   const note = $("bannerWorkspaceNotice");
   if (note) {
     note.hidden = !bannerUnavailable;
-    note.textContent = barMode ? "Banner controls are unavailable because the current Workspace Hero Style uses a bar. Search is standalone in bar styles." : "Banner controls are unavailable because the Banner widget is hidden in Workspace.";
+    note.textContent = "Banner controls are unavailable because the Banner widget is hidden in Workspace.";
   }
 }
 
@@ -1513,9 +1650,15 @@ function setText(id, value) { const el = $(id); if (el) el.textContent = value; 
 
 function setBannerSize(size) {
   if (!HERO_SIZES[size]) return false;
+  data.settings.bannerHiddenByWorkspace = false;
   data.settings.heroSize = size;
   data.settings.heroHeight = heroHeightForSize(size, data.settings.heroHeight);
-  setWidgetSlot("hero", size === "hidden" ? "hidden" : "hero-banner");
+  const workspace = canonicalizeWorkspace();
+  if (size !== "hidden" && workspace.slots.hero === "hidden") {
+    workspace.slots.hero = "hero-banner";
+    workspace.modified = true;
+    syncLegacyVisibilityFromWorkspace();
+  }
   save();
   render();
   return true;
@@ -2691,20 +2834,27 @@ function bindEvents() {
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
-  bindSetting("heroStyleSelect", "change", value => { if (value === "hidden") { data.settings.heroSize = "hidden"; data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight); data.settings.heroStyle = "auto"; setWidgetSlot("hero", "hidden"); } else { data.settings.heroStyle = value; if (slotForWidget("hero") === "hidden") setWidgetSlot("hero", "hero-banner"); } save(); render(); });
+  bindSetting("heroStyleSelect", "change", value => {
+    if (value === "hidden") {
+      data.settings.heroStyle = "auto";
+      setBannerSize("hidden");
+      return;
+    }
+    data.settings.heroStyle = value;
+    if (data.settings.heroSize === "hidden") {
+      setBannerSize("medium");
+      return;
+    }
+    save(); render();
+  });
   bindSetting("heroFitSelect", "change", value => { data.settings.heroFit = value; save(); render(); });
   bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); render(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
   bindSetting("heroHeightPresetSelect", "change", value => {
-    data.settings.heroSize = value;
-    data.settings.heroHeight = heroHeightForSize(value, data.settings.heroHeight);
-    setWidgetSlot("hero", value === "hidden" ? "hidden" : "hero-banner");
-    save(); render();
+    setBannerSize(value);
   });
-  bindNumber("heroZoomSlider", "heroZoom", () => applyHero());
-  bindNumber("heroYSlider", "heroY", () => applyHero());
 
   $("backgroundUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;

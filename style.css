@@ -3995,3 +3995,353 @@ body.edit-layout-active.workspace-hero-bottom-bar .workspace-designer-panel {
     width: calc(100vw - 24px) !important;
   }
 }
+
+/* v1.5.0-dev2: Hero Evolution refinement */
+.workspace-designer-panel {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  overflow: hidden !important;
+  max-height: min(72vh, 640px) !important;
+}
+.workspace-panel-body {
+  min-height: 0 !important;
+  overflow: auto !important;
+  display: grid !important;
+  gap: 12px !important;
+  padding-right: 2px !important;
+}
+.workspace-panel-head,
+.workspace-panel-footer {
+  position: sticky !important;
+  z-index: 2 !important;
+  background: color-mix(in srgb, var(--surface-strong, var(--panel-strong)), transparent 3%) !important;
+}
+.workspace-panel-head { top: 0 !important; }
+.workspace-panel-footer { bottom: 0 !important; }
+.workspace-item-select {
+  min-height: 42px !important;
+  border-radius: 14px !important;
+}
+.workspace-hero-style-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+.workspace-hero-style-choice {
+  min-height: 42px !important;
+  place-items: center !important;
+  padding: 8px 9px !important;
+  text-align: center !important;
+  font: 850 12px var(--sans) !important;
+}
+.workspace-hero-style-choice strong,
+.workspace-hero-style-choice span {
+  display: none !important;
+}
+.workspace-location-list.compact {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+.workspace-location-list.compact .workspace-location-choice {
+  min-height: 58px !important;
+  padding: 9px 10px !important;
+}
+.workspace-location-list.compact .workspace-location-choice strong {
+  white-space: normal !important;
+  line-height: 1.15 !important;
+}
+.workspace-location-list.compact .workspace-location-choice span {
+  font-size: 10.5px !important;
+}
+body.workspace-hero-bar .hero-image-card {
+  display: block !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero-image-card,
+body.workspace-hero-bar .hero-image-card.workspace-hidden-item {
+  display: none !important;
+}
+body.workspace-hero-bar .hero {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+  min-height: 76px !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-search-hero .hero {
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+}
+body.workspace-hero-bar.workspace-search-hero .hero .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-search-standalone .hero .search,
+body.workspace-hero-bar.workspace-banner-hidden .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bottom-bar .toolbar {
+  width: min(1760px, calc(100vw - 56px)) !important;
+}
+@media (max-width: 820px) {
+  .workspace-location-list.compact {
+    grid-template-columns: 1fr !important;
+  }
+  .workspace-hero-style-list {
+    grid-template-columns: 1fr !important;
+  }
+  .workspace-designer-panel {
+    max-height: 62vh !important;
+  }
+  body.workspace-hero-bottom-bar .toolbar {
+    width: calc(100vw - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev4: hero-search must use the real banner surface in bar layouts */
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+  min-height: var(--hero-height, 240px) !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  height: var(--hero-height, 240px) !important;
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero-image-card,
+body.workspace-hero-bar .hero-image-card.hidden-banner {
+  display: none !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero,
+body.workspace-hero-bar.workspace-search-standalone .hero {
+  min-height: 76px !important;
+}
+@media (max-width: 900px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev5: keep Hero Search anchored to the banner surface during bar layouts */
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero {
+  position: relative !important;
+  display: grid !important;
+  grid-template-areas: "hero-stack" !important;
+  place-items: center !important;
+  gap: 0 !important;
+  min-height: var(--hero-height, 240px) !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  grid-area: hero-stack !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  height: var(--hero-height, 240px) !important;
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+  grid-area: hero-stack !important;
+  position: relative !important;
+  z-index: 5 !important;
+  inset: auto !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.edit-layout-active .workspace-host-widget {
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.edit-layout-active .workspace-host-widget::before,
+body.edit-layout-active .workspace-host-widget::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 900px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev6: Hero region renderer cleanup
+   Bar layouts keep the bar as header chrome, while the Hero region owns banner,
+   search, and spacing. Hero Search is hosted by the banner surface in bar modes. */
+body.workspace-hero-bar:not(.workspace-banner-hidden) .hero {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+  min-height: var(--hero-height, 240px) !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar:not(.workspace-banner-hidden) .hero-image-card {
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero {
+  display: flex !important;
+  place-items: initial !important;
+  min-height: var(--hero-height, 240px) !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  height: var(--hero-height, 240px) !important;
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+  overflow: hidden !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card > .search {
+  position: absolute !important;
+  z-index: 6 !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 80px)) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-search-standalone:not(.workspace-banner-hidden) .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 76px !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.edit-layout-active .hero-image-card.workspace-host-widget {
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.edit-layout-active .hero-image-card.workspace-host-widget::before,
+body.edit-layout-active .hero-image-card.workspace-host-widget::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 900px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card > .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card > .search {
+    width: calc(100% - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev7: Hero layout polish
+   Bar layouts should keep the bar as chrome and center the Hero content as page content. */
+:root {
+  --bar-to-hero-gap: 30px;
+  --hero-to-content-gap: 26px;
+}
+
+body.workspace-hero-top-bar:not(.workspace-banner-hidden) .hero,
+body.workspace-hero-bottom-bar:not(.workspace-banner-hidden) .hero {
+  width: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: var(--hero-to-content-gap) !important;
+}
+
+body.workspace-hero-top-bar:not(.workspace-banner-hidden) .hero {
+  margin-top: var(--bar-to-hero-gap) !important;
+}
+
+body.workspace-hero-bottom-bar:not(.workspace-banner-hidden) .hero {
+  margin-top: 18px !important;
+}
+
+body.workspace-hero-top-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-bottom-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-top-bar:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-bottom-bar:not(.workspace-banner-hidden) .hero-image-card {
+  align-self: center !important;
+  justify-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body.workspace-hero-top-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-bottom-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  max-width: 100% !important;
+}
+
+body.workspace-hero-bar.workspace-banner-hidden .hero {
+  margin-top: var(--bar-to-hero-gap) !important;
+  margin-bottom: var(--hero-to-content-gap) !important;
+}
+
+body.workspace-hero-bottom-bar .page-shell {
+  padding-bottom: calc(112px + var(--hero-to-content-gap)) !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --bar-to-hero-gap: 18px;
+    --hero-to-content-gap: 18px;
+  }
+}

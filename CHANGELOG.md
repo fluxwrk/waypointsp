@@ -1,4 +1,48 @@
 # Changelog
+## [1.5.0-dev7] - 2026-06-30
+
+### Changed
+- Centered the Hero Banner in Top Bar and Bottom Bar layouts.
+- Increased the spacing between the Top Bar and Hero content so the bar reads as application chrome.
+- Added shared Hero spacing variables for bar layouts.
+
+## [1.5.0-dev6] - 2026-06-30
+
+### Fixed
+- Reworked bar-layout Hero rendering so the Hero region owns the banner surface, Hero Search, and spacing together.
+- Fixed Top Bar and Bottom Bar layouts where Hero Search could make the banner behave like a floating card.
+- Fixed Hero Search in bar layouts so it is hosted by the banner surface instead of floating over the wallpaper.
+- Preserved Banner Size hidden behavior from dev4 and dev5.
+
+
+## v1.5.0-dev5 - Workspace Studio hero-search bar hotfix
+- Fixed Workspace Studio dimming the Hero Banner while Search is selected in Hero Search mode.
+- Anchored Hero Search to the real banner surface in Top Bar and Bottom Bar layouts using a shared grid stack.
+- Removed the phantom Workspace Studio banner overlay label that could appear as a vertical line in bar layouts.
+- Preserved the dev4 Banner settings fix.
+
+## v1.5.0-dev4 - Hero search and banner settings hotfix
+- Fixed Top Bar and Bottom Bar layouts so Hero Search renders on the real banner card instead of floating over the wallpaper.
+- Fixed the phantom vertical Workspace Studio overlay line caused by the missing banner surface in bar layouts.
+- Fixed Banner Size: Hidden from the Banner settings tab so it visually hides the banner without hiding the Banner widget in Workspace.
+- Kept Banner settings restore controls available when the banner is hidden from Settings.
+- Preserved Workspace Studio behavior where hiding the Banner widget still removes it from layout and moves Hero Search to Standalone Search.
+
+## v1.5.0-dev3 - Banner ownership cleanup
+- Raised the Small banner preset height so Hero Search fits cleanly.
+- Fixed Banner settings so hiding the banner from the Banner tab does not lock the controls needed to restore it.
+- Kept Workspace-hidden Banner controls locked only when the Banner widget is hidden through Workspace.
+- Consolidated banner rendering around the fitted card background and removed the duplicate foreground image path.
+- Removed Banner Zoom and Banner Y controls because the duplicate foreground image they controlled was no longer part of the intended banner rendering model.
+
+## v1.5.0-dev2 - Hero Evolution refinement
+- Matched Top Bar and Bottom Bar width behavior so both bar layouts use the same page width rules.
+- Allowed the banner to remain visible when Top Bar or Bottom Bar layouts are active.
+- Allowed Hero Search to coexist with bar layouts when the Banner widget is visible.
+- Kept Header Search unavailable in bar layouts so Search never appears inside the bar.
+- Redesigned Workspace Studio into a compact panel with page layout choices, an item selector, and placement controls.
+- Made the Workspace Studio body independently scrollable with stable header and footer controls.
+- Updated Workspace-aware Banner settings so controls are only disabled when the Banner widget is hidden.
 
 ## v1.5.0-dev1 - Hero Evolution foundation
 - Added Workspace-owned Hero Style with Standard Hero, Top Bar, and Bottom Bar options.
@@ -14,6 +58,13 @@
 
 
 All notable changes to Waypoint will be documented in this file.
+
+## [1.5.0-dev8] - 2026-06-30
+
+### Fixed
+- Normalized bookmark URLs before favicon lookup so domains without a `www.` prefix can still fetch icons.
+- Fixed Add Link icon preview for URLs entered without a protocol, such as `youtube.com`.
+- Preserved internal `waypoint:` links and local/non-web URLs during favicon lookup.
 
 ## [Unreleased]
 
