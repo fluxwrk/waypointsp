@@ -1,8 +1,95 @@
 # Changelog
 
+## v1.4.0-dev10e - Wallpaper/banner fallback fix
+- Added resilient wallpaper fallback layering so missing packaged image paths no longer leave the page black.
+- Added hero banner fallback handling so broken banner images do not show alt text on the card.
+- Preserved dev10d Workspace Studio polish changes.
+
+
 All notable changes to Waypoint will be documented in this file.
 
 ## [Unreleased]
+
+## [1.4.0-dev10d] - 2026-06-29
+
+### Changed
+- Made the Workspace Studio launcher quieter by default so it no longer highlights whenever the page is hovered.
+- Moved the default Workspace Studio panel position to the upper-right open workspace area.
+- Centered the Add Section tile vertically next to the section row.
+
+### Fixed
+- Removed the duplicate Current badge on Workspace Studio destination cards.
+
+### Added
+- Added drag-to-move support for the Workspace Studio panel.
+
+## [1.4.0-dev10c] - 2026-06-29
+
+### Changed
+- Tightened header slot presentation so Clock and Weather fit side slots without overlapping.
+- Reduced Weather widget width and added compact side-slot styling.
+- Replaced the hover-only Workspace Studio launcher with a stable square pencil tile.
+
+### Fixed
+- Fixed the Workspace Studio launcher disappearing before it could be clicked.
+- Fixed left/right header slot overlap when Clock and Weather occupy the same header side.
+
+## [1.4.0-dev10b] - 2026-06-29
+
+### Added
+- Added hidden item support to Workspace Studio so hidden widgets can be selected and restored.
+- Added occupied/unavailable destination states in Workspace Studio.
+- Added a subtle hover-revealed main-page Workspace Studio launcher.
+- Added a Create Section modal so new sections are named before creation.
+
+### Changed
+- Refined Workspace Studio panel navigation and moved Done/Reset into the panel.
+- Removed the redundant bottom Workspace Designer bar.
+- Reduced header side slots to two per side while keeping four center slots and exclusive Header Search.
+- Replaced the wide Add Section tile with a small square plus tile.
+- Removed the Centered template; centered header placement remains available through normal Workspace slots.
+- Suppressed normal widget actions while Workspace Studio is active so clicks select widgets instead.
+
+### Fixed
+- Fixed panel item clicks being cleared immediately by the page click handler.
+- Fixed Banner being impossible to restore from Workspace Studio after being hidden.
+- Fixed occupied header slots appearing as valid destinations.
+
+
+### Added
+- Added v1.4.0-dev10 Workspace Studio header slot grid with four slots each for Header Left, Header Center, and Header Right.
+- Added Header Search as an exclusive center-header search destination.
+- Added Workspace Studio movement support for header widgets across explicit header positions.
+
+### Changed
+- Centered template now uses normal Workspace header slots instead of template-only header positioning.
+- Workspace Studio panel now docks away from the header so it does not block Clock or Weather.
+- Search destinations now include Hero Search, Standalone Search, Header Search, and Hidden.
+
+### Fixed
+- Fixed header widgets appearing unable to move unless other widgets were hidden.
+- Fixed panel item selection not clearly selecting the matching workspace item.
+- Fixed duplicate header-slot collisions by validating and swapping occupied header positions.
+
+
+### Added
+- Added v1.4.0-dev10 Workspace Studio pass with a persistent user-facing customization panel.
+- Added page-item list for visible and hidden Workspace widgets so hidden items can be restored without guessing.
+- Added friendly location choices for movable Workspace items.
+
+### Changed
+- Reworked Edit Layout from a debug-style inspector into a clearer Workspace Designer experience.
+- Replaced raw slot language in the editor with user-facing placement labels.
+- Improved edit-mode widget affordances, selection feedback, and panel guidance.
+
+
+### Added
+- Added v1.4.0-dev10 Workspace Designer UX polish.
+- Added click-to-select Workspace editing with valid destination choices.
+
+### Changed
+- Reworked Edit Layout into a user-facing Workspace Designer with clearer labels, selection feedback, and destination guidance.
+- Improved the Workspace summary card to distinguish template defaults from customized workspaces.
 
 
 ### Fixed
