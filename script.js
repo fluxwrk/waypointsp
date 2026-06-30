@@ -280,6 +280,21 @@ function heroHeightForSize(size, fallbackHeight) {
 }
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
 
+const WORKSPACE_HERO_STYLES = {
+  standard: { label: "Standard Hero", description: "Classic banner presentation with optional Hero Search." },
+  topBar: { label: "Top Bar", description: "OS-style top panel. Search becomes standalone." },
+  bottomBar: { label: "Bottom Bar", description: "OS-style bottom panel. Search becomes standalone." }
+};
+function normalizeWorkspaceHeroStyle(value) {
+  return WORKSPACE_HERO_STYLES[value] ? value : "standard";
+}
+function workspaceHeroStyle(workspace = data?.settings?.workspace) {
+  return normalizeWorkspaceHeroStyle(workspace?.display?.heroStyle);
+}
+function workspaceUsesHeroBar(workspace = data?.settings?.workspace) {
+  return ["topBar", "bottomBar"].includes(workspaceHeroStyle(workspace));
+}
+
 const WIDGET_REGISTRY = [
   { id: "logo", label: "Logo / Terminal Button", selector: "#logoBtn", area: "header", visibleKey: "showLogo", movable: true, resizable: false },
   { id: "wordmark", label: "Waypoint Wordmark", selector: ".brand-wordmark", area: "header", visibleKey: "showWordmark", movable: true, resizable: false },
@@ -339,19 +354,19 @@ const WORKSPACE_TEMPLATES = {
     label: "Classic",
     description: "Balanced default Waypoint layout.",
     slots: { logo: "header-left-1", wordmark: "header-left-2", clock: "header-right-1", weather: "header-right-2", search: "hero-search", hero: "hero-banner", sections: "content-sections" },
-    display: { showSectionTitles: true }
+    display: { showSectionTitles: true, heroStyle: "standard" }
   },
   dashboard: {
     label: "Dashboard",
     description: "Dense bookmark-first workspace with standalone search.",
     slots: { logo: "header-left-1", wordmark: "header-left-2", clock: "header-right-1", weather: "header-right-2", search: "standalone-search", hero: "hidden", sections: "content-sections" },
-    display: { showSectionTitles: true }
+    display: { showSectionTitles: true, heroStyle: "standard" }
   },
   minimal: {
     label: "Minimal",
     description: "Search-focused layout with visual chrome hidden.",
     slots: { logo: "hidden", wordmark: "hidden", clock: "hidden", weather: "hidden", search: "standalone-search", hero: "hidden", sections: "content-sections" },
-    display: { showSectionTitles: true }
+    display: { showSectionTitles: true, heroStyle: "standard" }
   }
 };
 
@@ -386,7 +401,10 @@ function defaultWorkspace(templateId = "classic") {
     template: WORKSPACE_TEMPLATES[templateId] ? templateId : "classic",
     modified: false,
     slots: { ...template.slots },
-    display: { showSectionTitles: template.display?.showSectionTitles !== false }
+    display: {
+      showSectionTitles: template.display?.showSectionTitles !== false,
+      heroStyle: normalizeWorkspaceHeroStyle(template.display?.heroStyle)
+    }
   };
 }
 
@@ -435,8 +453,10 @@ function normalizeWorkspace(input, settings = {}) {
     if (settings.showSearch === false || settings.showSearch === "false") normalized.slots.search = "hidden";
     if (normalizeHeroSize(settings.heroSize, settings.heroHeight, settings.heroStyle) === "hidden") normalized.slots.hero = "hidden";
     normalized.display.showSectionTitles = settings.showSectionTitles !== false && settings.showSectionTitles !== "false";
+    normalized.display.heroStyle = normalizeWorkspaceHeroStyle(settings.workspaceHeroStyle || settings.heroPresentation || normalized.display.heroStyle);
   } else {
     normalized.display.showSectionTitles = incoming.display?.showSectionTitles !== false;
+    normalized.display.heroStyle = normalizeWorkspaceHeroStyle(incoming.display?.heroStyle);
   }
 
   return canonicalizeWorkspace(normalized);
@@ -488,12 +508,19 @@ function canonicalizeWorkspace(workspace = data.settings.workspace) {
     workspace.slots[widgetId] = slot;
   }
 
+  workspace.display = workspace.display || {};
+  if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
+  workspace.display.heroStyle = normalizeWorkspaceHeroStyle(workspace.display.heroStyle);
+
+  if (workspaceUsesHeroBar(workspace)) {
+    workspace.slots.hero = "hidden";
+    if (["hero-search", "header-search"].includes(workspace.slots.search)) workspace.slots.search = "standalone-search";
+  }
+
   if (workspace.slots.hero === "hidden" && workspace.slots.search === "hero-search") {
     workspace.slots.search = "standalone-search";
   }
 
-  workspace.display = workspace.display || {};
-  if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
   return workspace;
 }
 
@@ -513,10 +540,12 @@ function syncLegacyVisibilityFromWorkspace() {
   data.settings.heroSize = heroHidden ? "hidden" : (data.settings.heroSize === "hidden" ? "medium" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle));
   data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
   data.settings.layoutPreset = workspace.template || "classic";
+  data.settings.workspaceHeroStyle = workspaceHeroStyle(workspace);
 }
 function setWidgetSlot(widgetId, slotId) {
   if (!WORKSPACE_WIDGETS[widgetId] || !WORKSPACE_WIDGETS[widgetId].allowedSlots.includes(slotId)) return false;
   if (!WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId)) return false;
+  if (workspaceSlotIsUnavailable(widgetId, slotId)) return false;
 
   const workspace = data.settings.workspace;
   const previousSlot = workspace.slots[widgetId];
@@ -548,6 +577,18 @@ function setWidgetVisible(widgetId, visible) {
   const fallback = WORKSPACE_WIDGETS[widgetId]?.defaultSlot;
   return setWidgetSlot(widgetId, visible ? fallback : "hidden");
 }
+function setWorkspaceHeroStyle(style) {
+  const workspace = canonicalizeWorkspace();
+  workspace.display.heroStyle = normalizeWorkspaceHeroStyle(style);
+  workspace.modified = true;
+  if (workspaceUsesHeroBar(workspace)) {
+    workspace.slots.hero = "hidden";
+    if (["hero-search", "header-search"].includes(workspace.slots.search)) workspace.slots.search = "standalone-search";
+  }
+  canonicalizeWorkspace(workspace);
+  syncLegacyVisibilityFromWorkspace();
+  return true;
+}
 function applyWorkspaceTemplate(templateId) {
   if (!WORKSPACE_TEMPLATES[templateId]) return false;
   data.settings.workspace = defaultWorkspace(templateId);
@@ -558,6 +599,7 @@ function workspaceSummaryText() {
   const workspace = data.settings.workspace || defaultWorkspace();
   const rows = Object.keys(WORKSPACE_WIDGETS).map(id => `${id.padEnd(10)} ${WORKSPACE_WIDGETS[id].label} -> ${slotLabel(workspace.slots[id])}`);
   rows.unshift(`Template: ${WORKSPACE_TEMPLATES[workspace.template]?.label || workspace.template}${workspace.modified ? " (modified)" : ""}`);
+  rows.push(`Hero style: ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero"}`);
   rows.push(`Section titles: ${workspace.display?.showSectionTitles === false ? "hidden" : "visible"}`);
   return cleanList("Waypoint Workspace", rows);
 }
@@ -624,13 +666,14 @@ function workspaceWidgetHint(widgetId) {
 function workspaceSlotDescription(slotId) {
   if (isHeaderWidgetSlot(slotId)) {
     const slot = WORKSPACE_SLOTS[slotId];
-    return `Place it in the ${slot.group} header group, position ${slot.order}.`;
+    const region = workspaceUsesHeroBar() ? "bar" : "header";
+    return `Place it in the ${slot.group} ${region} group, position ${slot.order}.`;
   }
   return {
     "hidden": "Hide it for a cleaner page.",
-    "header-search": "Place search in the center of the header. This uses the whole center header area.",
-    "hero-banner": "Show the banner image.",
-    "hero-search": "Place search on the banner.",
+    "header-search": "Place search in the center of the header. Unavailable for Top Bar and Bottom Bar styles.",
+    "hero-banner": "Show the banner image. Unavailable for Top Bar and Bottom Bar styles.",
+    "hero-search": "Place search on the banner. Unavailable when the banner is hidden or Hero uses a bar style.",
     "standalone-search": "Place search as its own row.",
     "content-sections": "Keep bookmark sections in the content area."
   }[slotId] || "Available location";
@@ -638,7 +681,7 @@ function workspaceSlotDescription(slotId) {
 
 function workspaceSlotTone(slotId) {
   if (slotId === "hidden") return "Hidden";
-  if (isHeaderWidgetSlot(slotId)) return `Header · ${slotLabel(slotId)}`;
+  if (isHeaderWidgetSlot(slotId)) return `${workspaceUsesHeroBar() ? "Bar" : "Header"} · ${slotLabel(slotId)}`;
   if (slotId === "header-search") return "Header · Search";
   return `${regionLabel(slotId)} · ${slotLabel(slotId).replace(/^Header /, "")}`;
 }
@@ -650,7 +693,7 @@ function availableWorkspaceSlots(widgetId) {
   const workspace = canonicalizeWorkspace();
   return widget.allowedSlots.filter(slotId => {
     if (!WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId)) return false;
-    if (HEADER_WIDGET_IDS.includes(widgetId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return false;
+    if (workspaceSlotIsUnavailable(widgetId, slotId)) return false;
     return true;
   });
 }
@@ -708,6 +751,12 @@ function workspaceSlotOccupant(slotId, ignoreWidgetId = null) {
 function workspaceSlotIsUnavailable(widgetId, slotId) {
   if (slotId === slotForWidget(widgetId)) return false;
   if (slotId === "hidden") return false;
+  const workspace = canonicalizeWorkspace();
+  const barMode = workspaceUsesHeroBar(workspace);
+  if (barMode && widgetId === "search" && ["hero-search", "header-search"].includes(slotId)) return true;
+  if (barMode && widgetId === "hero" && slotId === "hero-banner") return true;
+  if (!barMode && widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return true;
+  if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return true;
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspaceSlotOccupant(slotId, widgetId)) return true;
   if (widgetId === "search" && slotId === "header-search") {
     return HEADER_WIDGET_IDS.some(id => isHeaderWidgetSlot(slotForWidget(id)) && slotGroup(slotForWidget(id)) === "center");
@@ -719,6 +768,11 @@ function workspaceDestinationStatus(widgetId, slotId) {
   const occupant = workspaceSlotOccupant(slotId, widgetId);
   if (slotId === slotForWidget(widgetId)) return "Current";
   if (slotId === "hidden") return "Available";
+  const workspace = canonicalizeWorkspace();
+  if (workspaceUsesHeroBar(workspace) && widgetId === "search" && ["hero-search", "header-search"].includes(slotId)) return "Unavailable in bar styles";
+  if (workspaceUsesHeroBar(workspace) && widgetId === "hero" && slotId === "hero-banner") return "Unavailable in bar styles";
+  if (!workspaceUsesHeroBar(workspace) && widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return "Banner is hidden";
+  if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return "Header Search uses center";
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && occupant) return `${workspaceWidgetLabel(occupant)} already here`;
   if (widgetId === "search" && slotId === "header-search") {
     const centerOccupants = HEADER_WIDGET_IDS.filter(id => isHeaderWidgetSlot(slotForWidget(id)) && slotGroup(slotForWidget(id)) === "center");
@@ -770,6 +824,12 @@ function enableWorkspacePanelDrag(panel) {
   });
 }
 
+function workspaceDestinationSlots(widgetId) {
+  const widget = WORKSPACE_WIDGETS[widgetId];
+  if (!widget) return [];
+  return widget.allowedSlots.filter(slotId => WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId));
+}
+
 function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
   document.getElementById("workspaceDestinationTray")?.remove();
   if (!editLayoutActive) {
@@ -801,7 +861,7 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
     </button>`;
   }).join("") : `<p class="workspace-empty-note">Nothing here.</p>`;
 
-  const destinationRows = selected ? availableWorkspaceSlots(selected).map(slotId => {
+  const destinationRows = selected ? workspaceDestinationSlots(selected).map(slotId => {
     const isCurrent = slotId === currentSlot;
     const unavailable = workspaceSlotIsUnavailable(selected, slotId);
     const status = workspaceDestinationStatus(selected, slotId);
@@ -819,6 +879,15 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
         <span>Pick an item, then choose where it belongs.</span>
       </div>
       <button type="button" class="workspace-panel-close" aria-label="Close Workspace Studio">×</button>
+    </div>
+    <div class="workspace-panel-section workspace-hero-style-section">
+      <span class="workspace-panel-kicker">Hero Style</span>
+      <div class="workspace-hero-style-list">
+        ${Object.entries(WORKSPACE_HERO_STYLES).map(([styleId, style]) => `<button type="button" class="workspace-hero-style-choice${workspaceHeroStyle() === styleId ? " current" : ""}" data-workspace-hero-style="${escapeHtml(styleId)}">
+          <strong>${escapeHtml(style.label)}</strong>
+          <span>${escapeHtml(style.description)}</span>
+        </button>`).join("")}
+      </div>
     </div>
     <div class="workspace-panel-section">
       <span class="workspace-panel-kicker">Visible</span>
@@ -844,6 +913,16 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
   panel.querySelector(".workspace-panel-close")?.addEventListener("click", () => setEditLayoutMode(false));
   panel.querySelector("#workspacePanelDone")?.addEventListener("click", () => setEditLayoutMode(false));
   panel.querySelector("#workspacePanelReset")?.addEventListener("click", () => resetWidgetLayout());
+  panel.querySelectorAll("[data-workspace-hero-style]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      setWorkspaceHeroStyle(button.dataset.workspaceHeroStyle);
+      save();
+      render();
+      if (editLayoutActive) renderWorkspaceDesignerPanel(selectedWorkspaceWidgetId);
+    });
+  });
   panel.querySelectorAll("[data-workspace-item]").forEach(button => {
     button.addEventListener("click", event => {
       event.preventDefault();
@@ -1199,6 +1278,11 @@ function applyPersonalization() {
   const workspace = canonicalizeWorkspace();
   const currentHeroSlot = workspace.slots.hero;
   const currentSearchSlot = workspace.slots.search;
+  const currentHeroStyle = workspaceHeroStyle(workspace);
+  body.classList.toggle("workspace-hero-standard", currentHeroStyle === "standard");
+  body.classList.toggle("workspace-hero-top-bar", currentHeroStyle === "topBar");
+  body.classList.toggle("workspace-hero-bottom-bar", currentHeroStyle === "bottomBar");
+  body.classList.toggle("workspace-hero-bar", workspaceUsesHeroBar(workspace));
   body.classList.toggle("workspace-search-standalone", currentSearchSlot === "standalone-search");
   body.classList.toggle("workspace-search-hero", currentSearchSlot === "hero-search");
   body.classList.toggle("workspace-search-header", currentSearchSlot === "header-search");
@@ -1367,11 +1451,12 @@ function syncControls() {
   setValue("terminalTextColorInput", s.terminalTextColor);
   setValue("statusTextColorInput", s.statusTextColor);
   setValue("workspaceTemplateSelect", s.workspace?.template || s.layoutPreset || "classic");
+  setValue("workspaceHeroStyleSelect", workspaceHeroStyle());
   const workspace = canonicalizeWorkspace();
   const templateLabel = WORKSPACE_TEMPLATES[workspace.template || "classic"]?.label || "Classic";
   const placedCount = Object.values(workspace.slots || {}).filter(slot => slot && slot !== "hidden").length;
   setText("workspaceTemplateStatus", `Workspace · ${workspace.modified ? "Customized" : templateLabel}`);
-  setText("workspaceTemplateDescription", `${workspace.modified ? `Based on ${templateLabel}` : WORKSPACE_TEMPLATES[workspace.template || "classic"]?.description || "Workspace template"} · ${placedCount} items placed`);
+  setText("workspaceTemplateDescription", `${workspace.modified ? `Based on ${templateLabel}` : WORKSPACE_TEMPLATES[workspace.template || "classic"]?.description || "Workspace template"} · ${placedCount} items placed · ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero"}`);
   setValue("showLogoSelect", String(s.showLogo !== false));
   setValue("showWordmarkSelect", String(s.showWordmark !== false));
   setValue("showClockSelect", String(s.showClock !== false));
@@ -1399,7 +1484,30 @@ function syncControls() {
   setText("uiScaleValue", `${s.uiScale}%`);
   setText("bookmarkFontValue", `${s.bookmarkFontSize}px`);
   setText("bookmarkIconValue", `${s.bookmarkIconSize}px`);
+  updateWorkspaceAwareSettings();
 }
+
+function updateWorkspaceAwareSettings() {
+  const workspace = canonicalizeWorkspace();
+  const barMode = workspaceUsesHeroBar(workspace);
+  const bannerUnavailable = barMode || workspace.slots.hero === "hidden";
+  const bannerControlIds = ["heroStyleSelect", "heroFitSelect", "heroHeightPresetSelect", "heroZoomSlider", "heroYSlider", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
+  bannerControlIds.forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    el.disabled = bannerUnavailable;
+    const label = el.closest("label") || el;
+    label.classList?.toggle("workspace-setting-unavailable", bannerUnavailable);
+    if (bannerUnavailable) el.title = barMode ? "Unavailable while Hero Style uses Top Bar or Bottom Bar." : "Unavailable while the banner is hidden.";
+    else el.removeAttribute("title");
+  });
+  const note = $("bannerWorkspaceNotice");
+  if (note) {
+    note.hidden = !bannerUnavailable;
+    note.textContent = barMode ? "Banner controls are unavailable because the current Workspace Hero Style uses a bar. Search is standalone in bar styles." : "Banner controls are unavailable because the Banner widget is hidden in Workspace.";
+  }
+}
+
 function setValue(id, value) { const el = $(id); if (!el) return; if (document.activeElement === el) return; if (el.value !== String(value)) el.value = value; }
 function setText(id, value) { const el = $(id); if (el) el.textContent = value; }
 
@@ -2562,6 +2670,7 @@ function bindEvents() {
   bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); render(); });
+  bindSetting("workspaceHeroStyleSelect", "change", value => { setWorkspaceHeroStyle(value); save(); render(); });
   bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); render(); });
   bindSetting("showWordmarkSelect", "change", value => { setWidgetVisible("wordmark", value === "true"); save(); render(); });
   bindSetting("showClockSelect", "change", value => { setWidgetVisible("clock", value === "true"); save(); render(); });

@@ -4,7 +4,7 @@
 
 <img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
 
-### A Linux-inspired browser start page with a built-in command terminal and powerful customization.
+### A beautiful, bookmark-first browser start page inspired by Linux desktops, featuring Workspaces, an integrated terminal, and thoughtful customization.
 
 <p>
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp">
@@ -16,15 +16,49 @@
 
 ---
 
-## Features
+## Project Principles
 
-- Linux-inspired command terminal
-- Themes, fonts, and advanced color customization
+Waypoint is built around a few simple ideas:
+
+- Bookmarks come first.
+- Workspaces provide structured customization.
+- Beautiful defaults matter.
+- Simplicity is preferred over feature count.
+- Every feature must earn its place.
+
+Waypoint is intentionally focused on being an exceptional browser start page rather than a general-purpose dashboard.
+
+---
+
+## Highlights
+
+### Workspace
+
+- Workspace-based layout engine
+- Visual workspace editor
+- Structured widget placement
+- Multiple page layouts including classic, top bar, and bottom bar
+
+### Bookmarks
+
 - Drag-and-drop bookmark organization
-- Built-in weather, clock, and hero banner
-- Custom CSS support
-- Import and export profiles
-- Local-first configuration with no backend
+- Custom bookmark sections
+- Fast, elegant bookmark launching
+
+### Customization
+
+- Themes
+- Fonts
+- Advanced color customization
+- Multiple page layouts
+- Custom CSS
+- Local-first configuration
+
+### Terminal
+
+- Integrated Linux-inspired terminal
+- Built-in commands
+- Fast keyboard-driven interaction
 
 ---
 
@@ -73,15 +107,19 @@ No installation required.
 
 ## Terminal
 
-Waypoint includes a built-in Linux-inspired command terminal for configuration, navigation, and system information.
+The integrated terminal is one of Waypoint's signature features.
 
-Use `help` inside the terminal to browse available commands and documentation.
+Inspired by the Linux command line, it provides a fast and enjoyable way to configure and interact with Waypoint using built-in commands.
+
+Type `help` to get started.
 
 ---
 
 ## Customization
 
-Customize nearly every aspect of Waypoint, including themes, fonts, layouts, colors, transparency, bookmark organization, and custom CSS without editing the source code.
+Customize Waypoint through Workspaces, themes, fonts, colors, multiple page layouts, widget placement, and custom CSS without editing the source code.
+
+All configuration is stored locally. No backend is required.
 
 ---
 
@@ -93,10 +131,13 @@ Customize nearly every aspect of Waypoint, including themes, fonts, layouts, col
 - ✅ v1.1 Personalization
 - ✅ v1.2 Terminal Upgrade
 - ✅ v1.3 First Experience & Onboarding
+- ✅ v1.4 Workspace Foundation
 
 ### In Progress
 
-- 🚧 v1.4 Layouts & Profiles
+- 🚧 v1.5 Hero Evolution
+
+
 
 ---
 

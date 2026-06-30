@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.0-dev1 - Hero Evolution foundation
+- Added Workspace-owned Hero Style with Standard Hero, Top Bar, and Bottom Bar options.
+- Added OS-style top/bottom bar presentation that integrates logo, wordmark, clock, and weather while forcing Search to standalone.
+- Added Workspace Studio Hero Style controls so templates cannot express layouts Studio cannot create.
+- Added Workspace-aware destination availability so Hero Search, Header Search, and Banner destinations are disabled when unavailable.
+- Added Workspace-aware Banner settings disabling and explanatory messaging for bar styles and hidden banners.
+
 ## v1.4.0-dev10e - Wallpaper/banner fallback fix
 - Added resilient wallpaper fallback layering so missing packaged image paths no longer leave the page black.
 - Added hero banner fallback handling so broken banner images do not show alt text on the card.

@@ -79,7 +79,8 @@
         "sections": "content-sections"
       },
       "display": {
-        "showSectionTitles": true
+        "showSectionTitles": true,
+        "heroStyle": "standard"
       }
     }
   }
