@@ -2,9 +2,11 @@
 
 <div align="center">
 
-<img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
+<img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">  
 
-### A beautiful, bookmark-first browser start page inspired by Linux desktops, featuring Workspaces, an integrated terminal, and thoughtful customization.
+## Waypoint is a modern, local-first browser start page designed to be fast, customizable, and beautiful by default.
+
+ *It exists because I couldn't find a start page I wanted to use every day. So I built one.*
 
 <p>
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp">
@@ -16,13 +18,12 @@
 
 ---
 
-## Project Principles
+## Design Philosophy
 
 Waypoint is built around a few simple ideas:
 
 - Bookmarks come first.
 - Workspaces provide structured customization.
-- Beautiful defaults matter.
 - Simplicity is preferred over feature count.
 - Every feature must earn its place.
 
@@ -32,33 +33,12 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 ## Highlights
 
-### Workspace
-
-- Workspace-based layout engine
-- Visual workspace editor
-- Structured widget placement
-- Multiple page layouts including classic, top bar, and bottom bar
-
-### Bookmarks
-
-- Drag-and-drop bookmark organization
-- Custom bookmark sections
-- Fast, elegant bookmark launching
-
-### Customization
-
-- Themes
-- Bundled Waypoint typography
-- Advanced color customization
-- Multiple page layouts
-- Custom CSS
-- Local-first configuration
-
-### Terminal
-
-- Integrated Linux-inspired terminal
-- Built-in commands
-- Fast keyboard-driven interaction
+• Local-first — Everything stays in your browser.  
+• Workspace Studio — Design your layout visually.  
+• Linux-inspired Terminal — Built-in commands and keyboard-driven workflow.  
+• Flexible Layouts — Classic, Top Bar, and Bottom Bar.  
+• Smart Bookmarks — Sections, drag-and-drop, and automatic icons.  
+• Thoughtful Defaults — Ready to use from the first launch.
 
 ---
 
@@ -107,19 +87,15 @@ No installation required.
 
 ## Terminal
 
-The integrated terminal is one of Waypoint's signature features.
-
-Inspired by the Linux command line, it provides a fast and enjoyable way to configure and interact with Waypoint using built-in commands.
+The integrated terminal brings a familiar Linux-inspired command line directly into your start page. Use it to explore Waypoint, configure settings, and access built-in commands without leaving the browser.
 
 Type `help` to get started.
 
 ---
 
-## Customization
+##Customization
 
-Customize Waypoint through Workspaces, themes, fonts, colors, multiple page layouts, widget placement, and custom CSS without editing the source code.
-
-All configuration is stored locally. No backend is required.
+Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoint your own.
 
 ---
 
@@ -136,8 +112,6 @@ All configuration is stored locally. No backend is required.
 ### In Progress
 
 - 🚧 v1.5 Hero Evolution
-
-
 
 ---
 

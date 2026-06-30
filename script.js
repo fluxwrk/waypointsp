@@ -350,6 +350,24 @@ const INTERNAL_ACTIONS = {
   terminal: { icon: "▣", label: "Terminal", aliases: [], run: () => openModal("terminalModal") }
 };
 function isWaypointUrl(url) { return /^waypoint:/i.test(String(url || "").trim()); }
+const ALLOWED_BOOKMARK_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
+function isAllowedBookmarkUrl(url) {
+  const value = String(url || "").trim();
+  if (!value) return false;
+  if (isWaypointUrl(value)) return true;
+  try {
+    return ALLOWED_BOOKMARK_PROTOCOLS.has(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+function runtimeLabel() {
+  const protocol = window.location?.protocol || "";
+  if (protocol === "moz-extension:") return "Firefox Extension";
+  if (protocol === "chrome-extension:") return "Chromium Extension";
+  if (protocol === "file:") return "Local File";
+  return "Web";
+}
 function waypointActionKey(url) { return String(url || "").replace(/^waypoint:/i, "").trim().toLowerCase(); }
 function internalActionForUrl(url) {
   const key = waypointActionKey(url);
@@ -368,8 +386,8 @@ function normalizeUrl(url) {
   const t = String(url || "").trim();
   if (!t) return "";
   if (isWaypointUrl(t)) return t;
-  if (/^[a-z][a-z0-9+.-]*:/i.test(t)) return t;
-  return `https://${t}`;
+  const withProtocol = /^[a-z][a-z0-9+.-]*:/i.test(t) ? t : `https://${t}`;
+  return isAllowedBookmarkUrl(withProtocol) ? withProtocol : "";
 }
 function favicon(url) {
   try {
@@ -1308,10 +1326,11 @@ function normalizeData(input) {
   const normalizeLinks = links => Array.isArray(links)
     ? links.filter(link => link && link.url).map(link => {
       const url = normalizeUrl(link.url);
+      if (!url) return null;
       const icon = isWaypointUrl(url) ? waypointIcon(url) : typeof link.icon === "string" && link.icon ? link.icon : "";
       const name = isWaypointUrl(url) ? cleanInternalLinkName(link.name || link.url, url) : String(link.name || link.url);
       return { name, url, icon };
-    })
+    }).filter(Boolean)
     : [];
 
   const profileBookmarks = input?.bookmarks && typeof input.bookmarks === "object" ? input.bookmarks : null;
@@ -1786,13 +1805,22 @@ function renderSections() {
       const internalClass = isWaypointUrl(link.url) ? " internal-link" : "";
       const displayName = isWaypointUrl(link.url) ? cleanInternalLinkName(link.name, link.url) : link.name;
       row.className += internalClass;
+      const fallbackIcon = iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "";
       row.innerHTML = `
-        <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "")}</span>
+        <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(fallbackIcon)}</span>
         <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
         <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
         <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
         <span class="delete-link" title="Delete link" aria-label="Delete link">×</span>
       `;
+      const iconImg = row.querySelector("img");
+      const fallbackEl = row.querySelector(".link-icon-fallback");
+      if (iconImg && !iconImg.hidden) {
+        iconImg.addEventListener("error", () => {
+          iconImg.hidden = true;
+          if (fallbackEl && !fallbackEl.textContent.trim()) fallbackEl.textContent = "◆";
+        }, { once: true });
+      }
       row.addEventListener("click", event => {
         if (event.target.closest(".delete-link") || event.target.closest(".edit-link") || event.defaultPrevented) return;
         if (handleWaypointLink(link.url)) return;
@@ -2003,6 +2031,10 @@ function saveLink() {
   const rawUrl = $("linkUrl")?.value.trim();
   if (!name || !rawUrl) return;
   const normalizedUrl = normalizeUrl(rawUrl);
+  if (!normalizedUrl) {
+    alert("Unsupported URL type. Use http, https, mailto, tel, or waypoint links.");
+    return;
+  }
   const nextName = isWaypointUrl(normalizedUrl) ? cleanInternalLinkName(name, normalizedUrl) : name;
   const nextLink = { name: nextName, url: normalizedUrl, icon: isWaypointUrl(normalizedUrl) ? waypointIcon(normalizedUrl) : pendingLinkIcon || "" };
   if (editingLink) data.sections[editingLink.sectionIndex].links[editingLink.linkIndex] = nextLink;
@@ -2111,7 +2143,7 @@ function addLinkByCommand(sectionName, linkName, url) {
   const sectionIndex = findSectionIndexByName(sectionName);
   if (sectionIndex < 0) return `No section named <strong>${escapeHtml(sectionName)}</strong>.`;
   const safeUrl = normalizeUrl(url);
-  if (!safeUrl) return "Missing URL.";
+  if (!safeUrl) return "Unsupported URL type. Use http, https, mailto, tel, or waypoint links.";
   const safeName = isWaypointUrl(safeUrl) ? cleanInternalLinkName(linkName, safeUrl) : String(linkName).trim() || safeUrl;
   data.sections[sectionIndex].links.push({ name: safeName, url: safeUrl, icon: isWaypointUrl(safeUrl) ? waypointIcon(safeUrl) : "" });
   save();
@@ -2146,6 +2178,7 @@ function buildFastfetchHtml() {
     const rows = [
       ["Version", appMeta.version || "unknown"],
       ["Branch", appMeta.branch || "unknown"],
+      ["Runtime", runtimeLabel()],
       ["Theme", theme.label],
       ["Workspace", workspaceLabel],
       ["Hero", hero],

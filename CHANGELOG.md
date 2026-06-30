@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0-dev11] - 2026-06-30
+
+### Added
+
+- Added runtime detection for Web, local file, Firefox extension, and Chromium extension contexts.
+- Added the current runtime to the terminal `fetch` output.
+
+### Changed
+
+- Tightened bookmark URL handling so saved links only allow `http`, `https`, `mailto`, `tel`, and `waypoint:` protocols.
+- Improved bookmark icon fallback behavior when remote favicons fail to load.
+
 ## [1.5.0-dev10d] - 2026-06-30
 
 ### Fixed
