@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.0-dev12] - 2026-06-30
+
+### Changed
+
+- Added a WaypointStorage wrapper around browser storage operations.
+- Routed profile, demo initialization, weather cache, custom wallpaper, and custom banner persistence through the storage wrapper.
+
+### Notes
+
+- The storage backend remains localStorage for now. This prepares Waypoint for future extension storage support without changing user data behavior.
+
 ## [1.5.0-dev11] - 2026-06-30
 
 ### Added

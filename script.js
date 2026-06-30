@@ -3,7 +3,7 @@ const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6",
 const CUSTOM_BG_KEY = "startpage-custom-background";
 const CUSTOM_HERO_KEY = "startpage-custom-hero";
 const WEATHER_CACHE_KEY = "startpage-weather-cache-v2";
-let appMeta = { name: "Waypoint", version: "1.5.0-dev10d", branch: "dev", codename: "Hero Evolution" };
+let appMeta = { name: "Waypoint", version: "1.5.0-dev12", branch: "dev", codename: "Hero Evolution" };
 
 const SEARCH_ENGINES = {
   google: { label: "Google", badge: "G", action: "https://www.google.com/search", param: "q", placeholder: "Search Google" },
@@ -341,6 +341,65 @@ let terminalBuffer = [];
 function $(id) { return document.getElementById(id); }
 function clamp(value, min, max, fallback) { return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback; }
 function safeParse(value) { try { return JSON.parse(value); } catch { return null; } }
+
+const WaypointStorage = {
+  save(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  load(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw === null) return fallback;
+      const parsed = safeParse(raw);
+      return parsed === null ? fallback : parsed;
+    } catch {
+      return fallback;
+    }
+  },
+
+  saveRaw(key, value) {
+    try {
+      localStorage.setItem(key, String(value));
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  loadRaw(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw === null ? fallback : raw;
+    } catch {
+      return fallback;
+    }
+  },
+
+  remove(key) {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  clear() {
+    try {
+      localStorage.clear();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+};
+
 function escapeHtml(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
 function sanitizeUserName(value) { return String(value || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 32); }
 function displayUserName() { return data.settings.userName || "user"; }
@@ -1278,13 +1337,13 @@ function applyLayoutPresetDefaults(preset) {
 }
 
 function loadStoredProfile() {
-  const saved = safeParse(localStorage.getItem(KEY));
+  const saved = WaypointStorage.load(KEY);
   if (saved) return normalizeData(saved);
   for (const oldKey of OLD_KEYS) {
-    const old = safeParse(localStorage.getItem(oldKey));
+    const old = WaypointStorage.load(oldKey);
     if (old) {
       const migrated = normalizeData(old);
-      localStorage.setItem(KEY, JSON.stringify(migrated));
+      WaypointStorage.save(KEY, migrated);
       return migrated;
     }
   }
@@ -1316,7 +1375,7 @@ async function loadInitialProfile() {
   const stored = loadStoredProfile();
   if (stored) return stored;
   const demoProfile = await loadDemoProfile();
-  localStorage.setItem(KEY, JSON.stringify(demoProfile));
+  WaypointStorage.save(KEY, demoProfile);
   return demoProfile;
 }
 
@@ -1423,7 +1482,7 @@ function normalizeData(input) {
 
 function save() {
   data.settings.lastModified = new Date().toISOString();
-  localStorage.setItem(KEY, JSON.stringify(data));
+  WaypointStorage.save(KEY, data);
   updateLogoPrompt();
   syncControls();
 }
@@ -1545,7 +1604,7 @@ function applyTheme() {
     bg.style.filter = `blur(${data.settings.blur}px)`;
     if (data.settings.backgroundMode === "gradient") bg.style.backgroundImage = theme.gradient;
     else if (data.settings.backgroundMode === "custom") {
-      const custom = localStorage.getItem(CUSTOM_BG_KEY);
+      const custom = WaypointStorage.loadRaw(CUSTOM_BG_KEY);
       bg.style.backgroundImage = custom ? `url("${custom}"), ${theme.gradient}` : `url("${theme.wallpaper}"), ${theme.gradient}`;
     } else bg.style.backgroundImage = `url("${theme.wallpaper}"), ${theme.gradient}`;
   }
@@ -1554,7 +1613,7 @@ function applyTheme() {
 
 function getHeroSrc() {
   const theme = getTheme();
-  if (data.settings.heroStyle === "custom") return localStorage.getItem(CUSTOM_HERO_KEY) || theme[theme.defaultHero];
+  if (data.settings.heroStyle === "custom") return WaypointStorage.loadRaw(CUSTOM_HERO_KEY) || theme[theme.defaultHero];
   if (data.settings.heroStyle === "desktop") return theme.desktop;
   if (data.settings.heroStyle === "atmo") return theme.atmo;
   return theme[theme.defaultHero];
@@ -2305,7 +2364,7 @@ function importJsonFile(file) {
 async function refreshWeather(force = false) {
   const loc = data.settings.weatherLocation.trim();
   if (!loc) { updateWeatherWidget(); return; }
-  const cached = safeParse(localStorage.getItem(WEATHER_CACHE_KEY));
+  const cached = WaypointStorage.load(WEATHER_CACHE_KEY);
   if (!force && cached && cached.location === loc && Date.now() - cached.time < 30 * 60 * 1000) {
     updateWeatherWidget(cached); return;
   }
@@ -2333,7 +2392,7 @@ async function refreshWeather(force = false) {
       unit,
       time: Date.now()
     };
-    localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(cache));
+    WaypointStorage.save(WEATHER_CACHE_KEY, cache);
     updateWeatherWidget(cache);
   } catch {
     updateWeatherWidget({ error: true, location: loc });
@@ -2416,7 +2475,7 @@ async function resolveWeatherLocation(input) {
   };
 }
 
-function updateWeatherWidget(payload = safeParse(localStorage.getItem(WEATHER_CACHE_KEY))) {
+function updateWeatherWidget(payload = WaypointStorage.load(WEATHER_CACHE_KEY)) {
   const widget = $("weatherWidget");
   if (!widget) return;
   const icon = widget.querySelector(".weather-icon");
@@ -2653,10 +2712,10 @@ function executeButtonCommand(command) {
 
 function resetEverything() {
   if (!confirm("Reset Waypoint to factory defaults? This clears bookmarks, settings, custom wallpaper, custom banner, and weather cache. It will not reload demo.json.")) return;
-  localStorage.removeItem(KEY);
-  localStorage.removeItem(CUSTOM_BG_KEY);
-  localStorage.removeItem(CUSTOM_HERO_KEY);
-  localStorage.removeItem(WEATHER_CACHE_KEY);
+  WaypointStorage.remove(KEY);
+  WaypointStorage.remove(CUSTOM_BG_KEY);
+  WaypointStorage.remove(CUSTOM_HERO_KEY);
+  WaypointStorage.remove(WEATHER_CACHE_KEY);
   data = structuredClone(defaultData);
   save();
   render();
@@ -2913,17 +2972,17 @@ function bindEvents() {
   $("backgroundUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { localStorage.setItem(CUSTOM_BG_KEY, reader.result); data.settings.backgroundMode = "custom"; save(); render(); };
+    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_BG_KEY, reader.result); data.settings.backgroundMode = "custom"; save(); render(); };
     reader.readAsDataURL(file);
   });
   $("imageUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { localStorage.setItem(CUSTOM_HERO_KEY, reader.result); data.settings.heroStyle = "custom"; save(); render(); };
+    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_HERO_KEY, reader.result); data.settings.heroStyle = "custom"; save(); render(); };
     reader.readAsDataURL(file);
   });
-  $("resetBackgroundBtn")?.addEventListener("click", () => { localStorage.removeItem(CUSTOM_BG_KEY); data.settings.backgroundMode = "wallpaper"; save(); render(); });
-  $("resetHeroBtn")?.addEventListener("click", () => { localStorage.removeItem(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
+  $("resetBackgroundBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_BG_KEY); data.settings.backgroundMode = "wallpaper"; save(); render(); });
+  $("resetHeroBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
 
   document.addEventListener("keydown", event => {
     if (welcomeGuideState.active && event.key === "Escape") return;
@@ -3430,7 +3489,7 @@ function resetCategory(target) {
   else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroStyle"].forEach(k => data.settings[k] = d[k]);
   else if (target === "text" || target === "textcolors") ["useCustomTextColors", "sectionTitleColor", "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor", "customText"].forEach(k => data.settings[k] = d[k]);
   else if (target === "advanced") ["searchEngine", "customSearchUrl", "customCss", "terminalTransparency"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "all" || target === "everything") { data = structuredClone(defaultData); localStorage.removeItem(CUSTOM_BG_KEY); localStorage.removeItem(CUSTOM_HERO_KEY); localStorage.removeItem(WEATHER_CACHE_KEY); }
+  else if (target === "all" || target === "everything") { data = structuredClone(defaultData); WaypointStorage.remove(CUSTOM_BG_KEY); WaypointStorage.remove(CUSTOM_HERO_KEY); WaypointStorage.remove(WEATHER_CACHE_KEY); }
   else return;
   save(); render(); refreshWeather(false);
 }
