@@ -48,7 +48,7 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 ### Customization
 
 - Themes
-- Fonts
+- Bundled Waypoint typography
 - Advanced color customization
 - Multiple page layouts
 - Custom CSS

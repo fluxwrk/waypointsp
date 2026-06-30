@@ -3,6 +3,8 @@ const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6",
 const CUSTOM_BG_KEY = "startpage-custom-background";
 const CUSTOM_HERO_KEY = "startpage-custom-hero";
 const WEATHER_CACHE_KEY = "startpage-weather-cache-v2";
+let appMeta = { name: "Waypoint", version: "1.5.0-dev10d", branch: "dev", codename: "Hero Evolution" };
+
 const SEARCH_ENGINES = {
   google: { label: "Google", badge: "G", action: "https://www.google.com/search", param: "q", placeholder: "Search Google" },
   duckduckgo: { label: "DuckDuckGo", badge: "D", action: "https://duckduckgo.com/", param: "q", placeholder: "Search DuckDuckGo" },
@@ -102,7 +104,7 @@ const defaultData = {
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
-    "heroFit": "cover",
+    "heroFit": "contain",
     "bookmarkLayout": "list",
     "userName": "user",
     "weatherLocation": "",
@@ -110,7 +112,7 @@ const defaultData = {
     "searchEngine": "google",
     "customSearchUrl": "",
     "shortcut": "ctrlShiftSpace",
-    "fontFamily": "source",
+    "fontFamily": "inter",
     "uiScale": 100,
     "useCustomColors": false,
     "customAccent": "#00d084",
@@ -214,7 +216,7 @@ const bundledDemoData = {
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
-    "heroFit": "cover",
+    "heroFit": "contain",
     "bookmarkLayout": "grid",
     "userName": "demouser",
     "weatherLocation": "10012",
@@ -222,7 +224,7 @@ const bundledDemoData = {
     "searchEngine": "google",
     "customSearchUrl": "",
     "shortcut": "ctrlShiftSpace",
-    "fontFamily": "source",
+    "fontFamily": "inter",
     "uiScale": 100,
     "useCustomColors": false,
     "customAccent": "#00d084",
@@ -1281,6 +1283,17 @@ async function loadDemoProfile() {
   }
 }
 
+async function loadMetadata() {
+  try {
+    const response = await fetch("metadata.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("metadata unavailable");
+    const meta = await response.json();
+    appMeta = { ...appMeta, ...meta };
+  } catch {
+    // Keep bundled fallback metadata.
+  }
+}
+
 async function loadInitialProfile() {
   const stored = loadStoredProfile();
   if (stored) return stored;
@@ -1339,16 +1352,15 @@ function normalizeData(input) {
   normalized.settings.heroHeight = heroHeightForSize(normalized.settings.heroSize, normalized.settings.heroHeight);
   normalized.settings.heroZoom = clamp(Number(normalized.settings.heroZoom), 80, 140, 100);
   normalized.settings.heroY = clamp(Number(normalized.settings.heroY), 0, 100, 50);
-  normalized.settings.heroFit = ["cover", "contain"].includes(normalized.settings.heroFit) ? normalized.settings.heroFit : "cover";
+  normalized.settings.heroFit = "contain";
   normalized.settings.bookmarkLayout = ["grid", "list"].includes(normalized.settings.bookmarkLayout) ? normalized.settings.bookmarkLayout : "list";
-  if (normalized.settings.heroFit === "contain") normalized.settings.heroFit = "cover";
   normalized.settings.userName = sanitizeUserName(normalized.settings.userName);
   normalized.settings.weatherLocation = String(normalized.settings.weatherLocation || "").trim().slice(0, 80);
   normalized.settings.weatherUnit = ["auto", "fahrenheit", "celsius"].includes(normalized.settings.weatherUnit) ? normalized.settings.weatherUnit : "auto";
   normalized.settings.searchEngine = SEARCH_ENGINES[normalized.settings.searchEngine] ? normalized.settings.searchEngine : "google";
   normalized.settings.customSearchUrl = String(normalized.settings.customSearchUrl || "").trim().slice(0, 240);
   normalized.settings.shortcut = ["altT", "ctrlShiftSpace", "none"].includes(normalized.settings.shortcut) ? normalized.settings.shortcut : "none";
-  normalized.settings.fontFamily = ["system", "inter", "jetbrains", "firacode", "fira", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "system";
+  normalized.settings.fontFamily = ["system", "inter"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "inter";
   normalized.settings.uiScale = clamp(Number(normalized.settings.uiScale), 85, 120, 100);
   normalized.settings.useCustomColors = normalized.settings.useCustomColors === true || normalized.settings.useCustomColors === "true";
   normalized.settings.windowTransparency = clamp(Number(normalized.settings.windowTransparency ?? 92), 60, 100, 92);
@@ -1452,20 +1464,10 @@ function applyPersonalization() {
   document.documentElement.style.setProperty("--bookmark-columns", s.bookmarkColumns === "auto" ? "" : s.bookmarkColumns);
   document.documentElement.dataset.bookmarkColumns = s.bookmarkColumns || "auto";
   const fonts = {
-    system: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    inter: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    jetbrains: '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-    fira: '"Fira Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    roboto: 'Roboto, Inter, ui-sans-serif, system-ui, sans-serif',
-    firacode: '"Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-    plex: '"IBM Plex Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    source: '"Source Sans 3", Inter, ui-sans-serif, system-ui, sans-serif',
-    noto: '"Noto Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    ubuntu: 'Ubuntu, Inter, ui-sans-serif, system-ui, sans-serif',
-    opensans: '"Open Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace'
+    system: 'var(--font-system)',
+    inter: 'var(--font-waypoint)'
   };
-  document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.system);
+  document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.inter);
   let style = $("waypointCustomCss");
   if (!style) { style = document.createElement("style"); style.id = "waypointCustomCss"; document.head.appendChild(style); }
   style.textContent = s.customCss || "";
@@ -1554,13 +1556,13 @@ function applyHero() {
   ["hidden", "small", "medium", "large"].forEach(size => hero?.classList.toggle(`hero-size-${size}`, heroSize === size));
   card.style.setProperty("--hero-height", `${data.settings.heroHeight}px`);
   card.style.setProperty("--hero-min-height", `${data.settings.heroHeight}px`);
-  card.style.setProperty("--hero-fit", data.settings.heroFit || "cover");
-  card.classList.toggle("fit-contain", data.settings.heroFit === "contain");
+  card.style.setProperty("--hero-fit", "contain");
+  card.classList.add("fit-contain");
   const heroSrc = getHeroSrc();
   const theme = getTheme();
   card.style.backgroundImage = `url("${heroSrc}"), ${theme.gradient}`;
   card.style.backgroundPosition = "center center";
-  card.style.backgroundSize = data.settings.heroFit === "contain" ? "contain, cover" : "cover, cover";
+  card.style.backgroundSize = "contain, cover";
   card.style.backgroundRepeat = "no-repeat";
   img.hidden = true;
   img.removeAttribute("src");
@@ -1608,7 +1610,6 @@ function syncControls() {
   setValue("backgroundModeSelect", s.backgroundMode);
   setValue("heroStyleSelect", s.heroStyle);
   setValue("shortcutSelect", s.shortcut);
-  setValue("heroFitSelect", s.heroFit || "cover");
   setValue("bookmarkLayoutSelect", s.bookmarkLayout || "list");
   setValue("bookmarkColumnsSelect", s.bookmarkColumns || "auto");
   setValue("bookmarkFontSlider", s.bookmarkFontSize);
@@ -1628,7 +1629,7 @@ function syncControls() {
 function updateWorkspaceAwareSettings() {
   const workspace = canonicalizeWorkspace();
   const bannerUnavailable = workspace.slots.hero === "hidden" && data.settings.bannerHiddenByWorkspace === true;
-  const bannerControlIds = ["heroStyleSelect", "heroFitSelect", "heroHeightPresetSelect", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
+  const bannerControlIds = ["heroStyleSelect", "heroHeightPresetSelect", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
   bannerControlIds.forEach(id => {
     const el = $(id);
     if (!el) return;
@@ -2135,33 +2136,40 @@ function deleteSectionByCommand(sectionName) {
 }
 
 function buildFastfetchHtml() {
-  const theme = getTheme();
-  const heroLabel = data.settings.heroStyle === "auto" ? `Theme Default (${theme.defaultHero === "atmo" ? "Atmosphere" : "Desktop"})` : labelHero(data.settings.heroStyle);
-  const modified = data.settings.lastModified ? formatRelativeDate(new Date(data.settings.lastModified)) : "Never";
-  const logo = `  /\\/|  __
- |/\\/  / /
-      / /
-     / /
-    /_/____
-     |_____|`;
-  const rows = [
-    ["Version", "1.2.1"],
-    ["Theme", theme.label],
-    ["Workspace", `${WORKSPACE_TEMPLATES[data.settings.workspace?.template || "classic"]?.label || "Classic"}${data.settings.workspace?.modified ? "*" : ""}`],
-    ["Font", data.settings.fontFamily],
-    ["Bookmarks", countBookmarks()],
-    ["Sections", data.sections.length],
-    ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"],
-    ["Banner", heroLabel],
-    ["Weather", data.settings.showWeather === false ? "Hidden" : (data.settings.weatherLocation || "Not set")],
-    ["Search", labelSearch(data.settings.searchEngine)],
-    ["Modified", modified]
-  ];
-  return `
-    <pre class="fetch-output"><span class="fetch-logo">${escapeHtml(logo)}</span><span class="fetch-info"><strong>${escapeHtml(displayUserName())}@waypoint</strong>
--------------
-${rows.map(([k,v]) => `${String(k).padEnd(10)} ${escapeHtml(v)}`).join("\n")}</span></pre>
-  `;
+  try {
+    const theme = getTheme();
+    const modified = data.settings.lastModified ? formatRelativeDate(new Date(data.settings.lastModified)) : "Never";
+    const workspace = canonicalizeWorkspace();
+    const hero = WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero";
+    const workspaceLabel = workspace.modified ? "Custom" : (WORKSPACE_TEMPLATES[workspace.template || "classic"]?.label || "Default");
+    const weather = data.settings.showWeather === false ? "Hidden" : (data.settings.weatherLocation ? `${data.settings.weatherLocation} (${labelWeatherUnit(data.settings.weatherUnit)})` : "Not set");
+    const rows = [
+      ["Version", appMeta.version || "unknown"],
+      ["Branch", appMeta.branch || "unknown"],
+      ["Theme", theme.label],
+      ["Workspace", workspaceLabel],
+      ["Hero", hero],
+      ["Search", labelSearch(data.settings.searchEngine)],
+      ["Bookmarks", countBookmarks()],
+      ["Sections", data.sections.length],
+      ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"],
+      ["Weather", weather],
+      ["Modified", modified]
+    ];
+    const logo = [
+      "  /\\/|  __",
+      " |/\\/  / /",
+      "      / /",
+      "     / /",
+      "    /_/____",
+      "     |_____|"]
+      .join("\n");
+    const info = `${displayUserName()}@waypoint\n-----------------\n${rows.map(([key, value]) => `${String(key).padEnd(10)} ${value}`).join("\n")}`;
+    return `<div class="fetch-output"><pre class="fetch-logo">${escapeHtml(logo)}</pre><pre class="fetch-info">${escapeHtml(info)}</pre></div>`;
+  } catch (error) {
+    console.error("fetch command failed", error);
+    return commandResult("fetch: unable to build system summary", "terminal-error");
+  }
 }
 
 function renderTerminal() {
@@ -2205,6 +2213,13 @@ function terminalEcho(command) {
 function labelHero(value) { return ({ desktop: "Desktop", atmo: "Atmosphere", custom: "Custom", hidden: "Hidden" })[value] || "Theme Default"; }
 function labelBackground(value) { return ({ wallpaper: "Theme Wallpaper", gradient: "Theme Gradient", custom: "Custom" })[value] || value; }
 function labelShortcut(value) { return ({ altT: "Alt+T", ctrlShiftSpace: "Ctrl+Shift+Space", none: "Disabled" })[value] || value; }
+
+function labelWeatherUnit(value) {
+  if (value === "fahrenheit") return "Fahrenheit";
+  if (value === "celsius") return "Celsius";
+  return "Auto";
+}
+
 function labelSearch(value) { return (SEARCH_ENGINES[value] || SEARCH_ENGINES.google).label; }
 function formatRelativeDate(date) {
   const now = new Date();
@@ -2781,8 +2796,15 @@ function bindEvents() {
   document.querySelectorAll("[data-command]").forEach(btn => btn.addEventListener("click", () => executeButtonCommand(btn.dataset.command)));
 
   $("commandInput")?.addEventListener("keydown", e => {
+    if (e.key === "Enter" && e.target.value.trim()) {
+      e.preventDefault();
+      welcomeGuideState.active = false;
+      const value = e.target.value;
+      e.target.value = "";
+      runCommand(value);
+      return;
+    }
     if (handleWelcomeGuideKey(e)) return;
-    if (e.key === "Enter") { runCommand(e.target.value); e.target.value = ""; }
   });
 
   $("importFile")?.addEventListener("change", e => { const file = e.target.files[0]; if (file) importJsonFile(file); e.target.value = ""; });
@@ -2847,7 +2869,6 @@ function bindEvents() {
     }
     save(); render();
   });
-  bindSetting("heroFitSelect", "change", value => { data.settings.heroFit = value; save(); render(); });
   bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); render(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
@@ -2889,6 +2910,7 @@ function bindSetting(id, eventName, setter) { $(id)?.addEventListener(eventName,
 function bindNumber(id, key, after) { $(id)?.addEventListener("input", e => { data.settings[key] = Number(e.target.value); save(); after?.(); renderTerminal(); }); }
 
 async function initWaypoint() {
+  await loadMetadata();
   data = await loadInitialProfile();
   bindEvents();
   render();
@@ -2915,7 +2937,7 @@ function currentConfigText() {
     `Theme: ${getTheme().label}`,
     `Workspace template: ${s.workspace?.template || "classic"}${s.workspace?.modified ? " (modified)" : ""}`,
     `Bookmark layout: ${s.bookmarkLayout === "grid" ? "Grid Cards" : "Compact List"}`,
-    `Font: ${s.fontFamily}`,
+    `Interface font: ${s.fontFamily === "system" ? "System" : "Waypoint"}`,
     `Search engine: ${labelSearch(s.searchEngine)}`,
     `Weather: ${s.showWeather === false ? "Hidden" : "Shown"}`,
     `Clock: ${s.showClock === false ? "Hidden" : "Shown"}`,
@@ -3094,7 +3116,7 @@ function buildHelpText(topic = "") {
     visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  sections\n  banner`,
     search: `engine\n\nChange or view the search engine.\n\nSyntax:\n  engine\n  engine <name>\n\nExamples:\n  engine google\n  engine duckduckgo\n\nSee also:\n  ls search`,
     weather: `weather\n\nSet, view, or refresh weather.\n\nSyntax:\n  weather\n  weather <location>\n  weather refresh\n\nExamples:\n  weather "New York, NY"\n  weather refresh`,
-    font: `font\n\nChange or view the current font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font inter\n  font jetbrains\n  font "Source Sans 3"\n\nSee also:\n  ls fonts`,
+    font: `font\n\nChange or view the interface font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font waypoint\n  font system\n\nThe terminal always uses JetBrains Mono.\n\nSee also:\n  ls fonts`,
     settings: `settings\n\nOpen Settings or a specific settings page.\n\nSyntax:\n  settings\n  settings <page>\n\nPages:\n  appearance\n  layout\n  bookmarks\n  weather\n  banner\n  text\n  advanced\n  backup`,
     add: `add\n\nAdd a section or bookmark.\n\nSyntax:\n  add section <name>\n  add link <section> <name> <url>\n\nExamples:\n  add section Media\n  add link "Media" "Jellyfin" https://jellyfin.org`,
     remove: `remove / delete\n\nRemove a section.\n\nSyntax:\n  remove section <name>\n  delete section <name>`,
@@ -3147,7 +3169,7 @@ function listCommand(category = "") {
     commands: buildHelpText(),
     themes: cleanList("Available Themes", ["catppuccin", "nord", "gruvbox", "tokyo-night"]),
     layouts: cleanList("Available Templates", ["classic", "dashboard", "minimal"]),
-    fonts: cleanList("Available Fonts", ["system", "inter", "jetbrains", "firacode", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"]),
+    fonts: cleanList("Available Interface Fonts", ["system", "waypoint"]),
     visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "sections", "banner"]),
     search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
     widgets: widgetSummaryText(),
@@ -3170,7 +3192,7 @@ function fail(text) {
 }
 function normalizeFontName(arg) {
   const a = arg.replaceAll(" ", "").toLowerCase();
-  const map = { system: "system", inter: "inter", jetbrains: "jetbrains", jetbrainsmono: "jetbrains", firacode: "firacode", fira: "firacode", plex: "plex", ibmplex: "plex", ibmplexsans: "plex", source: "source", sourcesans: "source", sourcesans3: "source", roboto: "roboto", noto: "noto", notosans: "noto", ubuntu: "ubuntu", opensans: "opensans", mono: "mono", monospace: "mono" };
+  const map = { system: "system", waypoint: "inter", inter: "inter" };
   return map[a] || "";
 }
 function runCommand(commandRaw) {
@@ -3227,7 +3249,7 @@ function runCommand(commandRaw) {
     return done(buildStatusLines(`Applying workspace template: ${arg}`));
   }
   if (head === "font") {
-    if (!arg) return textOut(`Current font: ${data.settings.fontFamily}`);
+    if (!arg) return textOut(`Current interface font: ${data.settings.fontFamily === "system" ? "System" : "Waypoint"}`);
     const font = normalizeFontName(commandRaw.trim().replace(/^font\s*/i, "").trim());
     if (!font) return textOut(buildHelpText("font"), "terminal-warning");
     data.settings.fontFamily = font; save(); render();
@@ -3312,9 +3334,7 @@ function runCommand(commandRaw) {
       setBannerSize(sizeMap[arg]);
       return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
     }
-    if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
-    if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
-    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large|fit|fill", "terminal-warning");
+    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large", "terminal-warning");
     data.settings.heroStyle = map[arg]; save(); render();
     return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
   }
@@ -3374,7 +3394,7 @@ function resetCategory(target) {
   else if (target === "layout" || target === "workspace") { data.settings.workspace = defaultWorkspace(d.workspace?.template || "classic"); data.settings.shortcut = d.shortcut; syncLegacyVisibilityFromWorkspace(); }
   else if (target === "bookmarks") ["bookmarkLayout", "bookmarkColumns", "bookmarkFontSize", "bookmarkIconSize"].forEach(k => data.settings[k] = d[k]);
   else if (target === "weather") ["weatherLocation", "weatherUnit"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroZoom", "heroY", "heroStyle", "heroFit"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroStyle"].forEach(k => data.settings[k] = d[k]);
   else if (target === "text" || target === "textcolors") ["useCustomTextColors", "sectionTitleColor", "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor", "customText"].forEach(k => data.settings[k] = d[k]);
   else if (target === "advanced") ["searchEngine", "customSearchUrl", "customCss", "terminalTransparency"].forEach(k => data.settings[k] = d[k]);
   else if (target === "all" || target === "everything") { data = structuredClone(defaultData); localStorage.removeItem(CUSTOM_BG_KEY); localStorage.removeItem(CUSTOM_HERO_KEY); localStorage.removeItem(WEATHER_CACHE_KEY); }

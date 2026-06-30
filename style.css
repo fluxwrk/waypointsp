@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "Inter";
+  src: url("assets/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("assets/fonts/JetBrainsMonoVariable.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #0b0e14;
   --panel: rgba(17, 20, 30, .70);
@@ -10,8 +26,11 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, .42);
   --radius-lg: 24px;
   --radius-md: 17px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-system: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-waypoint: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-terminal: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --mono: var(--font-terminal);
+  --sans: var(--font-waypoint);
 }
 
 * { box-sizing: border-box; }
@@ -4344,4 +4363,33 @@ body.workspace-hero-bottom-bar .page-shell {
     --bar-to-hero-gap: 18px;
     --hero-to-content-gap: 18px;
   }
+}
+
+
+/* v1.5.0-dev10b: deterministic banner fill */
+.hero-image-card {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+.hero-image-card img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill !important;
+  object-position: center center !important;
+  transform: none !important;
+  transform-origin: center center !important;
+  background: transparent !important;
+}
+#terminalModal,
+#terminalModal *,
+.terminal-window,
+.terminal-window *,
+.command-output,
+.command-output *,
+#commandInput,
+#commandPromptLabel,
+.fetch-output,
+.fetch-output * {
+  font-family: var(--font-terminal) !important;
 }
