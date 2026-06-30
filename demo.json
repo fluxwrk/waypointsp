@@ -70,10 +70,10 @@
       "template": "classic",
       "modified": false,
       "slots": {
-        "logo": "header-left",
-        "wordmark": "header-left",
-        "clock": "header-right",
-        "weather": "header-right",
+        "logo": "header-left-1",
+        "wordmark": "header-left-2",
+        "clock": "header-right-1",
+        "weather": "header-right-2",
         "search": "hero-search",
         "hero": "hero-banner",
         "sections": "content-sections"
