@@ -57,7 +57,7 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 ![Workspace Studio](screenshots/studio.png)
 
-![Themes](theme.png)
+![Themes](screenshots/theme.png)
 
 ![Settings](screenshots/settings.png)
 
