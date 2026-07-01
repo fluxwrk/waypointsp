@@ -2,9 +2,11 @@
 
 <div align="center">
 
-<img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">
+<img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">  
 
-### A Linux-inspired browser start page with a built-in command terminal and powerful customization.
+## Waypoint is a modern, local-first browser start page designed to be fast, customizable, and beautiful by default.
+
+ *It exists because I couldn't find a start page I wanted to use every day. So I built one.*
 
 <p>
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp">
@@ -16,15 +18,27 @@
 
 ---
 
-## Features
+## Design Philosophy
 
-- Linux-inspired command terminal
-- Themes, fonts, and advanced color customization
-- Drag-and-drop bookmark organization
-- Built-in weather, clock, and hero banner
-- Custom CSS support
-- Import and export profiles
-- Local-first configuration with no backend
+Waypoint is built around a few simple ideas:
+
+- Bookmarks come first.
+- Workspaces provide structured customization.
+- Simplicity is preferred over feature count.
+- Every feature must earn its place.
+
+Waypoint is intentionally focused on being an exceptional browser start page rather than a general-purpose dashboard.
+
+---
+
+## Highlights
+
+• Local-first — Everything stays in your browser.  
+• Workspace Studio — Design your layout visually.  
+• Linux-inspired Terminal — Built-in commands and keyboard-driven workflow.  
+• Flexible Layouts — Classic, Top Bar, and Bottom Bar.  
+• Smart Bookmarks — Sections, drag-and-drop, and automatic icons.  
+• Thoughtful Defaults — Ready to use from the first launch.
 
 ---
 
@@ -32,7 +46,7 @@
 
 <div align="center">
 
-![Waypoint](screenshots/maintokyo.png)
+![Waypoint](screenshots/home.png)
 
 </div>
 
@@ -41,13 +55,13 @@
 
 <div align="center">
 
-![Compact Layout](screenshots/compactlistgruvbox.png)
+![Workspace Studio](screenshots/studio.png)
 
-![Minimal Layout](screenshots/minimal.png)
+![Themes](screenshots/theme.png)
 
 ![Settings](screenshots/settings.png)
 
-![Demo](screenshots/wpdemo.gif)
+![Terminal](screenshots/wpdemo.gif)
 
 </div>
 
@@ -73,15 +87,15 @@ No installation required.
 
 ## Terminal
 
-Waypoint includes a built-in Linux-inspired command terminal for configuration, navigation, and system information.
+The integrated terminal brings a familiar Linux-inspired command line directly into your start page. Use it to explore Waypoint, configure settings, and access built-in commands without leaving the browser.
 
-Use `help` inside the terminal to browse available commands and documentation.
+Type `help` to get started.
 
 ---
 
 ## Customization
 
-Customize nearly every aspect of Waypoint, including themes, fonts, layouts, colors, transparency, bookmark organization, and custom CSS without editing the source code.
+Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoint your own.
 
 ---
 
@@ -93,10 +107,12 @@ Customize nearly every aspect of Waypoint, including themes, fonts, layouts, col
 - ✅ v1.1 Personalization
 - ✅ v1.2 Terminal Upgrade
 - ✅ v1.3 First Experience & Onboarding
+- ✅ v1.4 Workspace Foundation
+- ✅v1.5 Hero Evolution
 
 ### In Progress
 
-- 🚧 v1.4 Layouts & Profiles
+- 🚧 v1.6 Platform Expansion
 
 ---
 

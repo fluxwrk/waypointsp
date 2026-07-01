@@ -3,6 +3,8 @@ const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6",
 const CUSTOM_BG_KEY = "startpage-custom-background";
 const CUSTOM_HERO_KEY = "startpage-custom-hero";
 const WEATHER_CACHE_KEY = "startpage-weather-cache-v2";
+let appMeta = { name: "Waypoint", version: "1.5.0-dev12", branch: "dev", codename: "Hero Evolution" };
+
 const SEARCH_ENGINES = {
   google: { label: "Google", badge: "G", action: "https://www.google.com/search", param: "q", placeholder: "Search Google" },
   duckduckgo: { label: "DuckDuckGo", badge: "D", action: "https://duckduckgo.com/", param: "q", placeholder: "Search DuckDuckGo" },
@@ -102,7 +104,7 @@ const defaultData = {
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
-    "heroFit": "cover",
+    "heroFit": "contain",
     "bookmarkLayout": "list",
     "userName": "user",
     "weatherLocation": "",
@@ -110,7 +112,7 @@ const defaultData = {
     "searchEngine": "google",
     "customSearchUrl": "",
     "shortcut": "ctrlShiftSpace",
-    "fontFamily": "source",
+    "fontFamily": "inter",
     "uiScale": 100,
     "useCustomColors": false,
     "customAccent": "#00d084",
@@ -146,34 +148,75 @@ const defaultData = {
 };
 
 const bundledDemoData = {
-  "sections": [
-    {
-      "name": "Getting Started",
-      "links": [
-        {
-          "name": "Welcome",
-          "url": "waypoint:welcome",
-          "icon": "\ud83d\udcd6"
-        },
-        {
-          "name": "Settings",
-          "url": "waypoint:settings",
-          "icon": "\u2699\ufe0f"
-        }
-      ]
+  "version": 1,
+  "workspace": {
+    "version": 1,
+    "template": "classic",
+    "modified": true,
+    "slots": {
+      "logo": "header-left-1",
+      "wordmark": "header-left-2",
+      "clock": "header-right-1",
+      "weather": "header-right-2",
+      "search": "hero-search",
+      "hero": "hero-banner",
+      "sections": "content-sections"
+    },
+    "display": {
+      "showSectionTitles": true,
+      "heroStyle": "topBar"
     }
-  ],
+  },
+  "bookmarks": {
+    "sections": [
+      {
+        "name": "Getting Started",
+        "links": [
+          {
+            "name": "Welcome",
+            "url": "waypoint:welcome",
+            "icon": "📖"
+          },
+          {
+            "name": "Settings",
+            "url": "waypoint:settings",
+            "icon": "⚙️"
+          }
+        ]
+      },
+      {
+        "name": "Favorites",
+        "links": [
+          {
+            "name": "GitHub",
+            "url": "https://github.com",
+            "icon": ""
+          },
+          {
+            "name": "YouTube",
+            "url": "https://youtube.com",
+            "icon": ""
+          },
+          {
+            "name": "Wikipedia",
+            "url": "https://wikipedia.org",
+            "icon": ""
+          }
+        ]
+      }
+    ]
+  },
   "settings": {
     "theme": "catppuccin",
     "backgroundMode": "wallpaper",
-    "overlay": 0,
+    "overlay": 2,
     "blur": 5,
-    "heroHeight": 240,
-    "heroSize": "medium",
+    "heroHeight": 210,
+    "heroSize": "small",
     "heroZoom": 100,
     "heroY": 50,
     "heroStyle": "auto",
-    "heroFit": "cover",
+    "heroFit": "contain",
     "bookmarkLayout": "grid",
     "userName": "demouser",
     "weatherLocation": "10012",
@@ -181,7 +224,7 @@ const bundledDemoData = {
     "searchEngine": "google",
     "customSearchUrl": "",
     "shortcut": "ctrlShiftSpace",
-    "fontFamily": "source",
+    "fontFamily": "inter",
     "uiScale": 100,
     "useCustomColors": false,
     "customAccent": "#00d084",
@@ -196,23 +239,94 @@ const bundledDemoData = {
     "terminalTextColor": "#d9e5f6",
     "statusTextColor": "#d8dee9",
     "layoutPreset": "classic",
-    "workspace": null,
     "showLogo": true,
     "showWordmark": true,
     "showClock": true,
     "showWeather": true,
     "showSearch": true,
     "showSectionTitles": true,
-    "widgets": {},
+    "widgets": {
+      "logo": {
+        "area": "header",
+        "order": 0,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "wordmark": {
+        "area": "header",
+        "order": 1,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "clock": {
+        "area": "header",
+        "order": 2,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "weather": {
+        "area": "header",
+        "order": 3,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "search": {
+        "area": "hero",
+        "order": 4,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "hero": {
+        "area": "hero",
+        "order": 5,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "sections": {
+        "area": "content",
+        "order": 6,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      }
+    },
     "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 36,
     "customCss": "",
     "terminalLeft": null,
     "terminalTop": null,
-    "settingsLeft": null,
-    "settingsTop": null,
-    "lastModified": "2026-06-25T07:27:50.176Z"
+    "settingsLeft": 0,
+    "settingsTop": 0,
+    "lastModified": "2026-06-30T06:30:43.287Z",
+    "workspaceHeroStyle": "topBar"
   }
 };
 
@@ -227,6 +341,65 @@ let terminalBuffer = [];
 function $(id) { return document.getElementById(id); }
 function clamp(value, min, max, fallback) { return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback; }
 function safeParse(value) { try { return JSON.parse(value); } catch { return null; } }
+
+const WaypointStorage = {
+  save(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  load(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw === null) return fallback;
+      const parsed = safeParse(raw);
+      return parsed === null ? fallback : parsed;
+    } catch {
+      return fallback;
+    }
+  },
+
+  saveRaw(key, value) {
+    try {
+      localStorage.setItem(key, String(value));
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  loadRaw(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw === null ? fallback : raw;
+    } catch {
+      return fallback;
+    }
+  },
+
+  remove(key) {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  clear() {
+    try {
+      localStorage.clear();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+};
+
 function escapeHtml(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
 function sanitizeUserName(value) { return String(value || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 32); }
 function displayUserName() { return data.settings.userName || "user"; }
@@ -236,6 +409,24 @@ const INTERNAL_ACTIONS = {
   terminal: { icon: "▣", label: "Terminal", aliases: [], run: () => openModal("terminalModal") }
 };
 function isWaypointUrl(url) { return /^waypoint:/i.test(String(url || "").trim()); }
+const ALLOWED_BOOKMARK_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
+function isAllowedBookmarkUrl(url) {
+  const value = String(url || "").trim();
+  if (!value) return false;
+  if (isWaypointUrl(value)) return true;
+  try {
+    return ALLOWED_BOOKMARK_PROTOCOLS.has(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+function runtimeLabel() {
+  const protocol = window.location?.protocol || "";
+  if (protocol === "moz-extension:") return "Firefox Extension";
+  if (protocol === "chrome-extension:") return "Chromium Extension";
+  if (protocol === "file:") return "Local File";
+  return "Web";
+}
 function waypointActionKey(url) { return String(url || "").replace(/^waypoint:/i, "").trim().toLowerCase(); }
 function internalActionForUrl(url) {
   const key = waypointActionKey(url);
@@ -250,14 +441,32 @@ function cleanInternalLinkName(name, url) {
   const cleaned = raw.startsWith(action.icon) ? raw.slice(action.icon.length).trim() : raw;
   return cleaned || action.label;
 }
-function normalizeUrl(url) { const t = String(url || "").trim(); if (!t) return ""; if (isWaypointUrl(t)) return t; return /^https?:\/\//i.test(t) ? t : `https://${t}`; }
-function favicon(url) { try { if (isWaypointUrl(url)) return ""; const host = new URL(url).hostname; return host ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32` : ""; } catch { return ""; } }
+function normalizeUrl(url) {
+  const t = String(url || "").trim();
+  if (!t) return "";
+  if (isWaypointUrl(t)) return t;
+  const withProtocol = /^[a-z][a-z0-9+.-]*:/i.test(t) ? t : `https://${t}`;
+  return isAllowedBookmarkUrl(withProtocol) ? withProtocol : "";
+}
+function favicon(url) {
+  try {
+    const normalized = normalizeUrl(url);
+    if (!normalized || isWaypointUrl(normalized)) return "";
+    const parsed = new URL(normalized);
+    if (!["http:", "https:"].includes(parsed.protocol)) return "";
+    const host = parsed.hostname.replace(/^www\./i, "");
+    if (!host || host === "localhost" || !host.includes(".")) return "";
+    return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(parsed.origin)}&sz=64`;
+  } catch {
+    return "";
+  }
+}
 function getTheme() { return THEMES[data.settings.theme] || THEMES.nord; }
 function countBookmarks() { return data.sections.reduce((sum, section) => sum + section.links.length, 0); }
 
 const HERO_SIZES = {
   hidden: { label: "Hidden", height: 0 },
-  small: { label: "Small", height: 160 },
+  small: { label: "Small", height: 210 },
   medium: { label: "Medium", height: 240 },
   large: { label: "Large", height: 330 }
 };
@@ -267,8 +476,8 @@ function normalizeHeroSize(value, heroHeight, heroStyle) {
   if (heroStyle === "hidden") return "hidden";
   const height = Number(heroHeight);
   if (Number.isFinite(height)) {
-    if (height <= 200) return "small";
-    if (height <= 270) return "medium";
+    if (height <= 220) return "small";
+    if (height <= 280) return "medium";
     return "large";
   }
   return "large";
@@ -276,9 +485,24 @@ function normalizeHeroSize(value, heroHeight, heroStyle) {
 function heroHeightForSize(size, fallbackHeight) {
   if (size === "hidden") return 0;
   if (HERO_SIZES[size]) return HERO_SIZES[size].height;
-  return clamp(Number(fallbackHeight), 160, 360, 330);
+  return clamp(Number(fallbackHeight), 210, 360, 330);
 }
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
+
+const WORKSPACE_HERO_STYLES = {
+  standard: { label: "Standard Hero", description: "Classic banner presentation with optional Hero Search." },
+  topBar: { label: "Top Bar", description: "OS-style top panel that replaces the standard header." },
+  bottomBar: { label: "Bottom Bar", description: "OS-style bottom panel that replaces the standard header." }
+};
+function normalizeWorkspaceHeroStyle(value) {
+  return WORKSPACE_HERO_STYLES[value] ? value : "standard";
+}
+function workspaceHeroStyle(workspace = data?.settings?.workspace) {
+  return normalizeWorkspaceHeroStyle(workspace?.display?.heroStyle);
+}
+function workspaceUsesHeroBar(workspace = data?.settings?.workspace) {
+  return ["topBar", "bottomBar"].includes(workspaceHeroStyle(workspace));
+}
 
 const WIDGET_REGISTRY = [
   { id: "logo", label: "Logo / Terminal Button", selector: "#logoBtn", area: "header", visibleKey: "showLogo", movable: true, resizable: false },
@@ -339,19 +563,19 @@ const WORKSPACE_TEMPLATES = {
     label: "Classic",
     description: "Balanced default Waypoint layout.",
     slots: { logo: "header-left-1", wordmark: "header-left-2", clock: "header-right-1", weather: "header-right-2", search: "hero-search", hero: "hero-banner", sections: "content-sections" },
-    display: { showSectionTitles: true }
+    display: { showSectionTitles: true, heroStyle: "standard" }
   },
   dashboard: {
     label: "Dashboard",
     description: "Dense bookmark-first workspace with standalone search.",
     slots: { logo: "header-left-1", wordmark: "header-left-2", clock: "header-right-1", weather: "header-right-2", search: "standalone-search", hero: "hidden", sections: "content-sections" },
-    display: { showSectionTitles: true }
+    display: { showSectionTitles: true, heroStyle: "standard" }
   },
   minimal: {
     label: "Minimal",
     description: "Search-focused layout with visual chrome hidden.",
     slots: { logo: "hidden", wordmark: "hidden", clock: "hidden", weather: "hidden", search: "standalone-search", hero: "hidden", sections: "content-sections" },
-    display: { showSectionTitles: true }
+    display: { showSectionTitles: true, heroStyle: "standard" }
   }
 };
 
@@ -386,7 +610,10 @@ function defaultWorkspace(templateId = "classic") {
     template: WORKSPACE_TEMPLATES[templateId] ? templateId : "classic",
     modified: false,
     slots: { ...template.slots },
-    display: { showSectionTitles: template.display?.showSectionTitles !== false }
+    display: {
+      showSectionTitles: template.display?.showSectionTitles !== false,
+      heroStyle: normalizeWorkspaceHeroStyle(template.display?.heroStyle)
+    }
   };
 }
 
@@ -435,8 +662,10 @@ function normalizeWorkspace(input, settings = {}) {
     if (settings.showSearch === false || settings.showSearch === "false") normalized.slots.search = "hidden";
     if (normalizeHeroSize(settings.heroSize, settings.heroHeight, settings.heroStyle) === "hidden") normalized.slots.hero = "hidden";
     normalized.display.showSectionTitles = settings.showSectionTitles !== false && settings.showSectionTitles !== "false";
+    normalized.display.heroStyle = normalizeWorkspaceHeroStyle(settings.workspaceHeroStyle || settings.heroPresentation || normalized.display.heroStyle);
   } else {
     normalized.display.showSectionTitles = incoming.display?.showSectionTitles !== false;
+    normalized.display.heroStyle = normalizeWorkspaceHeroStyle(incoming.display?.heroStyle);
   }
 
   return canonicalizeWorkspace(normalized);
@@ -488,12 +717,18 @@ function canonicalizeWorkspace(workspace = data.settings.workspace) {
     workspace.slots[widgetId] = slot;
   }
 
+  workspace.display = workspace.display || {};
+  if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
+  workspace.display.heroStyle = normalizeWorkspaceHeroStyle(workspace.display.heroStyle);
+
+  if (workspaceUsesHeroBar(workspace) && workspace.slots.search === "header-search") {
+    workspace.slots.search = "standalone-search";
+  }
+
   if (workspace.slots.hero === "hidden" && workspace.slots.search === "hero-search") {
     workspace.slots.search = "standalone-search";
   }
 
-  workspace.display = workspace.display || {};
-  if (typeof workspace.display.showSectionTitles !== "boolean") workspace.display.showSectionTitles = true;
   return workspace;
 }
 
@@ -510,13 +745,19 @@ function syncLegacyVisibilityFromWorkspace() {
   data.settings.showSearch = workspace.slots.search !== "hidden";
   data.settings.showSectionTitles = workspace.display?.showSectionTitles !== false;
 
-  data.settings.heroSize = heroHidden ? "hidden" : (data.settings.heroSize === "hidden" ? "medium" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle));
+  if (heroHidden) {
+    data.settings.heroSize = "hidden";
+  } else {
+    data.settings.heroSize = normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
+  }
   data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
   data.settings.layoutPreset = workspace.template || "classic";
+  data.settings.workspaceHeroStyle = workspaceHeroStyle(workspace);
 }
 function setWidgetSlot(widgetId, slotId) {
   if (!WORKSPACE_WIDGETS[widgetId] || !WORKSPACE_WIDGETS[widgetId].allowedSlots.includes(slotId)) return false;
   if (!WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId)) return false;
+  if (workspaceSlotIsUnavailable(widgetId, slotId)) return false;
 
   const workspace = data.settings.workspace;
   const previousSlot = workspace.slots[widgetId];
@@ -535,6 +776,17 @@ function setWidgetSlot(widgetId, slotId) {
   workspace.slots[widgetId] = slotId;
   workspace.modified = true;
 
+  if (widgetId === "hero") {
+    data.settings.bannerHiddenByWorkspace = slotId === "hidden";
+    if (slotId === "hidden") {
+      data.settings.heroSize = "hidden";
+      data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight);
+    } else if (data.settings.heroSize === "hidden") {
+      data.settings.heroSize = "medium";
+      data.settings.heroHeight = heroHeightForSize("medium", data.settings.heroHeight);
+    }
+  }
+
   if (widgetId === "hero" && slotId === "hidden" && workspace.slots.search === "hero-search") {
     workspace.slots.search = "standalone-search";
   }
@@ -548,6 +800,17 @@ function setWidgetVisible(widgetId, visible) {
   const fallback = WORKSPACE_WIDGETS[widgetId]?.defaultSlot;
   return setWidgetSlot(widgetId, visible ? fallback : "hidden");
 }
+function setWorkspaceHeroStyle(style) {
+  const workspace = canonicalizeWorkspace();
+  workspace.display.heroStyle = normalizeWorkspaceHeroStyle(style);
+  workspace.modified = true;
+  if (workspaceUsesHeroBar(workspace) && workspace.slots.search === "header-search") {
+    workspace.slots.search = "standalone-search";
+  }
+  canonicalizeWorkspace(workspace);
+  syncLegacyVisibilityFromWorkspace();
+  return true;
+}
 function applyWorkspaceTemplate(templateId) {
   if (!WORKSPACE_TEMPLATES[templateId]) return false;
   data.settings.workspace = defaultWorkspace(templateId);
@@ -558,6 +821,7 @@ function workspaceSummaryText() {
   const workspace = data.settings.workspace || defaultWorkspace();
   const rows = Object.keys(WORKSPACE_WIDGETS).map(id => `${id.padEnd(10)} ${WORKSPACE_WIDGETS[id].label} -> ${slotLabel(workspace.slots[id])}`);
   rows.unshift(`Template: ${WORKSPACE_TEMPLATES[workspace.template]?.label || workspace.template}${workspace.modified ? " (modified)" : ""}`);
+  rows.push(`Hero style: ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero"}`);
   rows.push(`Section titles: ${workspace.display?.showSectionTitles === false ? "hidden" : "visible"}`);
   return cleanList("Waypoint Workspace", rows);
 }
@@ -624,13 +888,14 @@ function workspaceWidgetHint(widgetId) {
 function workspaceSlotDescription(slotId) {
   if (isHeaderWidgetSlot(slotId)) {
     const slot = WORKSPACE_SLOTS[slotId];
-    return `Place it in the ${slot.group} header group, position ${slot.order}.`;
+    const region = workspaceUsesHeroBar() ? "bar" : "header";
+    return `Place it in the ${slot.group} ${region} group, position ${slot.order}.`;
   }
   return {
     "hidden": "Hide it for a cleaner page.",
-    "header-search": "Place search in the center of the header. This uses the whole center header area.",
+    "header-search": "Place search in the center of the header. Unavailable for Top Bar and Bottom Bar styles.",
     "hero-banner": "Show the banner image.",
-    "hero-search": "Place search on the banner.",
+    "hero-search": "Place search on the banner. Unavailable when the banner is hidden.",
     "standalone-search": "Place search as its own row.",
     "content-sections": "Keep bookmark sections in the content area."
   }[slotId] || "Available location";
@@ -638,7 +903,7 @@ function workspaceSlotDescription(slotId) {
 
 function workspaceSlotTone(slotId) {
   if (slotId === "hidden") return "Hidden";
-  if (isHeaderWidgetSlot(slotId)) return `Header · ${slotLabel(slotId)}`;
+  if (isHeaderWidgetSlot(slotId)) return `${workspaceUsesHeroBar() ? "Bar" : "Header"} · ${slotLabel(slotId)}`;
   if (slotId === "header-search") return "Header · Search";
   return `${regionLabel(slotId)} · ${slotLabel(slotId).replace(/^Header /, "")}`;
 }
@@ -650,7 +915,7 @@ function availableWorkspaceSlots(widgetId) {
   const workspace = canonicalizeWorkspace();
   return widget.allowedSlots.filter(slotId => {
     if (!WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId)) return false;
-    if (HEADER_WIDGET_IDS.includes(widgetId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return false;
+    if (workspaceSlotIsUnavailable(widgetId, slotId)) return false;
     return true;
   });
 }
@@ -687,9 +952,11 @@ function selectWorkspaceWidget(widgetId) {
     const slot = el.dataset.widgetSlot;
     const isSelected = elWidgetId === widgetId;
     const isValidPeer = slot && validSlots.has(slot) && slot !== currentSlot;
+    const isSearchHost = widgetId === "search" && currentSlot === "hero-search" && elWidgetId === "hero" && slot === "hero-banner";
     el.classList.toggle("workspace-selected-widget", isSelected);
     el.classList.toggle("workspace-valid-widget", !isSelected && isValidPeer);
-    el.classList.toggle("workspace-muted-widget", !isSelected && !isValidPeer);
+    el.classList.toggle("workspace-host-widget", isSearchHost);
+    el.classList.toggle("workspace-muted-widget", !isSelected && !isValidPeer && !isSearchHost);
   });
   renderWorkspaceDesignerPanel(widgetId);
   updateEditLayoutBar();
@@ -708,6 +975,11 @@ function workspaceSlotOccupant(slotId, ignoreWidgetId = null) {
 function workspaceSlotIsUnavailable(widgetId, slotId) {
   if (slotId === slotForWidget(widgetId)) return false;
   if (slotId === "hidden") return false;
+  const workspace = canonicalizeWorkspace();
+  const barMode = workspaceUsesHeroBar(workspace);
+  if (barMode && widgetId === "search" && slotId === "header-search") return true;
+  if (widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return true;
+  if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return true;
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspaceSlotOccupant(slotId, widgetId)) return true;
   if (widgetId === "search" && slotId === "header-search") {
     return HEADER_WIDGET_IDS.some(id => isHeaderWidgetSlot(slotForWidget(id)) && slotGroup(slotForWidget(id)) === "center");
@@ -719,6 +991,10 @@ function workspaceDestinationStatus(widgetId, slotId) {
   const occupant = workspaceSlotOccupant(slotId, widgetId);
   if (slotId === slotForWidget(widgetId)) return "Current";
   if (slotId === "hidden") return "Available";
+  const workspace = canonicalizeWorkspace();
+  if (workspaceUsesHeroBar(workspace) && widgetId === "search" && slotId === "header-search") return "Search cannot live in the bar";
+  if (widgetId === "search" && slotId === "hero-search" && workspace.slots.hero === "hidden") return "Banner is hidden";
+  if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && workspace.slots.search === "header-search" && slotGroup(slotId) === "center") return "Header Search uses center";
   if (HEADER_WIDGET_IDS.includes(widgetId) && isHeaderWidgetSlot(slotId) && occupant) return `${workspaceWidgetLabel(occupant)} already here`;
   if (widgetId === "search" && slotId === "header-search") {
     const centerOccupants = HEADER_WIDGET_IDS.filter(id => isHeaderWidgetSlot(slotForWidget(id)) && slotGroup(slotForWidget(id)) === "center");
@@ -770,6 +1046,12 @@ function enableWorkspacePanelDrag(panel) {
   });
 }
 
+function workspaceDestinationSlots(widgetId) {
+  const widget = WORKSPACE_WIDGETS[widgetId];
+  if (!widget) return [];
+  return widget.allowedSlots.filter(slotId => WORKSPACE_SLOTS[slotId]?.accepts.includes(widgetId));
+}
+
 function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
   document.getElementById("workspaceDestinationTray")?.remove();
   if (!editLayoutActive) {
@@ -787,51 +1069,45 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
 
   const selected = widgetId && WORKSPACE_WIDGETS[widgetId] ? widgetId : null;
   const currentSlot = selected ? slotForWidget(selected) : null;
-  const currentWidgetLabel = selected ? workspaceWidgetLabel(selected) : "Choose an item";
   const allItems = movableWorkspaceWidgetIds();
-  const visibleItems = allItems.filter(id => !widgetIsHidden(id));
-  const hiddenItems = allItems.filter(id => widgetIsHidden(id));
-  const renderItemRows = ids => ids.length ? ids.map(id => {
-    const hidden = widgetIsHidden(id);
-    const selectedClass = id === selected ? " selected" : "";
-    const hiddenClass = hidden ? " hidden-item" : "";
-    return `<button type="button" class="workspace-item-choice${selectedClass}${hiddenClass}" data-workspace-item="${escapeHtml(id)}">
-      <strong>${escapeHtml(workspaceWidgetLabel(id))}</strong>
-      <span>${escapeHtml(hidden ? "Hidden" : workspaceSlotTone(slotForWidget(id)))}</span>
-    </button>`;
-  }).join("") : `<p class="workspace-empty-note">Nothing here.</p>`;
-
-  const destinationRows = selected ? availableWorkspaceSlots(selected).map(slotId => {
+  const itemOptions = allItems.map(id => `<option value="${escapeHtml(id)}" ${id === selected ? "selected" : ""}>${escapeHtml(workspaceWidgetLabel(id))}${widgetIsHidden(id) ? " · Hidden" : ""}</option>`).join("");
+  const destinationRows = selected ? workspaceDestinationSlots(selected).map(slotId => {
     const isCurrent = slotId === currentSlot;
     const unavailable = workspaceSlotIsUnavailable(selected, slotId);
     const status = workspaceDestinationStatus(selected, slotId);
     return `<button type="button" class="workspace-location-choice${isCurrent ? " current" : ""}${unavailable ? " unavailable" : ""}" data-workspace-slot="${escapeHtml(slotId)}" ${unavailable ? "disabled" : ""}>
       <strong>${escapeHtml(slotLabel(slotId))}</strong>
-      <span>${escapeHtml(workspaceSlotDescription(slotId))}</span>
-      <em>${escapeHtml(status)}</em>
+      <span>${escapeHtml(status)}</span>
     </button>`;
-  }).join("") : `<p class="workspace-empty-note">Select an item on the page or from this list to see where it can go.</p>`;
+  }).join("") : `<p class="workspace-empty-note">Select an item to edit placement.</p>`;
 
   panel.innerHTML = `
     <div class="workspace-panel-head">
       <div>
         <strong>Customize Workspace</strong>
-        <span>Pick an item, then choose where it belongs.</span>
+        <span>Choose a layout, item, and placement.</span>
       </div>
       <button type="button" class="workspace-panel-close" aria-label="Close Workspace Studio">×</button>
     </div>
-    <div class="workspace-panel-section">
-      <span class="workspace-panel-kicker">Visible</span>
-      <div class="workspace-item-list">${renderItemRows(visibleItems)}</div>
-    </div>
-    <div class="workspace-panel-section">
-      <span class="workspace-panel-kicker">Hidden</span>
-      <div class="workspace-item-list">${renderItemRows(hiddenItems)}</div>
-    </div>
-    <div class="workspace-panel-section workspace-panel-selected">
-      <span class="workspace-panel-kicker">${escapeHtml(currentWidgetLabel)}</span>
-      ${selected ? `<p>${escapeHtml(workspaceWidgetHint(selected))}</p>` : ""}
-      <div class="workspace-location-list">${destinationRows}</div>
+    <div class="workspace-panel-body">
+      <div class="workspace-panel-section workspace-hero-style-section">
+        <span class="workspace-panel-kicker">Page Layout</span>
+        <div class="workspace-hero-style-list">
+          ${Object.entries(WORKSPACE_HERO_STYLES).map(([styleId, style]) => `<button type="button" class="workspace-hero-style-choice${workspaceHeroStyle() === styleId ? " current" : ""}" data-workspace-hero-style="${escapeHtml(styleId)}" title="${escapeHtml(style.description)}">${escapeHtml(style.label)}</button>`).join("")}
+        </div>
+      </div>
+      <div class="workspace-panel-section workspace-panel-selected">
+        <span class="workspace-panel-kicker">Item</span>
+        <select id="workspaceItemSelect" class="workspace-item-select">
+          <option value="">Choose an item</option>
+          ${itemOptions}
+        </select>
+        ${selected ? `<p>${escapeHtml(workspaceWidgetHint(selected))}</p>` : ""}
+      </div>
+      <div class="workspace-panel-section workspace-panel-selected">
+        <span class="workspace-panel-kicker">Placement</span>
+        <div class="workspace-location-list compact">${destinationRows}</div>
+      </div>
     </div>
     <div class="workspace-panel-footer">
       <button type="button" id="workspacePanelReset">Reset</button>
@@ -844,12 +1120,20 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
   panel.querySelector(".workspace-panel-close")?.addEventListener("click", () => setEditLayoutMode(false));
   panel.querySelector("#workspacePanelDone")?.addEventListener("click", () => setEditLayoutMode(false));
   panel.querySelector("#workspacePanelReset")?.addEventListener("click", () => resetWidgetLayout());
-  panel.querySelectorAll("[data-workspace-item]").forEach(button => {
+  panel.querySelectorAll("[data-workspace-hero-style]").forEach(button => {
     button.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
-      selectWorkspaceWidget(button.dataset.workspaceItem);
+      setWorkspaceHeroStyle(button.dataset.workspaceHeroStyle);
+      save();
+      render();
+      if (editLayoutActive) renderWorkspaceDesignerPanel(selectedWorkspaceWidgetId);
     });
+  });
+  panel.querySelector("#workspaceItemSelect")?.addEventListener("change", event => {
+    const value = event.target.value;
+    if (value) selectWorkspaceWidget(value);
+    else clearWorkspaceSelection();
   });
   panel.querySelectorAll("[data-workspace-slot]").forEach(button => {
     button.addEventListener("click", event => {
@@ -980,14 +1264,32 @@ function applyWorkspaceDomPlacement() {
   document.body.classList.toggle("workspace-header-center-exclusive", workspace.slots.search === "header-search");
 
   search.classList.toggle("workspace-hidden-item", workspace.slots.search === "hidden");
+  if (heroImage && heroImage.parentElement !== hero) hero.appendChild(heroImage);
+
+  const heroStyle = workspaceHeroStyle(workspace);
+  const barMode = workspaceUsesHeroBar(workspace);
+  const bannerVisible = workspace.slots.hero !== "hidden" && data.settings.heroSize !== "hidden";
+
   if (workspace.slots.search === "header-search") {
     moveElementToSlot(search, grid.querySelector('.workspace-header-center .workspace-header-search-slot'));
-  } else if (search.parentElement !== hero) {
-    hero.insertBefore(search, hero.firstElementChild || null);
+  } else if (workspace.slots.search === "hero-search") {
+    if (barMode && bannerVisible && heroImage) {
+      // In bar layouts, Hero Search belongs to the banner surface itself.
+      // This keeps the Hero region composed as Bar + Banner/Search instead of
+      // letting Search float over the page wallpaper.
+      moveElementToSlot(search, heroImage);
+    } else if (search.parentElement !== hero) {
+      hero.appendChild(search);
+    }
+    if (heroImage && heroImage.parentElement === hero && hero.firstElementChild !== heroImage) {
+      hero.insertBefore(heroImage, hero.firstElementChild || null);
+    }
+  } else {
+    if (search.parentElement !== hero) hero.insertBefore(search, hero.firstElementChild || null);
+    else if (hero.firstElementChild !== search) hero.insertBefore(search, hero.firstElementChild || null);
   }
-
-  if (heroImage && heroImage.parentElement !== hero) hero.appendChild(heroImage);
 }
+
 
 function applyWidgetFoundation() {
   applyWorkspaceDomPlacement();
@@ -1035,13 +1337,13 @@ function applyLayoutPresetDefaults(preset) {
 }
 
 function loadStoredProfile() {
-  const saved = safeParse(localStorage.getItem(KEY));
+  const saved = WaypointStorage.load(KEY);
   if (saved) return normalizeData(saved);
   for (const oldKey of OLD_KEYS) {
-    const old = safeParse(localStorage.getItem(oldKey));
+    const old = WaypointStorage.load(oldKey);
     if (old) {
       const migrated = normalizeData(old);
-      localStorage.setItem(KEY, JSON.stringify(migrated));
+      WaypointStorage.save(KEY, migrated);
       return migrated;
     }
   }
@@ -1058,11 +1360,22 @@ async function loadDemoProfile() {
   }
 }
 
+async function loadMetadata() {
+  try {
+    const response = await fetch("metadata.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("metadata unavailable");
+    const meta = await response.json();
+    appMeta = { ...appMeta, ...meta };
+  } catch {
+    // Keep bundled fallback metadata.
+  }
+}
+
 async function loadInitialProfile() {
   const stored = loadStoredProfile();
   if (stored) return stored;
   const demoProfile = await loadDemoProfile();
-  localStorage.setItem(KEY, JSON.stringify(demoProfile));
+  WaypointStorage.save(KEY, demoProfile);
   return demoProfile;
 }
 
@@ -1072,19 +1385,23 @@ function normalizeData(input) {
   const normalizeLinks = links => Array.isArray(links)
     ? links.filter(link => link && link.url).map(link => {
       const url = normalizeUrl(link.url);
+      if (!url) return null;
       const icon = isWaypointUrl(url) ? waypointIcon(url) : typeof link.icon === "string" && link.icon ? link.icon : "";
       const name = isWaypointUrl(url) ? cleanInternalLinkName(link.name || link.url, url) : String(link.name || link.url);
       return { name, url, icon };
-    })
+    }).filter(Boolean)
     : [];
 
-  if (Array.isArray(input.sections)) {
-    normalized.sections = input.sections.map((section, index) => ({
+  const profileBookmarks = input?.bookmarks && typeof input.bookmarks === "object" ? input.bookmarks : null;
+  const incomingSections = Array.isArray(profileBookmarks?.sections) ? profileBookmarks.sections : input.sections;
+
+  if (Array.isArray(incomingSections)) {
+    normalized.sections = incomingSections.map((section, index) => ({
       name: String(section.name || `Section ${index + 1}`),
       links: normalizeLinks(section.links)
     }));
   } else if (input && typeof input === "object") {
-    const ignoredKeys = new Set(["settings", "version", "name", "profile", "theme", "layout", "bookmarks"]);
+    const ignoredKeys = new Set(["settings", "version", "name", "profile", "theme", "layout", "bookmarks", "workspace"]);
     const objectSections = Object.entries(input)
       .filter(([name, links]) => !ignoredKeys.has(name) && Array.isArray(links))
       .map(([name, links]) => ({ name: String(name), links: normalizeLinks(links) }))
@@ -1094,6 +1411,9 @@ function normalizeData(input) {
 
   const incomingSettings = input.settings && typeof input.settings === "object" ? input.settings : input;
   normalized.settings = { ...normalized.settings, ...incomingSettings };
+  if (input?.workspace && typeof input.workspace === "object") {
+    normalized.settings.workspace = input.workspace;
+  }
 
   if (!THEMES[normalized.settings.theme]) normalized.settings.theme = "nord";
   if (!["wallpaper", "gradient", "custom"].includes(normalized.settings.backgroundMode)) normalized.settings.backgroundMode = "wallpaper";
@@ -1110,16 +1430,15 @@ function normalizeData(input) {
   normalized.settings.heroHeight = heroHeightForSize(normalized.settings.heroSize, normalized.settings.heroHeight);
   normalized.settings.heroZoom = clamp(Number(normalized.settings.heroZoom), 80, 140, 100);
   normalized.settings.heroY = clamp(Number(normalized.settings.heroY), 0, 100, 50);
-  normalized.settings.heroFit = ["cover", "contain"].includes(normalized.settings.heroFit) ? normalized.settings.heroFit : "cover";
+  normalized.settings.heroFit = "contain";
   normalized.settings.bookmarkLayout = ["grid", "list"].includes(normalized.settings.bookmarkLayout) ? normalized.settings.bookmarkLayout : "list";
-  if (normalized.settings.heroFit === "contain") normalized.settings.heroFit = "cover";
   normalized.settings.userName = sanitizeUserName(normalized.settings.userName);
   normalized.settings.weatherLocation = String(normalized.settings.weatherLocation || "").trim().slice(0, 80);
   normalized.settings.weatherUnit = ["auto", "fahrenheit", "celsius"].includes(normalized.settings.weatherUnit) ? normalized.settings.weatherUnit : "auto";
   normalized.settings.searchEngine = SEARCH_ENGINES[normalized.settings.searchEngine] ? normalized.settings.searchEngine : "google";
   normalized.settings.customSearchUrl = String(normalized.settings.customSearchUrl || "").trim().slice(0, 240);
   normalized.settings.shortcut = ["altT", "ctrlShiftSpace", "none"].includes(normalized.settings.shortcut) ? normalized.settings.shortcut : "none";
-  normalized.settings.fontFamily = ["system", "inter", "jetbrains", "firacode", "fira", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "system";
+  normalized.settings.fontFamily = ["system", "inter"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "inter";
   normalized.settings.uiScale = clamp(Number(normalized.settings.uiScale), 85, 120, 100);
   normalized.settings.useCustomColors = normalized.settings.useCustomColors === true || normalized.settings.useCustomColors === "true";
   normalized.settings.windowTransparency = clamp(Number(normalized.settings.windowTransparency ?? 92), 60, 100, 92);
@@ -1163,7 +1482,7 @@ function normalizeData(input) {
 
 function save() {
   data.settings.lastModified = new Date().toISOString();
-  localStorage.setItem(KEY, JSON.stringify(data));
+  WaypointStorage.save(KEY, data);
   updateLogoPrompt();
   syncControls();
 }
@@ -1199,11 +1518,17 @@ function applyPersonalization() {
   const workspace = canonicalizeWorkspace();
   const currentHeroSlot = workspace.slots.hero;
   const currentSearchSlot = workspace.slots.search;
+  const bannerVisuallyHidden = currentHeroSlot === "hidden" || s.heroSize === "hidden";
+  const currentHeroStyle = workspaceHeroStyle(workspace);
+  body.classList.toggle("workspace-hero-standard", currentHeroStyle === "standard");
+  body.classList.toggle("workspace-hero-top-bar", currentHeroStyle === "topBar");
+  body.classList.toggle("workspace-hero-bottom-bar", currentHeroStyle === "bottomBar");
+  body.classList.toggle("workspace-hero-bar", workspaceUsesHeroBar(workspace));
   body.classList.toggle("workspace-search-standalone", currentSearchSlot === "standalone-search");
   body.classList.toggle("workspace-search-hero", currentSearchSlot === "hero-search");
   body.classList.toggle("workspace-search-header", currentSearchSlot === "header-search");
   body.classList.toggle("workspace-header-center-exclusive", currentSearchSlot === "header-search");
-  body.classList.toggle("workspace-banner-hidden", currentHeroSlot === "hidden");
+  body.classList.toggle("workspace-banner-hidden", bannerVisuallyHidden);
   body.dataset.workspaceTemplate = templateId;
   body.classList.toggle("ui-hide-logo", workspace.slots.logo === "hidden");
   body.classList.toggle("ui-hide-wordmark", workspace.slots.wordmark === "hidden");
@@ -1217,20 +1542,10 @@ function applyPersonalization() {
   document.documentElement.style.setProperty("--bookmark-columns", s.bookmarkColumns === "auto" ? "" : s.bookmarkColumns);
   document.documentElement.dataset.bookmarkColumns = s.bookmarkColumns || "auto";
   const fonts = {
-    system: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    inter: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    jetbrains: '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-    fira: '"Fira Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    roboto: 'Roboto, Inter, ui-sans-serif, system-ui, sans-serif',
-    firacode: '"Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-    plex: '"IBM Plex Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    source: '"Source Sans 3", Inter, ui-sans-serif, system-ui, sans-serif',
-    noto: '"Noto Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    ubuntu: 'Ubuntu, Inter, ui-sans-serif, system-ui, sans-serif',
-    opensans: '"Open Sans", Inter, ui-sans-serif, system-ui, sans-serif',
-    mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace'
+    system: 'var(--font-system)',
+    inter: 'var(--font-waypoint)'
   };
-  document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.system);
+  document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.inter);
   let style = $("waypointCustomCss");
   if (!style) { style = document.createElement("style"); style.id = "waypointCustomCss"; document.head.appendChild(style); }
   style.textContent = s.customCss || "";
@@ -1289,7 +1604,7 @@ function applyTheme() {
     bg.style.filter = `blur(${data.settings.blur}px)`;
     if (data.settings.backgroundMode === "gradient") bg.style.backgroundImage = theme.gradient;
     else if (data.settings.backgroundMode === "custom") {
-      const custom = localStorage.getItem(CUSTOM_BG_KEY);
+      const custom = WaypointStorage.loadRaw(CUSTOM_BG_KEY);
       bg.style.backgroundImage = custom ? `url("${custom}"), ${theme.gradient}` : `url("${theme.wallpaper}"), ${theme.gradient}`;
     } else bg.style.backgroundImage = `url("${theme.wallpaper}"), ${theme.gradient}`;
   }
@@ -1298,7 +1613,7 @@ function applyTheme() {
 
 function getHeroSrc() {
   const theme = getTheme();
-  if (data.settings.heroStyle === "custom") return localStorage.getItem(CUSTOM_HERO_KEY) || theme[theme.defaultHero];
+  if (data.settings.heroStyle === "custom") return WaypointStorage.loadRaw(CUSTOM_HERO_KEY) || theme[theme.defaultHero];
   if (data.settings.heroStyle === "desktop") return theme.desktop;
   if (data.settings.heroStyle === "atmo") return theme.atmo;
   return theme[theme.defaultHero];
@@ -1309,7 +1624,7 @@ function applyHero() {
   const img = $("heroImage");
   if (!card || !img) return;
   const workspace = canonicalizeWorkspace();
-  const isBannerHidden = workspace.slots.hero === "hidden";
+  const isBannerHidden = workspace.slots.hero === "hidden" || data.settings.heroSize === "hidden";
   const heroSize = isBannerHidden ? "hidden" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
   data.settings.heroSize = heroSize;
   data.settings.heroHeight = heroHeightForSize(heroSize, data.settings.heroHeight);
@@ -1319,26 +1634,17 @@ function applyHero() {
   ["hidden", "small", "medium", "large"].forEach(size => hero?.classList.toggle(`hero-size-${size}`, heroSize === size));
   card.style.setProperty("--hero-height", `${data.settings.heroHeight}px`);
   card.style.setProperty("--hero-min-height", `${data.settings.heroHeight}px`);
-  card.style.setProperty("--hero-zoom", String(data.settings.heroZoom / 100));
-  card.style.setProperty("--hero-y", `${data.settings.heroY}%`);
-  card.style.setProperty("--hero-fit", data.settings.heroFit || "cover");
-  card.classList.toggle("fit-contain", data.settings.heroFit === "contain");
+  card.style.setProperty("--hero-fit", "contain");
+  card.classList.add("fit-contain");
   const heroSrc = getHeroSrc();
   const theme = getTheme();
   card.style.backgroundImage = `url("${heroSrc}"), ${theme.gradient}`;
-  card.style.backgroundPosition = `center ${data.settings.heroY}%`;
-  card.style.backgroundSize = data.settings.heroFit === "contain" ? "contain, cover" : "cover, cover";
+  card.style.backgroundPosition = "center center";
+  card.style.backgroundSize = "contain, cover";
   card.style.backgroundRepeat = "no-repeat";
-  img.hidden = false;
-  img.onerror = () => {
-    img.hidden = true;
-    card.classList.add("hero-image-missing");
-  };
-  img.onload = () => {
-    img.hidden = false;
-    card.classList.remove("hero-image-missing");
-  };
-  img.src = heroSrc;
+  img.hidden = true;
+  img.removeAttribute("src");
+  card.classList.remove("hero-image-missing");
 }
 
 function syncControls() {
@@ -1367,11 +1673,12 @@ function syncControls() {
   setValue("terminalTextColorInput", s.terminalTextColor);
   setValue("statusTextColorInput", s.statusTextColor);
   setValue("workspaceTemplateSelect", s.workspace?.template || s.layoutPreset || "classic");
+  setValue("workspaceHeroStyleSelect", workspaceHeroStyle());
   const workspace = canonicalizeWorkspace();
   const templateLabel = WORKSPACE_TEMPLATES[workspace.template || "classic"]?.label || "Classic";
   const placedCount = Object.values(workspace.slots || {}).filter(slot => slot && slot !== "hidden").length;
   setText("workspaceTemplateStatus", `Workspace · ${workspace.modified ? "Customized" : templateLabel}`);
-  setText("workspaceTemplateDescription", `${workspace.modified ? `Based on ${templateLabel}` : WORKSPACE_TEMPLATES[workspace.template || "classic"]?.description || "Workspace template"} · ${placedCount} items placed`);
+  setText("workspaceTemplateDescription", `${workspace.modified ? `Based on ${templateLabel}` : WORKSPACE_TEMPLATES[workspace.template || "classic"]?.description || "Workspace template"} · ${placedCount} items placed · ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero"}`);
   setValue("showLogoSelect", String(s.showLogo !== false));
   setValue("showWordmarkSelect", String(s.showWordmark !== false));
   setValue("showClockSelect", String(s.showClock !== false));
@@ -1381,7 +1688,6 @@ function syncControls() {
   setValue("backgroundModeSelect", s.backgroundMode);
   setValue("heroStyleSelect", s.heroStyle);
   setValue("shortcutSelect", s.shortcut);
-  setValue("heroFitSelect", s.heroFit || "cover");
   setValue("bookmarkLayoutSelect", s.bookmarkLayout || "list");
   setValue("bookmarkColumnsSelect", s.bookmarkColumns || "auto");
   setValue("bookmarkFontSlider", s.bookmarkFontSize);
@@ -1390,24 +1696,48 @@ function syncControls() {
   setValue("overlaySlider", s.overlay);
   setValue("blurSlider", s.blur);
   setValue("heroHeightPresetSelect", s.heroSize || normalizeHeroSize(null, s.heroHeight, s.heroStyle));
-  setValue("heroZoomSlider", s.heroZoom);
-  setValue("heroYSlider", s.heroY);
   setText("overlayValue", `${s.overlay}%`);
   setText("blurValue", `${s.blur}px`);
-    setText("heroZoomValue", `${s.heroZoom}%`);
-  setText("heroYValue", `${s.heroY}%`);
   setText("uiScaleValue", `${s.uiScale}%`);
   setText("bookmarkFontValue", `${s.bookmarkFontSize}px`);
   setText("bookmarkIconValue", `${s.bookmarkIconSize}px`);
+  updateWorkspaceAwareSettings();
 }
+
+function updateWorkspaceAwareSettings() {
+  const workspace = canonicalizeWorkspace();
+  const bannerUnavailable = workspace.slots.hero === "hidden" && data.settings.bannerHiddenByWorkspace === true;
+  const bannerControlIds = ["heroStyleSelect", "heroHeightPresetSelect", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
+  bannerControlIds.forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    el.disabled = bannerUnavailable;
+    const label = el.closest("label") || el;
+    label.classList?.toggle("workspace-setting-unavailable", bannerUnavailable);
+    if (bannerUnavailable) el.title = "Unavailable while the Banner widget is hidden in Workspace.";
+    else el.removeAttribute("title");
+  });
+  const note = $("bannerWorkspaceNotice");
+  if (note) {
+    note.hidden = !bannerUnavailable;
+    note.textContent = "Banner controls are unavailable because the Banner widget is hidden in Workspace.";
+  }
+}
+
 function setValue(id, value) { const el = $(id); if (!el) return; if (document.activeElement === el) return; if (el.value !== String(value)) el.value = value; }
 function setText(id, value) { const el = $(id); if (el) el.textContent = value; }
 
 function setBannerSize(size) {
   if (!HERO_SIZES[size]) return false;
+  data.settings.bannerHiddenByWorkspace = false;
   data.settings.heroSize = size;
   data.settings.heroHeight = heroHeightForSize(size, data.settings.heroHeight);
-  setWidgetSlot("hero", size === "hidden" ? "hidden" : "hero-banner");
+  const workspace = canonicalizeWorkspace();
+  if (size !== "hidden" && workspace.slots.hero === "hidden") {
+    workspace.slots.hero = "hero-banner";
+    workspace.modified = true;
+    syncLegacyVisibilityFromWorkspace();
+  }
   save();
   render();
   return true;
@@ -1534,13 +1864,22 @@ function renderSections() {
       const internalClass = isWaypointUrl(link.url) ? " internal-link" : "";
       const displayName = isWaypointUrl(link.url) ? cleanInternalLinkName(link.name, link.url) : link.name;
       row.className += internalClass;
+      const fallbackIcon = iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "";
       row.innerHTML = `
-        <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "")}</span>
+        <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(fallbackIcon)}</span>
         <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
         <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
         <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
         <span class="delete-link" title="Delete link" aria-label="Delete link">×</span>
       `;
+      const iconImg = row.querySelector("img");
+      const fallbackEl = row.querySelector(".link-icon-fallback");
+      if (iconImg && !iconImg.hidden) {
+        iconImg.addEventListener("error", () => {
+          iconImg.hidden = true;
+          if (fallbackEl && !fallbackEl.textContent.trim()) fallbackEl.textContent = "◆";
+        }, { once: true });
+      }
       row.addEventListener("click", event => {
         if (event.target.closest(".delete-link") || event.target.closest(".edit-link") || event.defaultPrevented) return;
         if (handleWaypointLink(link.url)) return;
@@ -1751,6 +2090,10 @@ function saveLink() {
   const rawUrl = $("linkUrl")?.value.trim();
   if (!name || !rawUrl) return;
   const normalizedUrl = normalizeUrl(rawUrl);
+  if (!normalizedUrl) {
+    alert("Unsupported URL type. Use http, https, mailto, tel, or waypoint links.");
+    return;
+  }
   const nextName = isWaypointUrl(normalizedUrl) ? cleanInternalLinkName(name, normalizedUrl) : name;
   const nextLink = { name: nextName, url: normalizedUrl, icon: isWaypointUrl(normalizedUrl) ? waypointIcon(normalizedUrl) : pendingLinkIcon || "" };
   if (editingLink) data.sections[editingLink.sectionIndex].links[editingLink.linkIndex] = nextLink;
@@ -1859,7 +2202,7 @@ function addLinkByCommand(sectionName, linkName, url) {
   const sectionIndex = findSectionIndexByName(sectionName);
   if (sectionIndex < 0) return `No section named <strong>${escapeHtml(sectionName)}</strong>.`;
   const safeUrl = normalizeUrl(url);
-  if (!safeUrl) return "Missing URL.";
+  if (!safeUrl) return "Unsupported URL type. Use http, https, mailto, tel, or waypoint links.";
   const safeName = isWaypointUrl(safeUrl) ? cleanInternalLinkName(linkName, safeUrl) : String(linkName).trim() || safeUrl;
   data.sections[sectionIndex].links.push({ name: safeName, url: safeUrl, icon: isWaypointUrl(safeUrl) ? waypointIcon(safeUrl) : "" });
   save();
@@ -1884,33 +2227,41 @@ function deleteSectionByCommand(sectionName) {
 }
 
 function buildFastfetchHtml() {
-  const theme = getTheme();
-  const heroLabel = data.settings.heroStyle === "auto" ? `Theme Default (${theme.defaultHero === "atmo" ? "Atmosphere" : "Desktop"})` : labelHero(data.settings.heroStyle);
-  const modified = data.settings.lastModified ? formatRelativeDate(new Date(data.settings.lastModified)) : "Never";
-  const logo = `  /\\/|  __
- |/\\/  / /
-      / /
-     / /
-    /_/____
-     |_____|`;
-  const rows = [
-    ["Version", "1.2.1"],
-    ["Theme", theme.label],
-    ["Workspace", `${WORKSPACE_TEMPLATES[data.settings.workspace?.template || "classic"]?.label || "Classic"}${data.settings.workspace?.modified ? "*" : ""}`],
-    ["Font", data.settings.fontFamily],
-    ["Bookmarks", countBookmarks()],
-    ["Sections", data.sections.length],
-    ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"],
-    ["Banner", heroLabel],
-    ["Weather", data.settings.showWeather === false ? "Hidden" : (data.settings.weatherLocation || "Not set")],
-    ["Search", labelSearch(data.settings.searchEngine)],
-    ["Modified", modified]
-  ];
-  return `
-    <pre class="fetch-output"><span class="fetch-logo">${escapeHtml(logo)}</span><span class="fetch-info"><strong>${escapeHtml(displayUserName())}@waypoint</strong>
--------------
-${rows.map(([k,v]) => `${String(k).padEnd(10)} ${escapeHtml(v)}`).join("\n")}</span></pre>
-  `;
+  try {
+    const theme = getTheme();
+    const modified = data.settings.lastModified ? formatRelativeDate(new Date(data.settings.lastModified)) : "Never";
+    const workspace = canonicalizeWorkspace();
+    const hero = WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero";
+    const workspaceLabel = workspace.modified ? "Custom" : (WORKSPACE_TEMPLATES[workspace.template || "classic"]?.label || "Default");
+    const weather = data.settings.showWeather === false ? "Hidden" : (data.settings.weatherLocation ? `${data.settings.weatherLocation} (${labelWeatherUnit(data.settings.weatherUnit)})` : "Not set");
+    const rows = [
+      ["Version", appMeta.version || "unknown"],
+      ["Branch", appMeta.branch || "unknown"],
+      ["Runtime", runtimeLabel()],
+      ["Theme", theme.label],
+      ["Workspace", workspaceLabel],
+      ["Hero", hero],
+      ["Search", labelSearch(data.settings.searchEngine)],
+      ["Bookmarks", countBookmarks()],
+      ["Sections", data.sections.length],
+      ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"],
+      ["Weather", weather],
+      ["Modified", modified]
+    ];
+    const logo = [
+      "  /\\/|  __",
+      " |/\\/  / /",
+      "      / /",
+      "     / /",
+      "    /_/____",
+      "     |_____|"]
+      .join("\n");
+    const info = `${displayUserName()}@waypoint\n-----------------\n${rows.map(([key, value]) => `${String(key).padEnd(10)} ${value}`).join("\n")}`;
+    return `<div class="fetch-output"><pre class="fetch-logo">${escapeHtml(logo)}</pre><pre class="fetch-info">${escapeHtml(info)}</pre></div>`;
+  } catch (error) {
+    console.error("fetch command failed", error);
+    return commandResult("fetch: unable to build system summary", "terminal-error");
+  }
 }
 
 function renderTerminal() {
@@ -1954,6 +2305,13 @@ function terminalEcho(command) {
 function labelHero(value) { return ({ desktop: "Desktop", atmo: "Atmosphere", custom: "Custom", hidden: "Hidden" })[value] || "Theme Default"; }
 function labelBackground(value) { return ({ wallpaper: "Theme Wallpaper", gradient: "Theme Gradient", custom: "Custom" })[value] || value; }
 function labelShortcut(value) { return ({ altT: "Alt+T", ctrlShiftSpace: "Ctrl+Shift+Space", none: "Disabled" })[value] || value; }
+
+function labelWeatherUnit(value) {
+  if (value === "fahrenheit") return "Fahrenheit";
+  if (value === "celsius") return "Celsius";
+  return "Auto";
+}
+
 function labelSearch(value) { return (SEARCH_ENGINES[value] || SEARCH_ENGINES.google).label; }
 function formatRelativeDate(date) {
   const now = new Date();
@@ -2006,7 +2364,7 @@ function importJsonFile(file) {
 async function refreshWeather(force = false) {
   const loc = data.settings.weatherLocation.trim();
   if (!loc) { updateWeatherWidget(); return; }
-  const cached = safeParse(localStorage.getItem(WEATHER_CACHE_KEY));
+  const cached = WaypointStorage.load(WEATHER_CACHE_KEY);
   if (!force && cached && cached.location === loc && Date.now() - cached.time < 30 * 60 * 1000) {
     updateWeatherWidget(cached); return;
   }
@@ -2034,7 +2392,7 @@ async function refreshWeather(force = false) {
       unit,
       time: Date.now()
     };
-    localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(cache));
+    WaypointStorage.save(WEATHER_CACHE_KEY, cache);
     updateWeatherWidget(cache);
   } catch {
     updateWeatherWidget({ error: true, location: loc });
@@ -2117,7 +2475,7 @@ async function resolveWeatherLocation(input) {
   };
 }
 
-function updateWeatherWidget(payload = safeParse(localStorage.getItem(WEATHER_CACHE_KEY))) {
+function updateWeatherWidget(payload = WaypointStorage.load(WEATHER_CACHE_KEY)) {
   const widget = $("weatherWidget");
   if (!widget) return;
   const icon = widget.querySelector(".weather-icon");
@@ -2354,10 +2712,10 @@ function executeButtonCommand(command) {
 
 function resetEverything() {
   if (!confirm("Reset Waypoint to factory defaults? This clears bookmarks, settings, custom wallpaper, custom banner, and weather cache. It will not reload demo.json.")) return;
-  localStorage.removeItem(KEY);
-  localStorage.removeItem(CUSTOM_BG_KEY);
-  localStorage.removeItem(CUSTOM_HERO_KEY);
-  localStorage.removeItem(WEATHER_CACHE_KEY);
+  WaypointStorage.remove(KEY);
+  WaypointStorage.remove(CUSTOM_BG_KEY);
+  WaypointStorage.remove(CUSTOM_HERO_KEY);
+  WaypointStorage.remove(WEATHER_CACHE_KEY);
   data = structuredClone(defaultData);
   save();
   render();
@@ -2530,8 +2888,15 @@ function bindEvents() {
   document.querySelectorAll("[data-command]").forEach(btn => btn.addEventListener("click", () => executeButtonCommand(btn.dataset.command)));
 
   $("commandInput")?.addEventListener("keydown", e => {
+    if (e.key === "Enter" && e.target.value.trim()) {
+      e.preventDefault();
+      welcomeGuideState.active = false;
+      const value = e.target.value;
+      e.target.value = "";
+      runCommand(value);
+      return;
+    }
     if (handleWelcomeGuideKey(e)) return;
-    if (e.key === "Enter") { runCommand(e.target.value); e.target.value = ""; }
   });
 
   $("importFile")?.addEventListener("change", e => { const file = e.target.files[0]; if (file) importJsonFile(file); e.target.value = ""; });
@@ -2562,6 +2927,7 @@ function bindEvents() {
   bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
   $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); render(); });
+  bindSetting("workspaceHeroStyleSelect", "change", value => { setWorkspaceHeroStyle(value); save(); render(); });
   bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); render(); });
   bindSetting("showWordmarkSelect", "change", value => { setWidgetVisible("wordmark", value === "true"); save(); render(); });
   bindSetting("showClockSelect", "change", value => { setWidgetVisible("clock", value === "true"); save(); render(); });
@@ -2582,35 +2948,41 @@ function bindEvents() {
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
   bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
-  bindSetting("heroStyleSelect", "change", value => { if (value === "hidden") { data.settings.heroSize = "hidden"; data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight); data.settings.heroStyle = "auto"; setWidgetSlot("hero", "hidden"); } else { data.settings.heroStyle = value; if (slotForWidget("hero") === "hidden") setWidgetSlot("hero", "hero-banner"); } save(); render(); });
-  bindSetting("heroFitSelect", "change", value => { data.settings.heroFit = value; save(); render(); });
+  bindSetting("heroStyleSelect", "change", value => {
+    if (value === "hidden") {
+      data.settings.heroStyle = "auto";
+      setBannerSize("hidden");
+      return;
+    }
+    data.settings.heroStyle = value;
+    if (data.settings.heroSize === "hidden") {
+      setBannerSize("medium");
+      return;
+    }
+    save(); render();
+  });
   bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); render(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
   bindSetting("heroHeightPresetSelect", "change", value => {
-    data.settings.heroSize = value;
-    data.settings.heroHeight = heroHeightForSize(value, data.settings.heroHeight);
-    setWidgetSlot("hero", value === "hidden" ? "hidden" : "hero-banner");
-    save(); render();
+    setBannerSize(value);
   });
-  bindNumber("heroZoomSlider", "heroZoom", () => applyHero());
-  bindNumber("heroYSlider", "heroY", () => applyHero());
 
   $("backgroundUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { localStorage.setItem(CUSTOM_BG_KEY, reader.result); data.settings.backgroundMode = "custom"; save(); render(); };
+    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_BG_KEY, reader.result); data.settings.backgroundMode = "custom"; save(); render(); };
     reader.readAsDataURL(file);
   });
   $("imageUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { localStorage.setItem(CUSTOM_HERO_KEY, reader.result); data.settings.heroStyle = "custom"; save(); render(); };
+    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_HERO_KEY, reader.result); data.settings.heroStyle = "custom"; save(); render(); };
     reader.readAsDataURL(file);
   });
-  $("resetBackgroundBtn")?.addEventListener("click", () => { localStorage.removeItem(CUSTOM_BG_KEY); data.settings.backgroundMode = "wallpaper"; save(); render(); });
-  $("resetHeroBtn")?.addEventListener("click", () => { localStorage.removeItem(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
+  $("resetBackgroundBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_BG_KEY); data.settings.backgroundMode = "wallpaper"; save(); render(); });
+  $("resetHeroBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
 
   document.addEventListener("keydown", event => {
     if (welcomeGuideState.active && event.key === "Escape") return;
@@ -2630,6 +3002,7 @@ function bindSetting(id, eventName, setter) { $(id)?.addEventListener(eventName,
 function bindNumber(id, key, after) { $(id)?.addEventListener("input", e => { data.settings[key] = Number(e.target.value); save(); after?.(); renderTerminal(); }); }
 
 async function initWaypoint() {
+  await loadMetadata();
   data = await loadInitialProfile();
   bindEvents();
   render();
@@ -2656,7 +3029,7 @@ function currentConfigText() {
     `Theme: ${getTheme().label}`,
     `Workspace template: ${s.workspace?.template || "classic"}${s.workspace?.modified ? " (modified)" : ""}`,
     `Bookmark layout: ${s.bookmarkLayout === "grid" ? "Grid Cards" : "Compact List"}`,
-    `Font: ${s.fontFamily}`,
+    `Interface font: ${s.fontFamily === "system" ? "System" : "Waypoint"}`,
     `Search engine: ${labelSearch(s.searchEngine)}`,
     `Weather: ${s.showWeather === false ? "Hidden" : "Shown"}`,
     `Clock: ${s.showClock === false ? "Hidden" : "Shown"}`,
@@ -2835,7 +3208,7 @@ function buildHelpText(topic = "") {
     visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  sections\n  banner`,
     search: `engine\n\nChange or view the search engine.\n\nSyntax:\n  engine\n  engine <name>\n\nExamples:\n  engine google\n  engine duckduckgo\n\nSee also:\n  ls search`,
     weather: `weather\n\nSet, view, or refresh weather.\n\nSyntax:\n  weather\n  weather <location>\n  weather refresh\n\nExamples:\n  weather "New York, NY"\n  weather refresh`,
-    font: `font\n\nChange or view the current font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font inter\n  font jetbrains\n  font "Source Sans 3"\n\nSee also:\n  ls fonts`,
+    font: `font\n\nChange or view the interface font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font waypoint\n  font system\n\nThe terminal always uses JetBrains Mono.\n\nSee also:\n  ls fonts`,
     settings: `settings\n\nOpen Settings or a specific settings page.\n\nSyntax:\n  settings\n  settings <page>\n\nPages:\n  appearance\n  layout\n  bookmarks\n  weather\n  banner\n  text\n  advanced\n  backup`,
     add: `add\n\nAdd a section or bookmark.\n\nSyntax:\n  add section <name>\n  add link <section> <name> <url>\n\nExamples:\n  add section Media\n  add link "Media" "Jellyfin" https://jellyfin.org`,
     remove: `remove / delete\n\nRemove a section.\n\nSyntax:\n  remove section <name>\n  delete section <name>`,
@@ -2888,7 +3261,7 @@ function listCommand(category = "") {
     commands: buildHelpText(),
     themes: cleanList("Available Themes", ["catppuccin", "nord", "gruvbox", "tokyo-night"]),
     layouts: cleanList("Available Templates", ["classic", "dashboard", "minimal"]),
-    fonts: cleanList("Available Fonts", ["system", "inter", "jetbrains", "firacode", "plex", "source", "roboto", "noto", "ubuntu", "opensans", "mono"]),
+    fonts: cleanList("Available Interface Fonts", ["system", "waypoint"]),
     visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "sections", "banner"]),
     search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
     widgets: widgetSummaryText(),
@@ -2911,7 +3284,7 @@ function fail(text) {
 }
 function normalizeFontName(arg) {
   const a = arg.replaceAll(" ", "").toLowerCase();
-  const map = { system: "system", inter: "inter", jetbrains: "jetbrains", jetbrainsmono: "jetbrains", firacode: "firacode", fira: "firacode", plex: "plex", ibmplex: "plex", ibmplexsans: "plex", source: "source", sourcesans: "source", sourcesans3: "source", roboto: "roboto", noto: "noto", notosans: "noto", ubuntu: "ubuntu", opensans: "opensans", mono: "mono", monospace: "mono" };
+  const map = { system: "system", waypoint: "inter", inter: "inter" };
   return map[a] || "";
 }
 function runCommand(commandRaw) {
@@ -2968,7 +3341,7 @@ function runCommand(commandRaw) {
     return done(buildStatusLines(`Applying workspace template: ${arg}`));
   }
   if (head === "font") {
-    if (!arg) return textOut(`Current font: ${data.settings.fontFamily}`);
+    if (!arg) return textOut(`Current interface font: ${data.settings.fontFamily === "system" ? "System" : "Waypoint"}`);
     const font = normalizeFontName(commandRaw.trim().replace(/^font\s*/i, "").trim());
     if (!font) return textOut(buildHelpText("font"), "terminal-warning");
     data.settings.fontFamily = font; save(); render();
@@ -3053,9 +3426,7 @@ function runCommand(commandRaw) {
       setBannerSize(sizeMap[arg]);
       return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
     }
-    if (["fit", "contain"].includes(arg)) { data.settings.heroFit = "contain"; save(); render(); return done(buildStatusLines("Setting banner fit: contain")); }
-    if (["fill", "cover", "crop"].includes(arg)) { data.settings.heroFit = "cover"; save(); render(); return done(buildStatusLines("Setting banner fit: cover")); }
-    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large|fit|fill", "terminal-warning");
+    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large", "terminal-warning");
     data.settings.heroStyle = map[arg]; save(); render();
     return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
   }
@@ -3115,10 +3486,10 @@ function resetCategory(target) {
   else if (target === "layout" || target === "workspace") { data.settings.workspace = defaultWorkspace(d.workspace?.template || "classic"); data.settings.shortcut = d.shortcut; syncLegacyVisibilityFromWorkspace(); }
   else if (target === "bookmarks") ["bookmarkLayout", "bookmarkColumns", "bookmarkFontSize", "bookmarkIconSize"].forEach(k => data.settings[k] = d[k]);
   else if (target === "weather") ["weatherLocation", "weatherUnit"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroZoom", "heroY", "heroStyle", "heroFit"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroStyle"].forEach(k => data.settings[k] = d[k]);
   else if (target === "text" || target === "textcolors") ["useCustomTextColors", "sectionTitleColor", "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor", "customText"].forEach(k => data.settings[k] = d[k]);
   else if (target === "advanced") ["searchEngine", "customSearchUrl", "customCss", "terminalTransparency"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "all" || target === "everything") { data = structuredClone(defaultData); localStorage.removeItem(CUSTOM_BG_KEY); localStorage.removeItem(CUSTOM_HERO_KEY); localStorage.removeItem(WEATHER_CACHE_KEY); }
+  else if (target === "all" || target === "everything") { data = structuredClone(defaultData); WaypointStorage.remove(CUSTOM_BG_KEY); WaypointStorage.remove(CUSTOM_HERO_KEY); WaypointStorage.remove(WEATHER_CACHE_KEY); }
   else return;
   save(); render(); refreshWeather(false);
 }

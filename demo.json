@@ -1,31 +1,71 @@
 {
-  "sections": [
-    {
-      "name": "Getting Started",
-      "links": [
-        {
-          "name": "Welcome",
-          "url": "waypoint:welcome",
-          "icon": "\ud83d\udcd6"
-        },
-        {
-          "name": "Settings",
-          "url": "waypoint:settings",
-          "icon": "\u2699\ufe0f"
-        }
-      ]
+  "version": 1,
+  "workspace": {
+    "version": 1,
+    "template": "classic",
+    "modified": true,
+    "slots": {
+      "logo": "header-left-1",
+      "wordmark": "header-left-2",
+      "clock": "header-right-1",
+      "weather": "header-right-2",
+      "search": "hero-search",
+      "hero": "hero-banner",
+      "sections": "content-sections"
+    },
+    "display": {
+      "showSectionTitles": true,
+      "heroStyle": "topBar"
     }
-  ],
+  },
+  "bookmarks": {
+    "sections": [
+      {
+        "name": "Getting Started",
+        "links": [
+          {
+            "name": "Welcome",
+            "url": "waypoint:welcome",
+            "icon": "📖"
+          },
+          {
+            "name": "Settings",
+            "url": "waypoint:settings",
+            "icon": "⚙️"
+          }
+        ]
+      },
+      {
+        "name": "Favorites",
+        "links": [
+          {
+            "name": "GitHub",
+            "url": "https://github.com",
+            "icon": ""
+          },
+          {
+            "name": "YouTube",
+            "url": "https://youtube.com",
+            "icon": ""
+          },
+          {
+            "name": "Wikipedia",
+            "url": "https://wikipedia.org",
+            "icon": ""
+          }
+        ]
+      }
+    ]
+  },
   "settings": {
     "theme": "catppuccin",
     "backgroundMode": "wallpaper",
-    "overlay": 0,
+    "overlay": 2,
     "blur": 5,
-    "heroHeight": 240,
-    "heroZoom": 100,
-    "heroY": 50,
+    "heroHeight": 210,
+    "heroSize": "small",
     "heroStyle": "auto",
-    "heroFit": "cover",
+    "heroFit": "contain",
     "bookmarkLayout": "grid",
     "userName": "demouser",
     "weatherLocation": "10012",
@@ -33,7 +73,7 @@
     "searchEngine": "google",
     "customSearchUrl": "",
     "shortcut": "ctrlShiftSpace",
-    "fontFamily": "source",
+    "fontFamily": "inter",
     "uiScale": 100,
     "useCustomColors": false,
     "customAccent": "#00d084",
@@ -54,33 +94,87 @@
     "showWeather": true,
     "showSearch": true,
     "showSectionTitles": true,
+    "widgets": {
+      "logo": {
+        "area": "header",
+        "order": 0,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "wordmark": {
+        "area": "header",
+        "order": 1,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "clock": {
+        "area": "header",
+        "order": 2,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "weather": {
+        "area": "header",
+        "order": 3,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "search": {
+        "area": "hero",
+        "order": 4,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "hero": {
+        "area": "hero",
+        "order": 5,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      },
+      "sections": {
+        "area": "content",
+        "order": 6,
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "customPlacement": false,
+        "customSize": false
+      }
+    },
     "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 36,
     "customCss": "",
     "terminalLeft": null,
     "terminalTop": null,
-    "settingsLeft": null,
-    "settingsTop": null,
-    "lastModified": "2026-06-25T07:27:50.176Z",
-    "heroSize": "medium",
-    "widgets": {},
-    "workspace": {
-      "version": 1,
-      "template": "classic",
-      "modified": false,
-      "slots": {
-        "logo": "header-left-1",
-        "wordmark": "header-left-2",
-        "clock": "header-right-1",
-        "weather": "header-right-2",
-        "search": "hero-search",
-        "hero": "hero-banner",
-        "sections": "content-sections"
-      },
-      "display": {
-        "showSectionTitles": true
-      }
-    }
+    "settingsLeft": 0,
+    "settingsTop": 0,
+    "lastModified": "2026-06-30T06:30:43.287Z",
+    "workspaceHeroStyle": "topBar"
   }
 }

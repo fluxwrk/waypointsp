@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "Inter";
+  src: url("assets/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("assets/fonts/JetBrainsMonoVariable.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #0b0e14;
   --panel: rgba(17, 20, 30, .70);
@@ -10,8 +26,11 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, .42);
   --radius-lg: 24px;
   --radius-md: 17px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-system: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-waypoint: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-terminal: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --mono: var(--font-terminal);
+  --sans: var(--font-waypoint);
 }
 
 * { box-sizing: border-box; }
@@ -3810,4 +3829,567 @@ body.edit-layout-active .workspace-quick-launcher:focus-visible {
 /* v1.4.0-dev10e: resilient wallpaper/banner fallback when packaged image assets are unavailable */
 .hero-image-card.hero-image-missing img {
   display: none !important;
+}
+
+/* v1.5.0-dev1: Hero Evolution foundation */
+.settings-context-note {
+  margin: 0 0 14px;
+  padding: 11px 13px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 70%);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent-soft), transparent 42%);
+  color: color-mix(in srgb, var(--text), var(--muted) 18%);
+  font: 750 12px/1.45 var(--sans);
+}
+.workspace-setting-unavailable {
+  opacity: .48;
+}
+.workspace-setting-unavailable input,
+.workspace-setting-unavailable select,
+.workspace-setting-unavailable button {
+  cursor: not-allowed !important;
+}
+.workspace-hero-style-list {
+  display: grid;
+  gap: 8px;
+}
+.workspace-hero-style-choice {
+  width: 100%;
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  text-align: left;
+  background: rgba(255,255,255,.035);
+  border-color: color-mix(in srgb, var(--border), transparent 14%);
+}
+.workspace-hero-style-choice strong {
+  color: var(--text);
+  font: 900 13px var(--sans);
+}
+.workspace-hero-style-choice span {
+  color: var(--muted);
+  font: 750 11.5px/1.35 var(--sans);
+}
+.workspace-hero-style-choice.current {
+  border-color: color-mix(in srgb, var(--accent), transparent 34%);
+  background: color-mix(in srgb, var(--accent), transparent 88%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 76%) inset;
+}
+
+body.workspace-hero-bar .toolbar {
+  display: block !important;
+  margin: 0 0 24px !important;
+  padding: 0 !important;
+}
+body.workspace-hero-bar .workspace-header-grid {
+  min-height: 62px;
+  padding: 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 74%);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--surface-strong, var(--panel-strong)), transparent 9%);
+  box-shadow: 0 18px 54px rgba(0,0,0,.30), inset 0 0 0 1px rgba(255,255,255,.025);
+  backdrop-filter: blur(20px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+}
+body.workspace-hero-bar .workspace-header-left,
+body.workspace-hero-bar .workspace-header-center,
+body.workspace-hero-bar .workspace-header-right {
+  min-width: 0 !important;
+  max-width: none !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+}
+body.workspace-hero-bar .workspace-header-left { justify-content: flex-start !important; }
+body.workspace-hero-bar .workspace-header-center { justify-content: center !important; }
+body.workspace-hero-bar .workspace-header-right { justify-content: flex-end !important; }
+body.workspace-hero-bar .workspace-header-search-slot { display: none !important; }
+body.workspace-hero-bar .logo-mark {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  border-radius: 16px !important;
+  background: color-mix(in srgb, var(--accent-soft), transparent 38%) !important;
+  border-color: color-mix(in srgb, var(--accent), transparent 58%) !important;
+}
+body.workspace-hero-bar .logo-glyph {
+  font-size: 20px !important;
+}
+body.workspace-hero-bar .brand-wordmark {
+  font-size: clamp(16px, 1.4vw, 22px) !important;
+  margin: 0 !important;
+  align-self: center !important;
+}
+body.workspace-hero-bar .mini-clock,
+body.workspace-hero-bar .weather-widget {
+  height: 48px !important;
+  min-height: 48px !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.035) !important;
+  box-shadow: none !important;
+}
+body.workspace-hero-bar .mini-clock {
+  min-width: 128px !important;
+  width: 128px !important;
+  padding: 6px 10px !important;
+}
+body.workspace-hero-bar .mini-clock-date {
+  font-size: 10px !important;
+}
+body.workspace-hero-bar .mini-clock-time {
+  font-size: 20px !important;
+}
+body.workspace-hero-bar .weather-widget {
+  min-width: 168px !important;
+  width: 168px !important;
+  max-width: 168px !important;
+  grid-template-columns: 36px minmax(0, 1fr) !important;
+  column-gap: 8px !important;
+  padding: 6px 10px !important;
+}
+body.workspace-hero-bar .weather-icon {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 12px !important;
+  font-size: 18px !important;
+}
+body.workspace-hero-bar .weather-main {
+  font-size: 18px !important;
+}
+body.workspace-hero-bar .weather-place {
+  font-size: 10px !important;
+}
+body.workspace-hero-bar .hero {
+  min-height: 76px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar .hero-image-card {
+  display: none !important;
+}
+body.workspace-hero-bar .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bottom-bar .page-shell {
+  padding-bottom: 108px !important;
+}
+body.workspace-hero-bottom-bar .toolbar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: 18px !important;
+  top: auto !important;
+  z-index: 58 !important;
+  width: min(1180px, calc(100vw - 36px)) !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bottom-bar .workspace-quick-launcher {
+  bottom: 92px !important;
+}
+body.edit-layout-active.workspace-hero-bottom-bar .workspace-designer-panel {
+  top: 20px !important;
+}
+@media (max-width: 820px) {
+  body.workspace-hero-bar .workspace-header-grid {
+    grid-template-columns: 1fr !important;
+    row-gap: 8px !important;
+  }
+  body.workspace-hero-bar .workspace-header-left,
+  body.workspace-hero-bar .workspace-header-center,
+  body.workspace-hero-bar .workspace-header-right {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  body.workspace-hero-bottom-bar .toolbar {
+    bottom: 12px !important;
+    width: calc(100vw - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev2: Hero Evolution refinement */
+.workspace-designer-panel {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  overflow: hidden !important;
+  max-height: min(72vh, 640px) !important;
+}
+.workspace-panel-body {
+  min-height: 0 !important;
+  overflow: auto !important;
+  display: grid !important;
+  gap: 12px !important;
+  padding-right: 2px !important;
+}
+.workspace-panel-head,
+.workspace-panel-footer {
+  position: sticky !important;
+  z-index: 2 !important;
+  background: color-mix(in srgb, var(--surface-strong, var(--panel-strong)), transparent 3%) !important;
+}
+.workspace-panel-head { top: 0 !important; }
+.workspace-panel-footer { bottom: 0 !important; }
+.workspace-item-select {
+  min-height: 42px !important;
+  border-radius: 14px !important;
+}
+.workspace-hero-style-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+.workspace-hero-style-choice {
+  min-height: 42px !important;
+  place-items: center !important;
+  padding: 8px 9px !important;
+  text-align: center !important;
+  font: 850 12px var(--sans) !important;
+}
+.workspace-hero-style-choice strong,
+.workspace-hero-style-choice span {
+  display: none !important;
+}
+.workspace-location-list.compact {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+.workspace-location-list.compact .workspace-location-choice {
+  min-height: 58px !important;
+  padding: 9px 10px !important;
+}
+.workspace-location-list.compact .workspace-location-choice strong {
+  white-space: normal !important;
+  line-height: 1.15 !important;
+}
+.workspace-location-list.compact .workspace-location-choice span {
+  font-size: 10.5px !important;
+}
+body.workspace-hero-bar .hero-image-card {
+  display: block !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero-image-card,
+body.workspace-hero-bar .hero-image-card.workspace-hidden-item {
+  display: none !important;
+}
+body.workspace-hero-bar .hero {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+  min-height: 76px !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-search-hero .hero {
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+}
+body.workspace-hero-bar.workspace-search-hero .hero .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-search-standalone .hero .search,
+body.workspace-hero-bar.workspace-banner-hidden .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bottom-bar .toolbar {
+  width: min(1760px, calc(100vw - 56px)) !important;
+}
+@media (max-width: 820px) {
+  .workspace-location-list.compact {
+    grid-template-columns: 1fr !important;
+  }
+  .workspace-hero-style-list {
+    grid-template-columns: 1fr !important;
+  }
+  .workspace-designer-panel {
+    max-height: 62vh !important;
+  }
+  body.workspace-hero-bottom-bar .toolbar {
+    width: calc(100vw - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev4: hero-search must use the real banner surface in bar layouts */
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+  min-height: var(--hero-height, 240px) !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  height: var(--hero-height, 240px) !important;
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero-image-card,
+body.workspace-hero-bar .hero-image-card.hidden-banner {
+  display: none !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero,
+body.workspace-hero-bar.workspace-search-standalone .hero {
+  min-height: 76px !important;
+}
+@media (max-width: 900px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev5: keep Hero Search anchored to the banner surface during bar layouts */
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero {
+  position: relative !important;
+  display: grid !important;
+  grid-template-areas: "hero-stack" !important;
+  place-items: center !important;
+  gap: 0 !important;
+  min-height: var(--hero-height, 240px) !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  grid-area: hero-stack !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  height: var(--hero-height, 240px) !important;
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+  grid-area: hero-stack !important;
+  position: relative !important;
+  z-index: 5 !important;
+  inset: auto !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: min(780px, calc(100% - 220px)) !important;
+  margin: 0 !important;
+}
+body.edit-layout-active .workspace-host-widget {
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.edit-layout-active .workspace-host-widget::before,
+body.edit-layout-active .workspace-host-widget::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 900px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero .search {
+    width: calc(100% - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev6: Hero region renderer cleanup
+   Bar layouts keep the bar as header chrome, while the Hero region owns banner,
+   search, and spacing. Hero Search is hosted by the banner surface in bar modes. */
+body.workspace-hero-bar:not(.workspace-banner-hidden) .hero {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+  min-height: var(--hero-height, 240px) !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar:not(.workspace-banner-hidden) .hero-image-card {
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero {
+  display: flex !important;
+  place-items: initial !important;
+  min-height: var(--hero-height, 240px) !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  height: var(--hero-height, 240px) !important;
+  min-height: var(--hero-min-height, var(--hero-height, 240px)) !important;
+  overflow: hidden !important;
+}
+body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card > .search {
+  position: absolute !important;
+  z-index: 6 !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(780px, calc(100% - 80px)) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-search-standalone:not(.workspace-banner-hidden) .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 76px !important;
+  margin: 10px 0 24px !important;
+}
+body.workspace-hero-bar.workspace-banner-hidden .hero .search {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(780px, 100%) !important;
+  margin: 0 !important;
+}
+body.edit-layout-active .hero-image-card.workspace-host-widget {
+  opacity: 1 !important;
+  filter: none !important;
+}
+body.edit-layout-active .hero-image-card.workspace-host-widget::before,
+body.edit-layout-active .hero-image-card.workspace-host-widget::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 900px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card > .search {
+    width: calc(100% - 54px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.workspace-hero-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card > .search {
+    width: calc(100% - 24px) !important;
+  }
+}
+
+/* v1.5.0-dev7: Hero layout polish
+   Bar layouts should keep the bar as chrome and center the Hero content as page content. */
+:root {
+  --bar-to-hero-gap: 30px;
+  --hero-to-content-gap: 26px;
+}
+
+body.workspace-hero-top-bar:not(.workspace-banner-hidden) .hero,
+body.workspace-hero-bottom-bar:not(.workspace-banner-hidden) .hero {
+  width: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: var(--hero-to-content-gap) !important;
+}
+
+body.workspace-hero-top-bar:not(.workspace-banner-hidden) .hero {
+  margin-top: var(--bar-to-hero-gap) !important;
+}
+
+body.workspace-hero-bottom-bar:not(.workspace-banner-hidden) .hero {
+  margin-top: 18px !important;
+}
+
+body.workspace-hero-top-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-bottom-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-top-bar:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-bottom-bar:not(.workspace-banner-hidden) .hero-image-card {
+  align-self: center !important;
+  justify-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body.workspace-hero-top-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card,
+body.workspace-hero-bottom-bar.workspace-search-hero:not(.workspace-banner-hidden) .hero-image-card {
+  width: min(var(--hero-width, 1180px), 100%) !important;
+  max-width: 100% !important;
+}
+
+body.workspace-hero-bar.workspace-banner-hidden .hero {
+  margin-top: var(--bar-to-hero-gap) !important;
+  margin-bottom: var(--hero-to-content-gap) !important;
+}
+
+body.workspace-hero-bottom-bar .page-shell {
+  padding-bottom: calc(112px + var(--hero-to-content-gap)) !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --bar-to-hero-gap: 18px;
+    --hero-to-content-gap: 18px;
+  }
+}
+
+
+/* v1.5.0-dev10b: deterministic banner fill */
+.hero-image-card {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+.hero-image-card img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill !important;
+  object-position: center center !important;
+  transform: none !important;
+  transform-origin: center center !important;
+  background: transparent !important;
+}
+#terminalModal,
+#terminalModal *,
+.terminal-window,
+.terminal-window *,
+.command-output,
+.command-output *,
+#commandInput,
+#commandPromptLabel,
+.fetch-output,
+.fetch-output * {
+  font-family: var(--font-terminal) !important;
 }
