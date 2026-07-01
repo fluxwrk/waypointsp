@@ -46,7 +46,7 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 <div align="center">
 
-![Waypoint](/home/dt/Projects/waypoint/screenshots/home.png)
+![Waypoint](screenshots/home.png)
 
 </div>
 
@@ -55,9 +55,9 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 <div align="center">
 
-![Workspace Studio](/home/dt/Projects/waypoint/screenshots/studio.png)
+![Workspace Studio](screenshots/studio.png)
 
-![Themes](/home/dt/Projects/waypoint/screenshots/theme.png)
+![Themes](theme.png)
 
 ![Settings](screenshots/settings.png)
 
