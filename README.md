@@ -93,7 +93,7 @@ Type `help` to get started.
 
 ---
 
-##Customization
+## Customization
 
 Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoint your own.
 
@@ -108,10 +108,11 @@ Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoin
 - ✅ v1.2 Terminal Upgrade
 - ✅ v1.3 First Experience & Onboarding
 - ✅ v1.4 Workspace Foundation
+- ✅v1.5 Hero Evolution
 
 ### In Progress
 
-- 🚧 v1.5 Hero Evolution
+- 🚧 v1.6 Platform Expansion
 
 ---
 
