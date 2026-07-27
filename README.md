@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="img/waypoint-icon-large.png" alt="Waypoint" width="200">  
+<img title="" src="img/waypoint-logo.svg" alt="Waypoint" width="246" data-align="center">
 
 ## Waypoint is a modern, local-first browser start page designed to be fast, customizable, and beautiful by default.
 
@@ -46,22 +46,41 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 <div align="center">
 
-![Waypoint](screenshots/home.png)
+![Waypoint flagship Top Bar workspace with Graphite theme and Grid Card bookmarks](screenshots/showcase-flagship.png)
 
 </div>
 
 <details>
-<summary><strong>More Screenshots</strong></summary>
+<summary><strong>Open the showcase gallery</strong></summary>
 
 <div align="center">
 
-![Workspace Studio](screenshots/studio.png)
+<img src="screenshots/showcase-nord.png" alt="Nord theme with Top Bar and Grid Card bookmarks" width="49%">
+<img src="screenshots/showcase-daylight-grid.png" alt="Daylight theme with Top Bar and Grid Card bookmarks" width="49%">
 
-![Themes](screenshots/theme.png)
+![WaypointKeys focused section with keyboard hints](screenshots/showcase-waypointkeys-grid.png)
 
-![Settings](screenshots/settings.png)
+<img src="screenshots/showcase-workspace-designer.png" alt="Waypoint Workspace Designer editing search placement" width="49%">
+<img src="screenshots/showcase-appearance.png" alt="Consolidated Appearance settings" width="49%">
 
-![Terminal](screenshots/wpdemo.gif)
+![Waypoint terminal fetch command](screenshots/showcase-terminal.png)
+
+<h3>Terminal workflow</h3>
+
+![Using Waypoint terminal commands](screenshots/showcase-terminal-demo.gif)
+
+<h3>Layout and visibility configurations</h3>
+
+<img src="screenshots/showcase-standard-header.png" alt="Gruvbox Grid Cards with the standard header and medium desktop banner" width="49%">
+<img src="screenshots/showcase-bottom-bar.png" alt="Graphite Grid Cards with the Bottom Bar layout" width="49%">
+
+<img src="screenshots/showcase-no-search.png" alt="Catppuccin workspace with the search box hidden" width="49%">
+<img src="screenshots/showcase-no-banner.png" alt="Nord workspace with the banner hidden and standalone search" width="49%">
+
+<img src="screenshots/showcase-minimal.png" alt="Daylight workspace with both search and banner hidden" width="49%">
+<img src="screenshots/showcase-large-banner.png" alt="Tokyo Night workspace with a large desktop banner" width="49%">
+
+![Custom wallpaper and custom banner configuration](screenshots/showcase-custom-artwork.png)
 
 </div>
 
@@ -108,17 +127,21 @@ Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoin
 - ✅ v1.2 Terminal Upgrade
 - ✅ v1.3 First Experience & Onboarding
 - ✅ v1.4 Workspace Foundation
-- ✅v1.5 Hero Evolution
+- ✅ v1.5 Workspace Evolution
 
 ### In Progress
 
-- 🚧 v1.6 Platform Expansion
+- 🚧 v1.5.1 Bookmark Experience Pass
+
+### On Hold
+
+- ⏸ Waypoint Protocol Expansion
 
 ---
 
 ## License
 
-Copyright (C) 2026 waypointsp-dev
+Copyright (C) 2026 fluxwrk
 
 Licensed under the GNU General Public License v3.0 or later.
 

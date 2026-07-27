@@ -3,7 +3,7 @@ const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6",
 const CUSTOM_BG_KEY = "startpage-custom-background";
 const CUSTOM_HERO_KEY = "startpage-custom-hero";
 const WEATHER_CACHE_KEY = "startpage-weather-cache-v2";
-let appMeta = { name: "Waypoint", version: "1.5.0-dev12", branch: "dev", codename: "Hero Evolution" };
+let appMeta = { name: "Waypoint", version: "1.5.1", branch: "main", codename: "Bookmark Experience Pass" };
 
 const SEARCH_ENGINES = {
   google: { label: "Google", badge: "G", action: "https://www.google.com/search", param: "q", placeholder: "Search Google" },
@@ -20,14 +20,24 @@ const THEMES = {
     desktop: "img/catppuccin-desktop-banner.png",
     atmo: "img/catppuccin-atmo-banner.png",
     defaultHero: "atmo",
-    gradient: "linear-gradient(135deg, #11111b 0%, #1e1e2e 47%, #313244 100%)",
-    accent: "#cba6f7",
-    bg: "#11111b",
-    panel: "rgba(17, 17, 27, .70)",
-    panelStrong: "rgba(17, 17, 27, .90)",
-    text: "#cdd6f4",
-    muted: "#a6adc8",
-    border: "rgba(205, 214, 244, .15)"
+    gradient: "linear-gradient(135deg, #181825 0%, #1e1e2e 48%, #313244 100%)",
+    page: "#181825", surface: "#1e1e2e", elevated: "#313244", hover: "#45475a",
+    textMuted: "#989baa", textSecondary: "#b1b6c8", text: "#cdd6f4", textStrong: "#f3f5fb",
+    accentStrong: "#5f7fbd", accent: "#74a0e8", accentHover: "#89b4fa", accentBright: "#a6c8ff",
+    cardTop: "#343448", cardBottom: "#202033", cardBorder: "#4d4e66", iconSurface: "#3b3c51"
+  },
+  daylight: {
+    label: "Daylight",
+    scheme: "light",
+    wallpaper: "img/daylight-wallpaper.png",
+    desktop: "img/daylight-desktop-banner.png",
+    atmo: "img/daylight-atmo-banner.png",
+    defaultHero: "atmo",
+    gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 48%, #e2e8f0 100%)",
+    page: "#f1f5f9", surface: "#ffffff", elevated: "#e8edf5", hover: "#dbe4f0",
+    textMuted: "#64748b", textSecondary: "#475569", text: "#1e293b", textStrong: "#0f172a",
+    accentStrong: "#3730a3", accent: "#4f46e5", accentHover: "#6366f1", accentBright: "#4338ca",
+    cardTop: "#ffffff", cardBottom: "#eef2ff", cardBorder: "#b8c3d4", iconSurface: "#e0e7ff"
   },
   nord: {
     label: "Nord",
@@ -35,14 +45,11 @@ const THEMES = {
     desktop: "img/nord-desktop-banner.png",
     atmo: "img/nord-atmo-banner.png",
     defaultHero: "atmo",
-    gradient: "linear-gradient(135deg, #2e3440 0%, #3b4252 48%, #4c566a 100%)",
-    accent: "#88c0d0",
-    bg: "#2e3440",
-    panel: "rgba(46, 52, 64, .70)",
-    panelStrong: "rgba(46, 52, 64, .90)",
-    text: "#eceff4",
-    muted: "#d8dee9",
-    border: "rgba(216, 222, 233, .16)"
+    gradient: "linear-gradient(135deg, #242933 0%, #2e3440 48%, #3b4252 100%)",
+    page: "#242933", surface: "#2e3440", elevated: "#3b4252", hover: "#4c566a",
+    textMuted: "#8f9aab", textSecondary: "#b4bfce", text: "#d8dee9", textStrong: "#eceff4",
+    accentStrong: "#5e81ac", accent: "#74a7b8", accentHover: "#88c0d0", accentBright: "#8fbcbb",
+    cardTop: "#39414f", cardBottom: "#29303b", cardBorder: "#526174", iconSurface: "#414b5b"
   },
   gruvbox: {
     label: "Gruvbox",
@@ -51,13 +58,22 @@ const THEMES = {
     atmo: "img/gruvbox-atmo-banner.png",
     defaultHero: "desktop",
     gradient: "linear-gradient(135deg, #1d2021 0%, #282828 50%, #3c3836 100%)",
-    accent: "#d79921",
-    bg: "#1d2021",
-    panel: "rgba(29, 32, 33, .74)",
-    panelStrong: "rgba(29, 32, 33, .92)",
-    text: "#ebdbb2",
-    muted: "#a89984",
-    border: "rgba(235, 219, 178, .15)"
+    page: "#1d2021", surface: "#282828", elevated: "#3c3836", hover: "#504945",
+    textMuted: "#a9a099", textSecondary: "#c2b8a9", text: "#ebdbb2", textStrong: "#fbf1c7",
+    accentStrong: "#b57614", accent: "#d79921", accentHover: "#fabd2f", accentBright: "#f6c94d",
+    cardTop: "#3a3733", cardBottom: "#262320", cardBorder: "#57514b", iconSurface: "#45403a"
+  },
+  graphite: {
+    label: "Graphite",
+    wallpaper: "img/graphite-wallpaper.png",
+    desktop: "img/graphite-desktop-banner.png",
+    atmo: "img/graphite-atmo-banner.png",
+    defaultHero: "desktop",
+    gradient: "linear-gradient(135deg, #111113 0%, #18181b 48%, #27272a 100%)",
+    page: "#111113", surface: "#1c1c20", elevated: "#29292e", hover: "#38383f",
+    textMuted: "#8e8e98", textSecondary: "#b4b4bd", text: "#e4e4e7", textStrong: "#fafafa",
+    accentStrong: "#6d28d9", accent: "#7c3aed", accentHover: "#8b5cf6", accentBright: "#a78bfa",
+    cardTop: "#29292e", cardBottom: "#18181b", cardBorder: "#414147", iconSurface: "#303036"
   },
   tokyoNight: {
     label: "Tokyo Night",
@@ -65,14 +81,11 @@ const THEMES = {
     desktop: "img/tokyo-night-desktop-banner.png",
     atmo: "img/tokyo-night-atmo-banner.png",
     defaultHero: "desktop",
-    gradient: "linear-gradient(135deg, #1a1b26 0%, #24283b 50%, #414868 100%)",
-    accent: "#7aa2f7",
-    bg: "#1a1b26",
-    panel: "rgba(26, 27, 38, .70)",
-    panelStrong: "rgba(26, 27, 38, .90)",
-    text: "#c0caf5",
-    muted: "#9aa5ce",
-    border: "rgba(192, 202, 245, .15)"
+    gradient: "linear-gradient(135deg, #13141c 0%, #1a1b26 48%, #24283b 100%)",
+    page: "#13141c", surface: "#1a1b26", elevated: "#24283b", hover: "#343b58",
+    textMuted: "#898fac", textSecondary: "#a2a5b9", text: "#c0caf5", textStrong: "#f1f3ff",
+    accentStrong: "#3d59a1", accent: "#5d7bd9", accentHover: "#7aa2f7", accentBright: "#89b4fa",
+    cardTop: "#252a40", cardBottom: "#181a28", cardBorder: "#3d4665", iconSurface: "#2c324b"
   }
 };
 
@@ -106,6 +119,7 @@ const defaultData = {
     "heroStyle": "auto",
     "heroFit": "contain",
     "bookmarkLayout": "list",
+    "keyboardNavigation": false,
     "userName": "user",
     "weatherLocation": "",
     "weatherUnit": "auto",
@@ -114,12 +128,11 @@ const defaultData = {
     "shortcut": "ctrlShiftSpace",
     "fontFamily": "inter",
     "uiScale": 100,
+    "useCustomAppearance": false,
     "useCustomColors": false,
     "customAccent": "#00d084",
     "customPanel": "#09111a",
     "customText": "#d8dee9",
-    "windowTransparency": 100,
-    "terminalTransparency": 92,
     "useCustomTextColors": false,
     "sectionTitleColor": "#d8dee9",
     "bookmarkTextColor": "#d8dee9",
@@ -135,7 +148,6 @@ const defaultData = {
     "showSearch": true,
     "showSectionTitles": true,
     "widgets": {},
-    "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 22,
     "customCss": "",
@@ -230,8 +242,6 @@ const bundledDemoData = {
     "customAccent": "#00d084",
     "customPanel": "#09111a",
     "customText": "#d8dee9",
-    "windowTransparency": 100,
-    "terminalTransparency": 60,
     "useCustomTextColors": false,
     "sectionTitleColor": "#d8dee9",
     "bookmarkTextColor": "#d8dee9",
@@ -317,7 +327,6 @@ const bundledDemoData = {
         "customSize": false
       }
     },
-    "bookmarkColumns": "auto",
     "bookmarkFontSize": 13,
     "bookmarkIconSize": 36,
     "customCss": "",
@@ -335,8 +344,14 @@ let activeSection = 0;
 let editingLink = null;
 let draggedSectionIndex = null;
 let draggedLink = null;
+let activeLinkDropTarget = null;
 let pendingLinkIcon = null;
 let terminalBuffer = [];
+let keyboardNavigationSection = null;
+let keyboardNavigationTimer = null;
+const KEYBOARD_NAVIGATION_TIMEOUT_MS = 10000;
+let focusedSectionIndex = null;
+let renamingSectionIndex = null;
 
 function $(id) { return document.getElementById(id); }
 function clamp(value, min, max, fallback) { return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback; }
@@ -408,6 +423,26 @@ const INTERNAL_ACTIONS = {
   settings: { icon: "⚙️", label: "Settings", aliases: [], run: () => openSettingsPage("appearance") },
   terminal: { icon: "▣", label: "Terminal", aliases: [], run: () => openModal("terminalModal") }
 };
+const SETTINGS_PAGE_ALIASES = {
+  appearance: "appearance",
+  banner: "appearance",
+  text: "appearance",
+  textcolor: "appearance",
+  textcolors: "appearance",
+  colors: "appearance",
+  advanced: "search",
+  search: "search",
+  layout: "layout",
+  workspace: "layout",
+  bookmarks: "bookmarks",
+  bookmark: "bookmarks",
+  weather: "weather",
+  backup: "backup"
+};
+function normalizeSettingsPage(page = "appearance") {
+  const key = String(page || "appearance").toLowerCase().replace(/^settings(?:[/:_-]+)?/, "").replace(/-?tab$/, "").replace(/[\s_-]+/g, "");
+  return SETTINGS_PAGE_ALIASES[key] || "appearance";
+}
 function isWaypointUrl(url) { return /^waypoint:/i.test(String(url || "").trim()); }
 const ALLOWED_BOOKMARK_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
 function isAllowedBookmarkUrl(url) {
@@ -430,6 +465,10 @@ function runtimeLabel() {
 function waypointActionKey(url) { return String(url || "").replace(/^waypoint:/i, "").trim().toLowerCase(); }
 function internalActionForUrl(url) {
   const key = waypointActionKey(url);
+  if (key === "settings" || /^settings[/:_-]/.test(key)) {
+    const page = normalizeSettingsPage(key);
+    return { icon: "⚙️", label: `Settings: ${capitalize(page)}`, aliases: [], run: () => openSettingsPage(page) };
+  }
   if (INTERNAL_ACTIONS[key]) return INTERNAL_ACTIONS[key];
   return Object.values(INTERNAL_ACTIONS).find(action => action.aliases.includes(key)) || null;
 }
@@ -464,6 +503,182 @@ function favicon(url) {
 function getTheme() { return THEMES[data.settings.theme] || THEMES.nord; }
 function countBookmarks() { return data.sections.reduce((sum, section) => sum + section.links.length, 0); }
 
+function assignNavigationKeys(items, labelForItem) {
+  const used = new Set();
+  return items.map((item, index) => {
+    const label = String(labelForItem(item, index) || "").toLowerCase().replace(/[^a-z]/g, "");
+    const key = [...label].find(char => !used.has(char))
+      || [..."abcdefghijklmnopqrstuvwxyz"].find(char => !used.has(char))
+      || "";
+    if (key) used.add(key);
+    return key;
+  });
+}
+
+function navigationKeyMap() {
+  const sectionKeys = assignNavigationKeys(data.sections, section => section.name);
+  return data.sections.map((section, sectionIndex) => ({
+    key: sectionKeys[sectionIndex],
+    linkKeys: assignNavigationKeys(section.links, link => link.name)
+  }));
+}
+
+const SECTION_ICONS = {
+  code: '<path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"/>',
+  media: '<path d="M8 5v14l11-7z"/>',
+  music: '<path d="M9 18V5l10-2v13M9 9l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
+  social: '<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>',
+  work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18"/>',
+  reading: '<path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v18H7.5A3.5 3.5 0 0 0 4 23zM20 5.5A3.5 3.5 0 0 0 16.5 2H13v18h3.5A3.5 3.5 0 0 1 20 23z"/>',
+  shopping: '<path d="M6 8h12l1 13H5zM9 8a3 3 0 0 1 6 0"/>',
+  games: '<path d="M8 8h8a6 6 0 0 1 5.5 8.4L20 20l-4-3H8l-4 3-1.5-3.6A6 6 0 0 1 8 8zM7 12v4M5 14h4M16 13h.01M19 15h.01"/>',
+  home: '<path d="m3 11 9-8 9 8v10h-6v-6H9v6H3z"/>',
+  tools: '<path d="M14.7 6.3a4 4 0 0 0-5-5L12 3.6 8.4 7.2 6.1 4.9a4 4 0 0 0 5 5L4 17l3 3 7.2-7.1a4 4 0 0 0 5-5L17 10.2l-3.6-3.6z"/>',
+  web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
+  server: '<rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h7M11 17.5h7"/>',
+  imageboard: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m4 17 5-4 3 3 3-2 5 4"/>',
+  cloud: '<path d="M7 18h11a4 4 0 0 0 .7-7.9A7 7 0 0 0 5.4 8.7 4.5 4.5 0 0 0 7 18z"/>',
+  finance: '<path d="M12 2v20M17 6.5C16 5.5 14.5 5 12.5 5 9.8 5 8 6.3 8 8.2c0 4.3 9 2.2 9 6.4 0 2-1.9 3.4-4.7 3.4-2.2 0-4-.7-5.3-2"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
+  documents: '<path d="M6 2h8l4 4v16H6zM14 2v5h5M9 12h6M9 16h6"/>',
+  downloads: '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
+  photos: '<path d="M4 7h4l2-3h4l2 3h4v13H4z"/><circle cx="12" cy="13" r="4"/>',
+  folder: '<path d="M3 6h7l2 2h9v11H3z"/>'
+};
+
+const SECTION_ICON_RULES = [
+    [/(^|\b)(4chan|imageboard|chan|forum|boards?)(\b|$)/, "imageboard"],
+    [/(^|\b)(web|internet|browser|online|sites?)(\b|$)/, "web"],
+    [/(^|\b)(server|servers|hosting|hosted|homelab|nas|infra|infrastructure)(\b|$)/, "server"],
+    [/(^|\b)(cloud|aws|azure|gcp|digitalocean)(\b|$)/, "cloud"],
+    [/(dev|code|program|git|tech)/, "code"],
+    [/(media|video|movie|tv|stream)/, "media"],
+    [/(music|audio|radio|podcast)/, "music"],
+    [/(social|community|chat|message|discord|reddit)/, "social"],
+    [/(work|office|business|project)/, "work"],
+    [/(read|news|book|learn|research)/, "reading"],
+    [/(shop|store|buy)/, "shopping"],
+    [/(game|play)/, "games"],
+    [/(home|local|self.host)/, "home"],
+    [/(tool|util|system|admin|settings)/, "tools"],
+    [/(money|bank|finance|crypto|stock|invest|budget)/, "finance"],
+    [/(mail|email|inbox)/, "mail"],
+    [/(docs?|document|files?|drive|notes?)/, "documents"],
+    [/(download|torrent|transfer)/, "downloads"],
+    [/(photo|image|gallery|camera)/, "photos"]
+];
+
+function inferSectionIcon(text) {
+  const value = String(text || "").toLowerCase();
+  return SECTION_ICON_RULES.find(([pattern]) => pattern.test(value))?.[1] || "";
+}
+
+function sectionGeneratedIcon(title, links = []) {
+  const contentSignals = links.map(link => `${link.name || ""} ${link.url || ""}`).join(" ");
+  const icon = inferSectionIcon(title) || inferSectionIcon(contentSignals) || "folder";
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${SECTION_ICONS[icon]}</svg>`;
+}
+
+function syncSectionFocusDom() {
+  const active = Number.isInteger(focusedSectionIndex);
+  document.body.classList.toggle("section-focus-active", active);
+  document.querySelectorAll(".section").forEach(section => {
+    const focused = active && Number(section.dataset.sectionIndex) === focusedSectionIndex;
+    section.classList.toggle("section-focused", focused);
+    if (focused) {
+      section.setAttribute("role", "dialog");
+      section.setAttribute("aria-modal", "true");
+    } else {
+      section.removeAttribute("role");
+      section.removeAttribute("aria-modal");
+    }
+  });
+  const backdrop = $("sectionFocusBackdrop");
+  if (backdrop) backdrop.hidden = !active;
+}
+
+function focusBookmarkSection(sectionIndex) {
+  if (!data.sections[sectionIndex]) return false;
+  focusedSectionIndex = sectionIndex;
+  syncSectionFocusDom();
+  return true;
+}
+
+function clearSectionFocus() {
+  focusedSectionIndex = null;
+  syncSectionFocusDom();
+}
+
+function clearKeyboardNavigation() {
+  keyboardNavigationSection = null;
+  clearTimeout(keyboardNavigationTimer);
+  keyboardNavigationTimer = null;
+  document.body.classList.remove("keyboard-navigation-active");
+  document.querySelectorAll(".keyboard-section-active").forEach(element => element.classList.remove("keyboard-section-active"));
+}
+
+function scheduleKeyboardNavigationReset() {
+  clearTimeout(keyboardNavigationTimer);
+  keyboardNavigationTimer = setTimeout(() => {
+    clearKeyboardNavigation();
+    clearSectionFocus();
+  }, KEYBOARD_NAVIGATION_TIMEOUT_MS);
+}
+
+function launchBookmark(link) {
+  if (handleWaypointLink(link.url)) return;
+  window.location.href = link.url;
+}
+
+function handleKeyboardNavigation(event) {
+  if (!data.settings.keyboardNavigation || editLayoutActive) return false;
+  if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey) return false;
+  if (event.target.matches("input, textarea, select") || event.target.isContentEditable) return false;
+  if (document.querySelector(".modal:not(.hidden)")) return false;
+
+  if (event.key === "?") {
+    event.preventDefault();
+    clearKeyboardNavigation();
+    openModal("keyboardHelpModal");
+    return true;
+  }
+  if (event.code === "Space") {
+    event.preventDefault();
+    clearKeyboardNavigation();
+    focusSearch();
+    return true;
+  }
+  if (!/^[a-z]$/i.test(event.key)) return false;
+
+  const key = event.key.toLowerCase();
+  const keyMap = navigationKeyMap();
+  if (keyboardNavigationSection === null) {
+    const sectionIndex = keyMap.findIndex(section => section.key === key);
+    if (sectionIndex < 0) return false;
+    event.preventDefault();
+    keyboardNavigationSection = sectionIndex;
+    document.body.classList.add("keyboard-navigation-active");
+    document.querySelector(`.section[data-section-index="${sectionIndex}"]`)?.classList.add("keyboard-section-active");
+    focusBookmarkSection(sectionIndex);
+    scheduleKeyboardNavigationReset();
+    return true;
+  }
+
+  event.preventDefault();
+  const sectionIndex = keyboardNavigationSection;
+  const linkIndex = keyMap[sectionIndex]?.linkKeys.indexOf(key) ?? -1;
+  if (linkIndex < 0) {
+    clearKeyboardNavigation();
+    clearSectionFocus();
+    return true;
+  }
+  const link = data.sections[sectionIndex]?.links[linkIndex];
+  clearKeyboardNavigation();
+  clearSectionFocus();
+  if (link) launchBookmark(link);
+  return true;
+}
+
 const HERO_SIZES = {
   hidden: { label: "Hidden", height: 0 },
   small: { label: "Small", height: 210 },
@@ -490,7 +705,7 @@ function heroHeightForSize(size, fallbackHeight) {
 function labelHeroSize(size) { return HERO_SIZES[size]?.label || "Large"; }
 
 const WORKSPACE_HERO_STYLES = {
-  standard: { label: "Standard Hero", description: "Classic banner presentation with optional Hero Search." },
+  standard: { label: "Standard Header", description: "Classic page header with an optional banner search." },
   topBar: { label: "Top Bar", description: "OS-style top panel that replaces the standard header." },
   bottomBar: { label: "Bottom Bar", description: "OS-style bottom panel that replaces the standard header." }
 };
@@ -525,8 +740,8 @@ function buildWorkspaceSlots() {
   const slots = {
     "hidden": { label: "Hidden", region: "hidden", accepts: ["logo", "wordmark", "clock", "weather", "search", "hero"] },
     "header-search": { label: "Header Search", region: "header", group: "center", exclusive: true, accepts: ["search"] },
-    "hero-banner": { label: "Hero Banner", region: "hero", accepts: ["hero"] },
-    "hero-search": { label: "Hero Search", region: "hero", accepts: ["search"] },
+    "hero-banner": { label: "Banner", region: "hero", accepts: ["hero"] },
+    "hero-search": { label: "Banner Search", region: "hero", accepts: ["search"] },
     "standalone-search": { label: "Standalone Search", region: "search", accepts: ["search"] },
     "content-sections": { label: "Content Sections", region: "content", accepts: ["sections"] }
   };
@@ -678,7 +893,7 @@ function widgetIsHidden(widgetId) { return slotForWidget(widgetId) === "hidden";
 function slotLabel(slotId) { return WORKSPACE_SLOTS[slotId]?.friendlyLabel || WORKSPACE_SLOTS[slotId]?.label || slotId || "Unknown"; }
 function regionLabel(slotId) {
   const region = WORKSPACE_SLOTS[slotId]?.region || "unknown";
-  return { header: "Header", hero: "Hero", search: "Search", content: "Content", hidden: "Hidden" }[region] || region;
+  return { header: "Header", hero: "Banner", search: "Search", content: "Content", hidden: "Hidden" }[region] || region;
 }
 function canonicalizeWorkspace(workspace = data.settings.workspace) {
   if (!workspace || typeof workspace !== "object") workspace = data.settings.workspace = defaultWorkspace();
@@ -821,8 +1036,8 @@ function workspaceSummaryText() {
   const workspace = data.settings.workspace || defaultWorkspace();
   const rows = Object.keys(WORKSPACE_WIDGETS).map(id => `${id.padEnd(10)} ${WORKSPACE_WIDGETS[id].label} -> ${slotLabel(workspace.slots[id])}`);
   rows.unshift(`Template: ${WORKSPACE_TEMPLATES[workspace.template]?.label || workspace.template}${workspace.modified ? " (modified)" : ""}`);
-  rows.push(`Hero style: ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero"}`);
-  rows.push(`Section titles: ${workspace.display?.showSectionTitles === false ? "hidden" : "visible"}`);
+  rows.push(`Page header style: ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Header"}`);
+  rows.push(`Grid section titles: ${workspace.display?.showSectionTitles === false ? "hidden" : "visible"}`);
   return cleanList("Waypoint Workspace", rows);
 }
 
@@ -1432,6 +1647,7 @@ function normalizeData(input) {
   normalized.settings.heroY = clamp(Number(normalized.settings.heroY), 0, 100, 50);
   normalized.settings.heroFit = "contain";
   normalized.settings.bookmarkLayout = ["grid", "list"].includes(normalized.settings.bookmarkLayout) ? normalized.settings.bookmarkLayout : "list";
+  normalized.settings.keyboardNavigation = normalized.settings.keyboardNavigation === true || normalized.settings.keyboardNavigation === "true";
   normalized.settings.userName = sanitizeUserName(normalized.settings.userName);
   normalized.settings.weatherLocation = String(normalized.settings.weatherLocation || "").trim().slice(0, 80);
   normalized.settings.weatherUnit = ["auto", "fahrenheit", "celsius"].includes(normalized.settings.weatherUnit) ? normalized.settings.weatherUnit : "auto";
@@ -1441,8 +1657,6 @@ function normalizeData(input) {
   normalized.settings.fontFamily = ["system", "inter"].includes(normalized.settings.fontFamily) ? normalized.settings.fontFamily : "inter";
   normalized.settings.uiScale = clamp(Number(normalized.settings.uiScale), 85, 120, 100);
   normalized.settings.useCustomColors = normalized.settings.useCustomColors === true || normalized.settings.useCustomColors === "true";
-  normalized.settings.windowTransparency = clamp(Number(normalized.settings.windowTransparency ?? 92), 60, 100, 92);
-  normalized.settings.terminalTransparency = clamp(Number(normalized.settings.terminalTransparency ?? 94), 60, 100, 94);
   normalized.settings.customAccent = /^#[0-9a-f]{6}$/i.test(normalized.settings.customAccent || "") ? normalized.settings.customAccent : "#00d084";
   normalized.settings.customPanel = /^#[0-9a-f]{6}$/i.test(normalized.settings.customPanel || "") ? normalized.settings.customPanel : "#09111a";
   normalized.settings.customText = /^#[0-9a-f]{6}$/i.test(normalized.settings.customText || "") ? normalized.settings.customText : "#d8dee9";
@@ -1467,10 +1681,17 @@ function normalizeData(input) {
   }
   normalized.settings.layoutPreset = normalized.settings.workspace.template;
   normalized.settings.widgets = normalizeWidgetState(normalized.settings.widgets);
-  normalized.settings.bookmarkColumns = ["auto", "2", "3", "4"].includes(String(normalized.settings.bookmarkColumns)) ? String(normalized.settings.bookmarkColumns) : "auto";
   normalized.settings.bookmarkFontSize = clamp(Number(normalized.settings.bookmarkFontSize), 10, 15, 12);
   normalized.settings.bookmarkIconSize = clamp(Number(normalized.settings.bookmarkIconSize), 14, 36, 22);
   normalized.settings.customCss = String(normalized.settings.customCss || "").slice(0, 8000);
+  const hasCustomAppearanceSetting = Object.prototype.hasOwnProperty.call(incomingSettings || {}, "useCustomAppearance");
+  normalized.settings.useCustomAppearance = hasCustomAppearanceSetting
+    ? normalized.settings.useCustomAppearance === true || normalized.settings.useCustomAppearance === "true"
+    : normalized.settings.useCustomColors
+      || normalized.settings.useCustomTextColors
+      || !!normalized.settings.customCss;
+  normalized.settings.useCustomColors = normalized.settings.useCustomAppearance;
+  normalized.settings.useCustomTextColors = normalized.settings.useCustomAppearance;
   normalized.settings.settingsLeft = Number.isFinite(Number(normalized.settings.settingsLeft)) ? Number(normalized.settings.settingsLeft) : null;
   normalized.settings.settingsTop = Number.isFinite(Number(normalized.settings.settingsTop)) ? Number(normalized.settings.settingsTop) : null;
   normalized.settings.terminalLeft = normalized.settings.terminalLeft === null ? null : clamp(Number(normalized.settings.terminalLeft), 20, 4000, null);
@@ -1535,12 +1756,10 @@ function applyPersonalization() {
   body.classList.toggle("ui-hide-clock", workspace.slots.clock === "hidden");
   body.classList.toggle("ui-hide-weather", workspace.slots.weather === "hidden");
   body.classList.toggle("ui-hide-search", currentSearchSlot === "hidden");
-  body.classList.toggle("ui-hide-section-titles", workspace.display?.showSectionTitles === false);
+  body.classList.toggle("ui-hide-section-titles", workspace.display?.showSectionTitles === false && s.bookmarkLayout === "grid");
   document.documentElement.style.setProperty("--ui-scale", String(s.uiScale / 100));
   document.documentElement.style.setProperty("--bookmark-font-size", `${s.bookmarkFontSize}px`);
   document.documentElement.style.setProperty("--bookmark-icon-size", `${s.bookmarkIconSize}px`);
-  document.documentElement.style.setProperty("--bookmark-columns", s.bookmarkColumns === "auto" ? "" : s.bookmarkColumns);
-  document.documentElement.dataset.bookmarkColumns = s.bookmarkColumns || "auto";
   const fonts = {
     system: 'var(--font-system)',
     inter: 'var(--font-waypoint)'
@@ -1548,43 +1767,68 @@ function applyPersonalization() {
   document.documentElement.style.setProperty("--sans", fonts[s.fontFamily] || fonts.inter);
   let style = $("waypointCustomCss");
   if (!style) { style = document.createElement("style"); style.id = "waypointCustomCss"; document.head.appendChild(style); }
-  style.textContent = s.customCss || "";
+  style.textContent = s.useCustomAppearance ? s.customCss || "" : "";
 }
 function applyTheme() {
   const theme = getTheme();
   const root = document.documentElement;
-  root.style.setProperty("--bg", theme.bg);
-  root.style.setProperty("--panel", theme.panel);
-  root.style.setProperty("--panel-strong", theme.panelStrong);
-  root.style.setProperty("--text", theme.text);
-  root.style.setProperty("--muted", theme.muted);
-  root.style.setProperty("--accent", theme.accent);
-  root.style.setProperty("--border", theme.border);
-  if (data.settings.useCustomColors) {
-    root.style.setProperty("--accent", data.settings.customAccent);
-    root.style.setProperty("--waypoint-green", data.settings.customAccent);
-    root.style.setProperty("--panel", hexToRgba(data.settings.customPanel, .70));
-    root.style.setProperty("--panel-strong", hexToRgba(data.settings.customPanel, .92));
-    root.style.setProperty("--text", data.settings.customText);
-    root.style.setProperty("--muted", colorMix(data.settings.customText, "#808080", .45));
-    root.style.setProperty("--border", hexToRgba(data.settings.customText, .16));
-    root.style.setProperty("--surface", hexToRgba(data.settings.customPanel, .70));
-    root.style.setProperty("--surface-strong", hexToRgba(data.settings.customPanel, .92));
-    root.style.setProperty("--surface-soft", hexToRgba(data.settings.customPanel, .34));
-    root.style.setProperty("--accent-hover", hexToRgba(data.settings.customAccent, .16));
+  root.dataset.themeScheme = theme.scheme || "dark";
+  const sectionCardOpacity = .6;
+  const sectionCardOpacityPercent = 60;
+  if (data.settings.useCustomAppearance) {
+    const customSurface = data.settings.customPanel;
+    const customText = data.settings.customText;
+    const customAccent = data.settings.customAccent;
+    const customElevated = colorMix(customSurface, customText, .12);
+    const customHover = colorMix(customSurface, customText, .20);
+    root.style.setProperty("--bg", colorMix(customSurface, "#000000", .28));
+    root.style.setProperty("--panel", hexToRgba(customSurface, .80));
+    root.style.setProperty("--panel-strong", hexToRgba(customSurface, .96));
+    root.style.setProperty("--surface", hexToRgba(customSurface, .82));
+    root.style.setProperty("--surface-strong", hexToRgba(customSurface, .96));
+    root.style.setProperty("--surface-soft", hexToRgba(customSurface, .42));
+    root.style.setProperty("--surface-elevated", customElevated);
+    root.style.setProperty("--surface-hover", customHover);
+    root.style.setProperty("--text", customText);
+    root.style.setProperty("--text-secondary", colorMix(customText, customSurface, .24));
+    root.style.setProperty("--text-strong", colorMix(customText, "#ffffff", .18));
+    root.style.setProperty("--muted", colorMix(customText, customSurface, .42));
+    root.style.setProperty("--accent", customAccent);
+    root.style.setProperty("--accent-strong", colorMix(customAccent, "#000000", .18));
+    root.style.setProperty("--accent-bright", colorMix(customAccent, "#ffffff", .18));
+    root.style.setProperty("--accent-hover-color", colorMix(customAccent, "#ffffff", .10));
+    root.style.setProperty("--waypoint-green", customAccent);
+    root.style.setProperty("--border", hexToRgba(customText, .20));
+    root.style.setProperty("--card-border", hexToRgba(customText, .24));
+    root.style.setProperty("--card-background", `linear-gradient(145deg, color-mix(in srgb, ${customElevated} ${sectionCardOpacityPercent}%, transparent), color-mix(in srgb, ${customSurface} ${sectionCardOpacityPercent}%, transparent))`);
+    root.style.setProperty("--card-icon-surface", customElevated);
   } else {
-    root.style.setProperty("--waypoint-green", "#00d084");
-    root.style.setProperty("--surface", theme.panel);
-    root.style.setProperty("--surface-strong", theme.panelStrong);
-    root.style.setProperty("--surface-soft", "rgba(5, 9, 18, .16)");
-    root.style.setProperty("--accent-hover", "var(--accent-soft)");
+    root.style.setProperty("--bg", theme.page);
+    root.style.setProperty("--panel", hexToRgba(theme.surface, .80));
+    root.style.setProperty("--panel-strong", hexToRgba(theme.surface, .96));
+    root.style.setProperty("--surface", hexToRgba(theme.surface, .82));
+    root.style.setProperty("--surface-strong", hexToRgba(theme.surface, .96));
+    root.style.setProperty("--surface-soft", hexToRgba(theme.surface, .42));
+    root.style.setProperty("--surface-elevated", theme.elevated);
+    root.style.setProperty("--surface-hover", theme.hover);
+    root.style.setProperty("--text", theme.text);
+    root.style.setProperty("--text-secondary", theme.textSecondary);
+    root.style.setProperty("--text-strong", theme.textStrong);
+    root.style.setProperty("--muted", theme.textMuted);
+    root.style.setProperty("--accent", theme.accent);
+    root.style.setProperty("--accent-strong", theme.accentStrong);
+    root.style.setProperty("--accent-bright", theme.accentBright);
+    root.style.setProperty("--accent-hover-color", theme.accentHover);
+    root.style.setProperty("--waypoint-green", theme.accentHover);
+    root.style.setProperty("--border", hexToRgba(theme.textSecondary, .18));
+    root.style.setProperty("--card-border", theme.cardBorder);
+    root.style.setProperty("--card-background", `linear-gradient(145deg, ${hexToRgba(theme.cardTop, sectionCardOpacity)}, ${hexToRgba(theme.cardBottom, sectionCardOpacity)})`);
+    root.style.setProperty("--card-icon-surface", theme.iconSurface);
   }
-  root.style.setProperty("--text", data.settings.customText);
-  root.style.setProperty("--muted", colorMix(data.settings.customText, "#808080", .45));
-  root.style.setProperty("--window-opacity-percent", `${data.settings.windowTransparency}%`);
-  root.style.setProperty("--terminal-opacity", String(data.settings.terminalTransparency / 100));
+  root.style.setProperty("--accent-soft", "color-mix(in srgb, var(--accent-hover-color) 18%, transparent)");
+  root.style.setProperty("--accent-hover", "color-mix(in srgb, var(--accent-hover-color) 16%, transparent)");
 
-  if (data.settings.useCustomTextColors) {
+  if (data.settings.useCustomAppearance) {
     root.style.setProperty("--section-title-color", data.settings.sectionTitleColor);
     root.style.setProperty("--bookmark-text-color", data.settings.bookmarkTextColor);
     root.style.setProperty("--custom-muted-text", data.settings.mutedTextColor);
@@ -1608,7 +1852,10 @@ function applyTheme() {
       bg.style.backgroundImage = custom ? `url("${custom}"), ${theme.gradient}` : `url("${theme.wallpaper}"), ${theme.gradient}`;
     } else bg.style.backgroundImage = `url("${theme.wallpaper}"), ${theme.gradient}`;
   }
-  if (overlay) overlay.style.background = `rgba(0,0,0,${data.settings.overlay / 100})`;
+  if (overlay) {
+    const overlayColor = theme.scheme === "light" ? "255,255,255" : "0,0,0";
+    overlay.style.background = `rgba(${overlayColor},${data.settings.overlay / 100})`;
+  }
 }
 
 function getHeroSrc() {
@@ -1657,16 +1904,10 @@ function syncControls() {
   setValue("themeSelect", s.theme);
   setValue("fontSelect", s.fontFamily);
   setValue("uiScaleSlider", s.uiScale);
-  setValue("customColorsSelect", String(!!s.useCustomColors));
+  setValue("customAppearanceSelect", String(!!s.useCustomAppearance));
   setValue("accentColorInput", s.customAccent);
   setValue("panelColorInput", s.customPanel);
   setValue("globalTextColorInput", s.customText);
-  setValue("windowTransparencySlider", s.windowTransparency);
-  setText("windowTransparencyValue", `${s.windowTransparency}%`);
-  setValue("terminalTransparencySlider", s.terminalTransparency);
-  setText("terminalTransparencyValue", `${s.terminalTransparency}%`);
-  document.querySelectorAll(".custom-text-only input").forEach(input => input.disabled = !s.useCustomTextColors);
-  setValue("customTextColorsSelect", String(!!s.useCustomTextColors));
   setValue("sectionTitleColorInput", s.sectionTitleColor);
   setValue("bookmarkTextColorInput", s.bookmarkTextColor);
   setValue("mutedTextColorInput", s.mutedTextColor);
@@ -1678,7 +1919,7 @@ function syncControls() {
   const templateLabel = WORKSPACE_TEMPLATES[workspace.template || "classic"]?.label || "Classic";
   const placedCount = Object.values(workspace.slots || {}).filter(slot => slot && slot !== "hidden").length;
   setText("workspaceTemplateStatus", `Workspace · ${workspace.modified ? "Customized" : templateLabel}`);
-  setText("workspaceTemplateDescription", `${workspace.modified ? `Based on ${templateLabel}` : WORKSPACE_TEMPLATES[workspace.template || "classic"]?.description || "Workspace template"} · ${placedCount} items placed · ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero"}`);
+  setText("workspaceTemplateDescription", `${workspace.modified ? `Based on ${templateLabel}` : WORKSPACE_TEMPLATES[workspace.template || "classic"]?.description || "Workspace template"} · ${placedCount} items placed · ${WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Header"}`);
   setValue("showLogoSelect", String(s.showLogo !== false));
   setValue("showWordmarkSelect", String(s.showWordmark !== false));
   setValue("showClockSelect", String(s.showClock !== false));
@@ -1689,7 +1930,7 @@ function syncControls() {
   setValue("heroStyleSelect", s.heroStyle);
   setValue("shortcutSelect", s.shortcut);
   setValue("bookmarkLayoutSelect", s.bookmarkLayout || "list");
-  setValue("bookmarkColumnsSelect", s.bookmarkColumns || "auto");
+  setValue("keyboardNavigationSelect", String(!!s.keyboardNavigation));
   setValue("bookmarkFontSlider", s.bookmarkFontSize);
   setValue("bookmarkIconSlider", s.bookmarkIconSize);
   setValue("customCssInput", s.customCss || "");
@@ -1701,13 +1942,23 @@ function syncControls() {
   setText("uiScaleValue", `${s.uiScale}%`);
   setText("bookmarkFontValue", `${s.bookmarkFontSize}px`);
   setText("bookmarkIconValue", `${s.bookmarkIconSize}px`);
+  updateCustomAppearanceControls();
   updateWorkspaceAwareSettings();
+}
+
+function updateCustomAppearanceControls() {
+  const enabled = data.settings.useCustomAppearance === true;
+  const container = document.querySelector("[data-custom-appearance]");
+  container?.classList.toggle("custom-appearance-disabled", !enabled);
+  container?.querySelectorAll("input, select, textarea, button").forEach(control => {
+    control.disabled = !enabled;
+  });
 }
 
 function updateWorkspaceAwareSettings() {
   const workspace = canonicalizeWorkspace();
   const bannerUnavailable = workspace.slots.hero === "hidden" && data.settings.bannerHiddenByWorkspace === true;
-  const bannerControlIds = ["heroStyleSelect", "heroHeightPresetSelect", "imageUpload", "resetHeroBtn", "resetBannerBtn"];
+  const bannerControlIds = ["heroStyleSelect", "heroHeightPresetSelect", "imageUpload", "resetHeroBtn"];
   bannerControlIds.forEach(id => {
     const el = $(id);
     if (!el) return;
@@ -1746,7 +1997,8 @@ function setBannerSize(size) {
 function updateLogoPrompt() {
   const text = `${displayUserName()}@waypoint:~$`;
   setText("logoPrompt", text);
-  setText("commandPromptLabel", text);
+  const commandPrompt = $("commandPromptLabel");
+  if (commandPrompt) commandPrompt.innerHTML = terminalPromptMarkup();
 }
 
 function positionTerminal() {
@@ -1779,11 +2031,13 @@ function positionSettings() {
 }
 
 function openSettingsPage(page = "appearance") {
-  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === page));
-  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === page));
+  const targetPage = normalizeSettingsPage(page);
+  document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === targetPage));
+  document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === targetPage));
   openModal("settingsModal");
 }
 function openModal(id) {
+  clearSectionFocus();
   $(id)?.classList.remove("hidden");
   if (id === "terminalModal") {
     renderTerminal();
@@ -1799,12 +2053,14 @@ function render() {
   syncLegacyVisibilityFromWorkspace();
   document.body.classList.toggle("bookmark-list-layout", (data.settings.bookmarkLayout || "list") === "list");
   document.body.classList.toggle("bookmark-grid-layout", (data.settings.bookmarkLayout || "list") === "grid");
+  document.body.classList.toggle("keyboard-navigation-enabled", data.settings.keyboardNavigation === true);
   applyTheme();
   applyPersonalization();
   applyHero();
   updateLogoPrompt();
   syncControls();
   renderSections();
+  syncSectionFocusDom();
   applyWidgetFoundation();
   ensureWorkspaceLauncher();
   updateEditLayoutBar();
@@ -1818,6 +2074,7 @@ function renderSections() {
   if (!container) return;
   container.innerHTML = "";
 
+  const keyMap = navigationKeyMap();
   data.sections.forEach((section, sectionIndex) => {
     const sectionEl = document.createElement("article");
     sectionEl.className = `section waypoint-widget-section${section.links.length ? "" : " empty-section"}`;
@@ -1828,27 +2085,33 @@ function renderSections() {
     sectionEl.dataset.sectionIndex = sectionIndex;
     sectionEl.innerHTML = `
       <div class="section-header">
-        <span class="section-name" contenteditable="true" spellcheck="false">${escapeHtml(section.name)}</span>
+        <span class="section-generated-icon" aria-hidden="true">${sectionGeneratedIcon(section.name, section.links)}</span>
+        <span class="section-name">${escapeHtml(section.name)}</span>
       </div>
       <div class="section-actions">
+        <kbd class="keyboard-hint section-key-hint" aria-hidden="true">${escapeHtml(keyMap[sectionIndex].key.toUpperCase())}</kbd>
         <button class="section-action add-link-btn" title="Add link" type="button">+</button>
+        <button class="section-action section-rename" title="Rename section" type="button" aria-label="Rename section">✎</button>
         <button class="section-action section-delete" title="Delete section" type="button">×</button>
+        <button class="section-action section-focus-close" title="Close section" type="button" aria-label="Close focused section">×</button>
       </div>
+      <div class="category-summary">${section.links.length} ${section.links.length === 1 ? "bookmark" : "bookmarks"}</div>
       <div class="links" data-section-index="${sectionIndex}"></div>
     `;
 
-    const nameEl = sectionEl.querySelector(".section-name");
-    nameEl.addEventListener("blur", () => {
-      data.sections[sectionIndex].name = nameEl.textContent.trim() || "Untitled";
-      save();
-      renderTerminal();
-    });
-    nameEl.addEventListener("keydown", event => {
-      if (event.key === "Enter") { event.preventDefault(); nameEl.blur(); }
-    });
-
     sectionEl.querySelector(".add-link-btn").addEventListener("click", () => openLinkModal(sectionIndex));
+    sectionEl.querySelector(".section-rename").addEventListener("click", () => openRenameSectionModal(sectionIndex));
     sectionEl.querySelector(".section-delete").addEventListener("click", () => deleteSection(sectionIndex));
+    sectionEl.querySelector(".section-focus-close").addEventListener("click", event => {
+      event.stopPropagation();
+      clearKeyboardNavigation();
+      clearSectionFocus();
+    });
+    sectionEl.addEventListener("click", event => {
+      if (event.target.closest(".link, .section-actions")) return;
+      event.stopPropagation();
+      focusBookmarkSection(sectionIndex);
+    });
 
     setupSectionDrag(sectionEl, sectionIndex);
     const linksContainer = sectionEl.querySelector(".links");
@@ -1868,6 +2131,7 @@ function renderSections() {
       row.innerHTML = `
         <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(fallbackIcon)}</span>
         <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
+        <kbd class="keyboard-hint link-key-hint" aria-hidden="true">${escapeHtml(keyMap[sectionIndex].linkKeys[linkIndex].toUpperCase())}</kbd>
         <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
         <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
         <span class="delete-link" title="Delete link" aria-label="Delete link">×</span>
@@ -1882,6 +2146,7 @@ function renderSections() {
       }
       row.addEventListener("click", event => {
         if (event.target.closest(".delete-link") || event.target.closest(".edit-link") || event.defaultPrevented) return;
+        clearSectionFocus();
         if (handleWaypointLink(link.url)) return;
         window.location.href = link.url;
       });
@@ -1945,6 +2210,15 @@ function setupSectionDrag(sectionEl, sectionIndex) {
     if (draggedLink) {
       event.preventDefault();
       event.stopPropagation();
+      if (event.target.closest(".link")) return;
+      clearLinkDropMarkers();
+      sectionEl.querySelector(".links")?.classList.add("drag-over");
+      return;
+    }
+    if (draggedSectionIndex === null && hasDroppedUrl(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      clearLinkDropMarkers();
       sectionEl.querySelector(".links")?.classList.add("drag-over");
       return;
     }
@@ -1962,8 +2236,15 @@ function setupSectionDrag(sectionEl, sectionIndex) {
     if (draggedLink) {
       event.preventDefault();
       event.stopPropagation();
+      if (event.target.closest(".link")) return;
       sectionEl.querySelector(".links")?.classList.remove("drag-over");
       moveLink(draggedLink.sectionIndex, draggedLink.linkIndex, sectionIndex, data.sections[sectionIndex].links.length);
+      return;
+    }
+    if (draggedSectionIndex === null && handleExternalBookmarkDrop(sectionIndex, event.dataTransfer)) {
+      event.preventDefault();
+      event.stopPropagation();
+      sectionEl.querySelector(".links")?.classList.remove("drag-over");
       return;
     }
     if (draggedSectionIndex === null || draggedSectionIndex === sectionIndex) return;
@@ -1981,32 +2262,42 @@ function setupSectionDrag(sectionEl, sectionIndex) {
 
 function setupLinkDrag(row, sectionIndex, linkIndex) {
   row.addEventListener("dragstart", event => {
+    event.stopPropagation();
     draggedLink = { sectionIndex, linkIndex };
     draggedSectionIndex = null;
     row.classList.add("dragging-link");
+    document.body.classList.add("dragging-bookmark");
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("application/x-startpage-link", JSON.stringify(draggedLink));
   });
   row.addEventListener("dragend", () => {
     draggedLink = null;
+    activeLinkDropTarget = null;
     clearLinkDragClasses();
   });
   row.addEventListener("dragover", event => {
     if (!draggedLink) return;
     event.preventDefault();
-    const rect = row.getBoundingClientRect();
-    const before = event.clientY < rect.top + rect.height / 2;
+    event.stopPropagation();
+    const before = isBeforeLinkDropPoint(row, event);
     clearLinkDropMarkers();
     row.classList.toggle("link-drop-before", before);
     row.classList.toggle("link-drop-after", !before);
+    activeLinkDropTarget = { sectionIndex: Number(row.dataset.sectionIndex), linkIndex: Number(row.dataset.linkIndex), before };
+    row.closest(".links")?.classList.add("drag-over");
+  });
+  row.addEventListener("dragleave", event => {
+    if (!row.contains(event.relatedTarget)) clearLinkDropMarkers();
   });
   row.addEventListener("drop", event => {
     if (!draggedLink) return;
     event.preventDefault();
+    event.stopPropagation();
     const targetSection = Number(row.dataset.sectionIndex);
     let targetIndex = Number(row.dataset.linkIndex);
-    const rect = row.getBoundingClientRect();
-    const before = event.clientY < rect.top + rect.height / 2;
+    const before = activeLinkDropTarget?.sectionIndex === targetSection && activeLinkDropTarget?.linkIndex === targetIndex
+      ? activeLinkDropTarget.before
+      : isBeforeLinkDropPoint(row, event);
     if (!before) targetIndex += 1;
     moveLink(draggedLink.sectionIndex, draggedLink.linkIndex, targetSection, targetIndex);
   });
@@ -2014,46 +2305,147 @@ function setupLinkDrag(row, sectionIndex, linkIndex) {
 
 function setupLinkDropZone(zone, sectionIndex) {
   zone.addEventListener("dragover", event => {
+    if (!draggedLink && !hasDroppedUrl(event)) return;
+    if (event.target.closest(".link")) return;
     event.preventDefault();
+    event.stopPropagation();
+    clearLinkDropMarkers();
     zone.classList.add("drag-over");
   });
   zone.addEventListener("dragleave", event => {
     if (!zone.contains(event.relatedTarget)) zone.classList.remove("drag-over");
   });
   zone.addEventListener("drop", event => {
+    if (event.target.closest(".link")) return;
     event.preventDefault();
+    event.stopPropagation();
     zone.classList.remove("drag-over");
     if (draggedLink) {
       moveLink(draggedLink.sectionIndex, draggedLink.linkIndex, sectionIndex, data.sections[sectionIndex].links.length);
       return;
     }
-    const droppedUrl = event.dataTransfer.getData("text/uri-list") || event.dataTransfer.getData("text/plain");
-    if (!/^https?:\/\//i.test(droppedUrl)) return;
-    try {
-      const url = new URL(droppedUrl);
-      data.sections[sectionIndex].links.push({ name: url.hostname.replace(/^www\./, ""), url: droppedUrl });
-      save();
-      render();
-    } catch {}
+    handleExternalBookmarkDrop(sectionIndex, event.dataTransfer);
   });
+}
+
+function isBeforeLinkDropPoint(row, event) {
+  const rect = row.getBoundingClientRect();
+  const links = row.closest(".links");
+  const isGrid = links && getComputedStyle(links).display === "grid";
+  if (!isGrid) return event.clientY < rect.top + rect.height / 2;
+  const y = (event.clientY - rect.top) / rect.height;
+  if (y < .3) return true;
+  if (y > .7) return false;
+  return event.clientX < rect.left + rect.width / 2;
+}
+
+function hasDroppedUrl(event) {
+  const types = Array.from(event.dataTransfer?.types || []);
+  return types.includes("text/uri-list") || types.includes("text/x-moz-url") || types.includes("text/html") || types.includes("text/plain");
+}
+
+function handleExternalBookmarkDrop(sectionIndex, dataTransfer) {
+  const droppedBookmark = getDroppedBookmarkData(dataTransfer);
+  if (!droppedBookmark) return false;
+  openLinkModal(sectionIndex, null, droppedBookmark);
+  return true;
+}
+
+function getDroppedBookmarkData(dataTransfer) {
+  if (!dataTransfer) return null;
+  const mozData = parseMozUrlData(dataTransfer.getData("text/x-moz-url"));
+  const htmlData = parseHtmlLinkData(dataTransfer.getData("text/html"));
+  const uriUrl = firstUriListUrl(dataTransfer.getData("text/uri-list"));
+  const plainText = dataTransfer.getData("text/plain");
+  const plainUrl = firstUrlFromText(plainText);
+  const url = normalizeUrl(uriUrl || mozData.url || htmlData.url || plainUrl);
+  if (!url) return null;
+  const name = cleanDroppedBookmarkName(
+    mozData.name || htmlData.name || titleFromDroppedText(plainText, url) || titleFromUrl(url)
+  );
+  return { name, url };
+}
+
+function parseMozUrlData(value) {
+  const lines = String(value || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  if (!lines.length) return { url: "", name: "" };
+  return { url: firstUrlFromText(lines[0]), name: lines[1] || "" };
+}
+
+function parseHtmlLinkData(value) {
+  const html = String(value || "").trim();
+  if (!html) return { url: "", name: "" };
+  try {
+    const link = new DOMParser().parseFromString(html, "text/html").querySelector("a[href]");
+    if (!link) return { url: "", name: "" };
+    return { url: link.getAttribute("href") || "", name: link.textContent || link.getAttribute("title") || "" };
+  } catch {
+    return { url: "", name: "" };
+  }
+}
+
+function firstUriListUrl(value) {
+  return String(value || "").split(/\r?\n/).map(line => line.trim()).find(line => line && !line.startsWith("#")) || "";
+}
+
+function firstUrlFromText(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  if (isLikelyDroppedUrl(text) && normalizeUrl(text)) return text;
+  const lineUrl = text.split(/\r?\n/).map(line => line.trim()).find(line => isLikelyDroppedUrl(line) && normalizeUrl(line));
+  if (lineUrl) return lineUrl;
+  return text.match(/(?:https?:\/\/|mailto:|tel:|www\.)[^\s<>"']+/i)?.[0] || "";
+}
+
+function titleFromDroppedText(value, url) {
+  const normalizedUrl = normalizeUrl(url);
+  return String(value || "").split(/\r?\n/)
+    .map(line => cleanDroppedBookmarkName(line))
+    .find(line => line && (!isLikelyDroppedUrl(line) || normalizeUrl(line) !== normalizedUrl)) || "";
+}
+
+function titleFromUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname ? parsed.hostname.replace(/^www\./i, "") : url;
+  } catch {
+    return url;
+  }
+}
+
+function cleanDroppedBookmarkName(value) {
+  return String(value || "").replace(/\s+/g, " ").trim().slice(0, 120);
+}
+
+function isLikelyDroppedUrl(value) {
+  const text = String(value || "").trim();
+  return /^(https?:\/\/|mailto:|tel:|www\.)/i.test(text) || /^[^\s:/?#]+\.[^\s]+/i.test(text);
 }
 
 function moveLink(fromSection, fromIndex, toSection, toIndex) {
   if (!data.sections[fromSection] || !data.sections[toSection]) return;
+  fromIndex = Number(fromIndex);
+  toIndex = Number(toIndex);
+  if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex)) return;
   const [moved] = data.sections[fromSection].links.splice(fromIndex, 1);
   if (!moved) return;
   if (fromSection === toSection && fromIndex < toIndex) toIndex -= 1;
   toIndex = clamp(toIndex, 0, data.sections[toSection].links.length, data.sections[toSection].links.length);
   data.sections[toSection].links.splice(toIndex, 0, moved);
   draggedLink = null;
+  activeLinkDropTarget = null;
+  clearLinkDragClasses();
   save();
   render();
 }
 
 function clearLinkDropMarkers() { document.querySelectorAll(".link-drop-before,.link-drop-after").forEach(el => el.classList.remove("link-drop-before", "link-drop-after")); }
-function clearLinkDragClasses() { document.querySelectorAll(".dragging-link,.drag-over,.link-drop-before,.link-drop-after").forEach(el => el.classList.remove("dragging-link", "drag-over", "link-drop-before", "link-drop-after")); }
+function clearLinkDragClasses() {
+  document.body.classList.remove("dragging-bookmark");
+  document.querySelectorAll(".dragging-link,.drag-over,.link-drop-before,.link-drop-after").forEach(el => el.classList.remove("dragging-link", "drag-over", "link-drop-before", "link-drop-after"));
+}
 
-function openLinkModal(sectionIndex, linkIndex = null) {
+function openLinkModal(sectionIndex, linkIndex = null, initialValues = {}) {
   activeSection = sectionIndex;
   editingLink = linkIndex === null ? null : { sectionIndex, linkIndex };
   const title = $("linkModalTitle");
@@ -2072,8 +2464,8 @@ function openLinkModal(sectionIndex, linkIndex = null) {
   } else {
     pendingLinkIcon = "";
     if (title) title.textContent = "Add Link";
-    if (nameInput) nameInput.value = "";
-    if (urlInput) urlInput.value = "";
+    if (nameInput) nameInput.value = initialValues.name || "";
+    if (urlInput) urlInput.value = initialValues.url || "";
   }
   if (iconPreview) {
     const previewSrc = pendingLinkIcon || favicon(urlInput?.value || "");
@@ -2159,6 +2551,65 @@ function createSectionFromModal() {
   closeModal("sectionModal");
 }
 
+function openRenameSectionModal(sectionIndex) {
+  const section = data.sections[sectionIndex];
+  if (!section) return;
+  ensureRenameSectionModal();
+  renamingSectionIndex = sectionIndex;
+  const input = $("renameSectionNameInput");
+  if (input) input.value = section.name;
+  openModal("renameSectionModal");
+  setTimeout(() => {
+    input?.focus();
+    input?.select();
+  }, 50);
+}
+
+function ensureRenameSectionModal() {
+  if ($("renameSectionModal")) return;
+  const modal = document.createElement("div");
+  modal.className = "modal hidden";
+  modal.id = "renameSectionModal";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-labelledby", "renameSectionModalTitle");
+  modal.innerHTML = `
+    <div class="modal-content compact-modal section-rename-modal">
+      <button class="modal-close" data-close-modal="renameSectionModal" aria-label="Close">×</button>
+      <h3 id="renameSectionModalTitle">Rename Section</h3>
+      <label>Section Name<input id="renameSectionNameInput" maxlength="80"></label>
+      <div class="modal-actions">
+        <button id="renameSectionBtn" class="primary-btn" type="button">Rename</button>
+        <button class="ghost-btn" data-close-modal="renameSectionModal" type="button">Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener("click", event => {
+    if (event.target === modal) closeModal("renameSectionModal");
+  });
+  modal.querySelectorAll("[data-close-modal]").forEach(button => {
+    button.addEventListener("click", () => closeModal(button.dataset.closeModal));
+  });
+  modal.querySelector("#renameSectionBtn")?.addEventListener("click", renameSectionFromModal);
+  modal.querySelector("#renameSectionNameInput")?.addEventListener("keydown", event => {
+    if (event.key === "Enter") renameSectionFromModal();
+    if (event.key === "Escape") closeModal("renameSectionModal");
+  });
+}
+
+function renameSectionFromModal() {
+  const sectionIndex = renamingSectionIndex;
+  const nextName = $("renameSectionNameInput")?.value.trim();
+  if (!Number.isInteger(sectionIndex) || !data.sections[sectionIndex] || !nextName) return;
+  data.sections[sectionIndex].name = nextName;
+  renamingSectionIndex = null;
+  save();
+  render();
+  closeModal("renameSectionModal");
+  focusBookmarkSection(sectionIndex);
+}
+
 function addSection(name = "") {
   const sectionName = String(name || "").trim();
   if (!sectionName) return openSectionModal();
@@ -2223,7 +2674,7 @@ function deleteSectionByCommand(sectionName) {
   const sectionIndex = findSectionIndexByName(sectionName);
   if (sectionIndex < 0) return `No section named <strong>${escapeHtml(sectionName)}</strong>.`;
   deleteSection(sectionIndex);
-  return `Delete request handled for <strong>${escapeHtml(sectionName)}</strong>.`;
+  return `Deleted section <strong>${escapeHtml(sectionName)}</strong>.`;
 }
 
 function buildFastfetchHtml() {
@@ -2231,7 +2682,7 @@ function buildFastfetchHtml() {
     const theme = getTheme();
     const modified = data.settings.lastModified ? formatRelativeDate(new Date(data.settings.lastModified)) : "Never";
     const workspace = canonicalizeWorkspace();
-    const hero = WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Hero";
+    const pageHeader = WORKSPACE_HERO_STYLES[workspaceHeroStyle(workspace)]?.label || "Standard Header";
     const workspaceLabel = workspace.modified ? "Custom" : (WORKSPACE_TEMPLATES[workspace.template || "classic"]?.label || "Default");
     const weather = data.settings.showWeather === false ? "Hidden" : (data.settings.weatherLocation ? `${data.settings.weatherLocation} (${labelWeatherUnit(data.settings.weatherUnit)})` : "Not set");
     const rows = [
@@ -2240,7 +2691,7 @@ function buildFastfetchHtml() {
       ["Runtime", runtimeLabel()],
       ["Theme", theme.label],
       ["Workspace", workspaceLabel],
-      ["Hero", hero],
+      ["Page Header", pageHeader],
       ["Search", labelSearch(data.settings.searchEngine)],
       ["Bookmarks", countBookmarks()],
       ["Sections", data.sections.length],
@@ -2248,16 +2699,9 @@ function buildFastfetchHtml() {
       ["Weather", weather],
       ["Modified", modified]
     ];
-    const logo = [
-      "  /\\/|  __",
-      " |/\\/  / /",
-      "      / /",
-      "     / /",
-      "    /_/____",
-      "     |_____|"]
-      .join("\n");
-    const info = `${displayUserName()}@waypoint\n-----------------\n${rows.map(([key, value]) => `${String(key).padEnd(10)} ${value}`).join("\n")}`;
-    return `<div class="fetch-output"><pre class="fetch-logo">${escapeHtml(logo)}</pre><pre class="fetch-info">${escapeHtml(info)}</pre></div>`;
+    const title = `<div class="fetch-heading"><span class="fetch-user">${escapeHtml(displayUserName())}</span><span class="fetch-at">@</span><span class="fetch-host">waypoint</span></div>`;
+    const rowHtml = rows.map(([key, value]) => `<div class="fetch-row-line"><span class="fetch-key">${escapeHtml(key)}</span><span class="fetch-value">${escapeHtml(value)}</span></div>`).join("");
+    return `<div class="fetch-output"><div class="fetch-logo"><img src="img/waypoint-logo.svg" alt="" aria-hidden="true"></div><div class="fetch-info">${title}<div class="fetch-rule"></div><div class="fetch-rows">${rowHtml}</div></div></div>`;
   } catch (error) {
     console.error("fetch command failed", error);
     return commandResult("fetch: unable to build system summary", "terminal-error");
@@ -2271,6 +2715,10 @@ function renderTerminal() {
 
 function terminalPrompt() {
   return `${displayUserName()}@waypoint:~$`;
+}
+
+function terminalPromptMarkup() {
+  return `<span class="prompt-user">${escapeHtml(displayUserName())}</span><span class="prompt-at">@</span><span class="prompt-host">waypoint</span><span class="prompt-path">:~</span><span class="prompt-symbol">$</span>`;
 }
 
 function renderTerminalBuffer() {
@@ -2299,10 +2747,10 @@ function terminalPre(text, className = "") {
 }
 
 function terminalEcho(command) {
-  return `<div class="terminal-echo"><span>${escapeHtml(terminalPrompt())}</span> ${escapeHtml(command)}</div>`;
+  return `<div class="terminal-echo"><span class="terminal-echo-prompt">${terminalPromptMarkup()}</span> <span class="terminal-echo-command">${escapeHtml(command)}</span></div>`;
 }
 
-function labelHero(value) { return ({ desktop: "Desktop", atmo: "Atmosphere", custom: "Custom", hidden: "Hidden" })[value] || "Theme Default"; }
+function labelBannerStyle(value) { return ({ desktop: "Desktop", atmo: "Atmosphere", custom: "Custom", hidden: "Hidden" })[value] || "Theme Default"; }
 function labelBackground(value) { return ({ wallpaper: "Theme Wallpaper", gradient: "Theme Gradient", custom: "Custom" })[value] || value; }
 function labelShortcut(value) { return ({ altT: "Alt+T", ctrlShiftSpace: "Ctrl+Shift+Space", none: "Disabled" })[value] || value; }
 
@@ -2559,9 +3007,11 @@ function buildHelpText(topic = "") {
 Change the active theme.
 
 Available themes:
+  daylight
   nord
   catppuccin
   gruvbox
+  graphite
   tokyo
 
 Examples:
@@ -2620,7 +3070,7 @@ Common commands:
   fetch                         Show Waypoint system info
   help                          Show this help
   help <topic>                  Show help for a command group
-  man css                       Show Custom CSS examples
+  help css                      Show Custom CSS examples
   settings                      Open Settings
   settings appearance           Open a Settings page
   theme nord                    Change theme
@@ -2628,10 +3078,9 @@ Common commands:
   layout list                   Change bookmark layout
   show weather                  Show a UI element
   hide title                    Hide a UI element
-  font jetbrains                Change font
+  font system                   Change interface font
   accent #00d084               Set accent color
   surface #09111a              Set surface color
-  transparency 92              Set window transparency
   titlecolor #d8dee9           Set section title color
   engine duckduckgo             Change search engine
   weather Russellville, AR      Set weather location
@@ -2655,7 +3104,7 @@ function buildCssManualText() {
 
 Custom CSS is applied last, so it can override Waypoint styling.
 Use it for small personal tweaks. Bad CSS can make the page ugly or hide controls.
-Clear it from Settings > Advanced if you break something.
+Clear it from Settings > Appearance if you break something.
 
 Change the main accent color:
 :root {
@@ -2675,6 +3124,12 @@ Make bookmark cards rounder:
 Make sections more transparent:
 .section {
   background: rgba(5, 9, 18, .35) !important;
+}
+
+Change section hover and terminal opacity:
+:root {
+  --section-card-opacity-percent: 80%;
+  --terminal-opacity: .8;
 }
 
 Make the search bar wider:
@@ -2849,6 +3304,22 @@ function bindEvents() {
       location.href = form.dataset.customSearch.replace("%s", encodeURIComponent(query));
     }
   });
+  $("searchInput")?.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.currentTarget.blur();
+    clearKeyboardNavigation();
+  });
+  $("sectionFocusBackdrop")?.addEventListener("click", () => {
+    clearKeyboardNavigation();
+    clearSectionFocus();
+  });
+  document.addEventListener("click", event => {
+    if (focusedSectionIndex === null || event.target.closest(".section-focused, .modal")) return;
+    clearKeyboardNavigation();
+    clearSectionFocus();
+  });
   $("linkUrl")?.addEventListener("keydown", e => { if (e.key === "Enter") saveLink(); });
   $("linkName")?.addEventListener("keydown", e => { if (e.key === "Enter") $("linkUrl")?.focus(); });
   $("linkUrl")?.addEventListener("input", e => {
@@ -2914,18 +3385,22 @@ function bindEvents() {
   bindSetting("themeSelect", "change", value => { data.settings.theme = value; save(); render(); });
   bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); render(); });
   bindNumber("uiScaleSlider", "uiScale", () => applyPersonalization());
-  bindSetting("customColorsSelect", "change", value => { data.settings.useCustomColors = value === "true"; save(); render(); });
-  bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; data.settings.useCustomColors = true; save(); render(); });
-  bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; data.settings.useCustomColors = true; save(); render(); });
+  bindSetting("customAppearanceSelect", "change", value => {
+    const enabled = value === "true";
+    data.settings.useCustomAppearance = enabled;
+    data.settings.useCustomColors = enabled;
+    data.settings.useCustomTextColors = enabled;
+    save();
+    render();
+  });
+  bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; save(); render(); });
+  bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; save(); render(); });
   bindSetting("globalTextColorInput", "input", value => { data.settings.customText = value; save(); render(); });
-  bindNumber("windowTransparencySlider", "windowTransparency", () => render());
-  bindNumber("terminalTransparencySlider", "terminalTransparency", () => render());
-  bindSetting("customTextColorsSelect", "change", value => { data.settings.useCustomTextColors = value === "true"; save(); render(); });
-  bindSetting("sectionTitleColorInput", "input", value => { data.settings.sectionTitleColor = value; data.settings.useCustomTextColors = true; save(); render(); });
-  bindSetting("bookmarkTextColorInput", "input", value => { data.settings.bookmarkTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
-  bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
-  bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
-  bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; data.settings.useCustomTextColors = true; save(); render(); });
+  bindSetting("sectionTitleColorInput", "input", value => { data.settings.sectionTitleColor = value; save(); render(); });
+  bindSetting("bookmarkTextColorInput", "input", value => { data.settings.bookmarkTextColor = value; save(); render(); });
+  bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; save(); render(); });
+  bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; save(); render(); });
+  bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; save(); render(); });
   $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); render(); });
   bindSetting("workspaceHeroStyleSelect", "change", value => { setWorkspaceHeroStyle(value); save(); render(); });
   bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); render(); });
@@ -2940,7 +3415,12 @@ function bindEvents() {
     if (event.target.closest(".waypoint-widget") || event.target.closest("#workspaceDesignerPanel")) return;
     clearWorkspaceSelection();
   });
-  bindSetting("bookmarkColumnsSelect", "change", value => { data.settings.bookmarkColumns = value; save(); render(); });
+  bindSetting("keyboardNavigationSelect", "change", value => {
+    data.settings.keyboardNavigation = value === "true";
+    clearKeyboardNavigation();
+    save();
+    render();
+  });
   bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
   bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
   bindSetting("customCssInput", "input", value => { data.settings.customCss = value.slice(0, 8000); save(); applyPersonalization(); });
@@ -2987,7 +3467,19 @@ function bindEvents() {
   document.addEventListener("keydown", event => {
     if (welcomeGuideState.active && event.key === "Escape") return;
     if (event.key === "Escape" && editLayoutActive) return setEditLayoutMode(false);
+    if (event.key === "Escape" && keyboardNavigationSection !== null) {
+      event.preventDefault();
+      clearKeyboardNavigation();
+      clearSectionFocus();
+      return;
+    }
+    if (event.key === "Escape" && focusedSectionIndex !== null) {
+      event.preventDefault();
+      clearSectionFocus();
+      return;
+    }
     if (event.key === "Escape") return closeAllModals();
+    if (handleKeyboardNavigation(event)) return;
     if (event.target.matches("input, textarea, select") || event.target.isContentEditable) return;
     if (data.settings.shortcut === "altT" && event.altKey && !event.ctrlKey && !event.shiftKey && event.key.toLowerCase() === "t") {
       event.preventDefault(); openModal("terminalModal");
@@ -3006,6 +3498,9 @@ async function initWaypoint() {
   data = await loadInitialProfile();
   bindEvents();
   render();
+  if (data.settings.keyboardNavigation && document.activeElement === $("searchInput")) {
+    $("searchInput").blur();
+  }
   updateClock();
   setInterval(updateClock, 1000);
   refreshWeather(false);
@@ -3033,9 +3528,7 @@ function currentConfigText() {
     `Search engine: ${labelSearch(s.searchEngine)}`,
     `Weather: ${s.showWeather === false ? "Hidden" : "Shown"}`,
     `Clock: ${s.showClock === false ? "Hidden" : "Shown"}`,
-    `Section titles: ${s.showSectionTitles === false ? "Hidden" : "Shown"}`,
-    `Window transparency: ${s.windowTransparency}%`,
-    `Terminal transparency: ${s.terminalTransparency}%`,
+    `Grid section titles: ${s.showSectionTitles === false ? "Hidden" : "Shown"}`,
     `Sections: ${data.sections.length}`,
     `Bookmarks: ${countBookmarks()}`
   ].join("\n");
@@ -3044,9 +3537,9 @@ const WELCOME_GUIDE = [
   {
     title: "Getting Started",
     body: [
-      "Waypoint is a Linux-inspired browser start page.",
-      "Use it as a dashboard, launcher, bookmark manager, and command center.",
-      "Click links normally, or open the terminal and control Waypoint with commands.",
+      "Waypoint is a local-first browser start page.",
+      "Use it as a dashboard, launcher, and bookmark manager.",
+      "Click links normally, or use the terminal for quick configuration.",
       "Your configuration is stored locally in this browser."
     ]
   },
@@ -3058,12 +3551,25 @@ const WELCOME_GUIDE = [
       "  • Click ✎ to edit a bookmark.",
       "  • Click × to remove a bookmark or section.",
       "  • Drag bookmarks to reorder or move them between sections.",
-      "  • Rename a section by clicking its title.",
+      "  • Focus a section, then click its pencil button to rename it.",
+      "  • Compact List shows category cards; Grid Cards show bookmarks directly.",
       "",
       "Terminal examples:",
       "  add section \"Media\"",
       "  add link \"Media\" \"Jellyfin\" https://jellyfin.org",
       "  remove section \"Media\""
+    ]
+  },
+  {
+    title: "WaypointKeys & Search",
+    body: [
+      "When WaypointKeys is enabled:",
+      "  • Press a section key, then a bookmark key to open it.",
+      "  • Press Space to focus search.",
+      "  • Press Esc to cancel key navigation or release search focus.",
+      "  • Press ? to open the keyboard reference.",
+      "",
+      "Key hints appear on sections and bookmarks while navigation is active."
     ]
   },
   {
@@ -3076,7 +3582,7 @@ const WELCOME_GUIDE = [
       "  ls themes",
       "  ls config",
       "  help add",
-      "  help theme",
+      "  help banner",
       "  help layout",
       "",
       "You can reopen this guide anytime with:",
@@ -3093,9 +3599,11 @@ const WELCOME_GUIDE = [
       "  theme nord",
       "  template minimal",
       "  layout compact",
-      "  font jetbrains",
-      "  window transparency 92",
-      "  terminal transparency 85"
+      "  font system",
+      "  banner atmosphere",
+      "  wallpaper theme",
+      "  settings appearance",
+      "  help css"
     ]
   },
   {
@@ -3105,16 +3613,17 @@ const WELCOME_GUIDE = [
       "Export supports complete backups plus separate workspace, bookmarks, and settings files.",
       "",
       "Commands:",
-      "  export",
+      "  export complete",
+      "  export bookmarks",
       "  import",
       "",
-      "The live demo only loads demo.json on first launch. After that, your own local setup is preserved."
+      "Export a complete backup before making large changes or moving browsers."
     ]
   },
   {
     title: "About Waypoint",
     body: [
-      "Waypoint is built with HTML, CSS, and JavaScript.",
+      "Waypoint is built with plain HTML, CSS, and JavaScript.",
       "No backend. No account. No tracking.",
       "Everything you change is saved locally in your browser.",
       "",
@@ -3149,7 +3658,7 @@ function wrapGuideLine(line, width) {
 }
 
 function boxLines(title, lines) {
-  const width = 84;
+  const width = window.innerWidth <= 560 ? 40 : window.innerWidth <= 820 ? 60 : 84;
   const top = `╔${"═".repeat(width)}╗`;
   const mid = `╠${"═".repeat(width)}╣`;
   const bottom = `╚${"═".repeat(width)}╝`;
@@ -3163,11 +3672,11 @@ function renderWelcomeGuide() {
   if (!out) return;
   if (welcomeGuideState.mode === "menu") {
     const rows = WELCOME_GUIDE.map((item, i) => i === welcomeGuideState.index ? `► ${item.title}  ←` : `  ${item.title}`);
-    const content = boxLines("Waypoint Guide", ["", ...rows, "", "↑↓ Move   Enter Select   Esc Exit"]);
+    const content = boxLines("Waypoint Guide", ["", ...rows, "", "↑↓ Move   Enter/→ Select   Esc Exit"]);
     out.innerHTML = `<pre class="welcome-tui">${escapeHtml(content)}</pre>`;
   } else {
     const page = WELCOME_GUIDE[welcomeGuideState.index];
-    const lines = [...page.body, "", "← Back   Esc Exit"];
+    const lines = [...page.body, "", "←/Enter Back   Esc Exit"];
     const content = boxLines(page.title, lines);
     out.innerHTML = `<pre class="welcome-tui welcome-tui-page">${escapeHtml(content)}</pre>`;
   }
@@ -3200,25 +3709,28 @@ function handleWelcomeGuideKey(event) {
 }
 
 function buildHelpText(topic = "") {
-  const t = String(topic || "").trim().toLowerCase();
+  const requestedTopic = String(topic || "").trim().toLowerCase();
+  const t = requestedTopic === "preset" ? "template" : requestedTopic;
   const pages = {
     theme: `theme\n\nChange or view the current color theme.\n\nSyntax:\n  theme\n  theme <name>\n\nExamples:\n  theme nord\n  theme tokyo-night\n\nSee also:\n  ls themes`,
     layout: `layout\n\nChange or view the bookmark layout.\n\nSyntax:\n  layout\n  layout compact\n  layout grid\n\nWorkspace templates use the template command.\n\nSee also:\n  help template\n  ls layouts`,
-    preset: `preset\n\nChange or view the workspace template.\n\nSyntax:\n  preset\n  preset <name>\n\nExamples:\n  preset classic\n  template minimal\n\nSee also:\n  ls layouts`,
-    visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  sections\n  banner`,
+    template: `template\n\nChange or view the workspace template.\n\nSyntax:\n  template\n  template <name>\n\nExamples:\n  template classic\n  template minimal\n\nThe preset command remains as a compatibility alias.\n\nSee also:\n  ls layouts`,
+    visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  titles (Grid Card section titles)\n  banner\n\nThe sections name remains as an alias for titles.`,
     search: `engine\n\nChange or view the search engine.\n\nSyntax:\n  engine\n  engine <name>\n\nExamples:\n  engine google\n  engine duckduckgo\n\nSee also:\n  ls search`,
     weather: `weather\n\nSet, view, or refresh weather.\n\nSyntax:\n  weather\n  weather <location>\n  weather refresh\n\nExamples:\n  weather "New York, NY"\n  weather refresh`,
     font: `font\n\nChange or view the interface font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font waypoint\n  font system\n\nThe terminal always uses JetBrains Mono.\n\nSee also:\n  ls fonts`,
-    settings: `settings\n\nOpen Settings or a specific settings page.\n\nSyntax:\n  settings\n  settings <page>\n\nPages:\n  appearance\n  layout\n  bookmarks\n  weather\n  banner\n  text\n  advanced\n  backup`,
+    settings: `settings\n\nOpen Settings or a specific settings page.\n\nSyntax:\n  settings\n  settings <page>\n\nPages:\n  appearance\n  layout\n  bookmarks\n  weather\n  search\n  backup\n\nCompatibility aliases:\n  banner, text → appearance\n  advanced → search`,
     add: `add\n\nAdd a section or bookmark.\n\nSyntax:\n  add section <name>\n  add link <section> <name> <url>\n\nExamples:\n  add section Media\n  add link "Media" "Jellyfin" https://jellyfin.org`,
     remove: `remove / delete\n\nRemove a section.\n\nSyntax:\n  remove section <name>\n  delete section <name>`,
     rename: `rename\n\nRename a section.\n\nSyntax:\n  rename section <old> <new>\n\nExample:\n  rename section "Media" "Streaming"`,
     colors: `colors\n\nChange interface colors.\n\nSyntax:\n  accent <hex>\n  surface <hex>\n  text <hex>\n  titlecolor <hex>\n\nExamples:\n  accent #00d084\n  surface #09111a`,
-    transparency: `transparency\n\nChange window or terminal transparency.\n\nSyntax:\n  window transparency <60-100>\n  terminal transparency <60-100>`,
+    transparency: `transparency\n\nSection cards and the terminal use 60% opacity by default. Override their backgrounds through Custom CSS in Settings > Appearance.`,
+    banner: `banner\n\nView or change the page banner.\n\nSyntax:\n  banner\n  banner auto|desktop|atmosphere|custom\n  banner size hidden|small|medium|large`,
+    wallpaper: `wallpaper\n\nChange the page background.\n\nSyntax:\n  wallpaper theme|gradient|custom\n\nCustom images are managed in Settings > Appearance.`,
     css: buildCssManualText(),
-    widgets: `widgets\n\nList Waypoint's registered UI widgets.\n\nThis is the foundation for future edit layout, dragging, and resizing features.\n\nSyntax:\n  widgets\n  ls widgets`,
+    widgets: `widgets\n\nList registered workspace widgets and their current placement.\n\nSyntax:\n  widgets\n  ls widgets\n  workspace`,
     ls: `ls\n\nList available options or current configuration.\n\nSyntax:\n  ls\n  ls <category>\n\nCategories:\n  commands\n  themes\n  layouts\n  fonts\n  visibility\n  search\n  widgets\n  config`,
-    reset: `reset\n\nReset a category of settings.\n\nSyntax:\n  reset appearance\n  reset layout\n  reset bookmarks\n  reset weather\n  reset banner\n  reset text\n  reset advanced\n  reset all`
+    reset: `reset\n\nReset a category of settings.\n\nSyntax:\n  reset appearance\n  reset layout\n  reset bookmarks\n  reset weather\n  reset search\n  reset all\n\nCompatibility aliases remain available for older configurations.`
   };
   if (t) return pages[t] || `No help topic for '${t}'.\n\nType help to see commands.`;
   return cleanList("Available Commands", [
@@ -3231,14 +3743,14 @@ function buildHelpText(topic = "") {
     "template         Apply workspace templates",
     "layout           Manage bookmark layout",
     "font             Manage fonts",
+    "banner           Manage the page banner",
+    "wallpaper        Manage the page background",
     "engine           Manage search engine",
     "weather          Configure weather",
     "show / hide      Show or hide UI elements",
     "accent           Set accent color",
     "surface          Set surface color",
     "text             Set global text color",
-    "window           Set window transparency",
-    "terminal         Set terminal settings",
     "widgets          List registered UI widgets",
     "workspace        Show workspace slot assignments",
     "add              Add sections or bookmarks",
@@ -3247,22 +3759,23 @@ function buildHelpText(topic = "") {
     "export           Export configuration",
     "import           Import configuration",
     "reset            Reset settings",
+    "css              Show Custom CSS examples",
     "clear            Clear terminal",
     "exit             Close terminal"
   ]);
 }
 function buildCssManualText() {
-  return `css\n\nCustom CSS is applied last, so it can override Waypoint styling.\n\nExamples:\n  Hide the Waypoint name:\n  .brand-wordmark { display: none !important; }\n\n  Make bookmark cards rounder:\n  .link { border-radius: 18px !important; }\n\n  Hide section headers:\n  .section-header { display: none !important; }\n\n  Make the search bar wider:\n  .search { width: min(920px, calc(100% - 80px)) !important; }\n\nNotes:\n  .brand-wordmark controls the Waypoint title.\n  .link controls bookmark tiles.\n  .section controls section cards.\n  !important makes your rule win over built-in styling.`;
+  return `css\n\nCustom CSS is applied last, so it can override Waypoint styling.\n\nExamples:\n  Hide the Waypoint name:\n  .brand-wordmark { display: none !important; }\n\n  Make bookmark cards rounder:\n  .link { border-radius: 18px !important; }\n\n  Change section card transparency:\n  .section { background: rgba(5, 9, 18, .8) !important; }\n  :root { --section-card-opacity-percent: 80%; }\n\n  Change terminal transparency:\n  :root { --terminal-opacity: .8; }\n\n  Hide section headers:\n  .section-header { display: none !important; }\n\n  Make the search bar wider:\n  .search { width: min(920px, calc(100% - 80px)) !important; }\n\nNotes:\n  Section cards and the terminal use 60% opacity by default.\n  .brand-wordmark controls the Waypoint title.\n  .link controls bookmark tiles.\n  .section controls section cards.\n  !important makes your rule win over built-in styling.`;
 }
 function listCommand(category = "") {
   const c = String(category || "").trim().toLowerCase();
   const maps = {
     "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "widgets", "workspace", "config"]),
     commands: buildHelpText(),
-    themes: cleanList("Available Themes", ["catppuccin", "nord", "gruvbox", "tokyo-night"]),
-    layouts: cleanList("Available Templates", ["classic", "dashboard", "minimal"]),
+    themes: cleanList("Available Themes", ["catppuccin", "daylight", "nord", "gruvbox", "graphite", "tokyo-night"]),
+    layouts: `Bookmark Layouts\n\n  compact\n  grid\n\nWorkspace Templates\n\n  classic\n  dashboard\n  minimal`,
     fonts: cleanList("Available Interface Fonts", ["system", "waypoint"]),
-    visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "sections", "banner"]),
+    visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "titles", "banner"]),
     search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
     widgets: widgetSummaryText(),
     workspace: workspaceSummaryText(),
@@ -3300,17 +3813,21 @@ function runCommand(commandRaw) {
   const textOut = (text, cls) => done(commandResult(text, cls));
   if (head === "help") return done(terminalPre(buildHelpText(arg), "terminal-help"));
   if (["welcome", "guide", "tutorial"].includes(head)) { startWelcomeGuide(); return; }
-  if (head === "man") return done(fail("The man command was removed. Use help <topic> instead."));
+  if (head === "man") {
+    if (arg) return done(terminalPre(buildHelpText(arg), "terminal-help"));
+    return done(terminalPre(buildHelpText(), "terminal-help"));
+  }
   if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
   if (head === "fetch") return done(buildFastfetchHtml());
   if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
   if (head === "workspace") return done(terminalPre(workspaceSummaryText(), "terminal-help"));
   if (head === "settings") {
-    const pageMap = { text: "textcolors", textcolor: "textcolors", textcolors: "textcolors", colors: "textcolors", appearance: "appearance", layout: "layout", bookmarks: "bookmarks", weather: "weather", banner: "banner", advanced: "advanced", backup: "backup" };
-    const page = arg ? pageMap[arg.replace(/\s+/g, "")] : "appearance";
-    if (!page) return textOut(buildHelpText("settings"), "terminal-warning");
+    const requestedPage = arg ? arg.replace(/\s+/g, "") : "appearance";
+    const validPages = new Set(Object.keys(SETTINGS_PAGE_ALIASES));
+    if (arg && !validPages.has(requestedPage)) return textOut(buildHelpText("settings"), "terminal-warning");
+    const page = normalizeSettingsPage(requestedPage);
     openSettingsPage(page);
-    return textOut(`Opened Settings > ${page}.`, "terminal-success-text");
+    return textOut(`Opened Settings > ${page[0].toUpperCase()}${page.slice(1)}.`, "terminal-success-text");
   }
   if (["show", "hide"].includes(head)) {
     const widgetMap = {
@@ -3325,7 +3842,7 @@ function runCommand(commandRaw) {
       data.settings.workspace.modified = true;
       syncLegacyVisibilityFromWorkspace();
       save(); render();
-      return done(buildStatusLines(`${visible ? "Showing" : "Hiding"}: section titles`));
+      return done(buildStatusLines(`${visible ? "Showing" : "Hiding"}: Grid Card section titles`));
     }
     const widgetId = widgetMap[arg];
     if (!widgetId) return textOut(buildHelpText("visibility"), "terminal-warning");
@@ -3345,11 +3862,11 @@ function runCommand(commandRaw) {
     const font = normalizeFontName(commandRaw.trim().replace(/^font\s*/i, "").trim());
     if (!font) return textOut(buildHelpText("font"), "terminal-warning");
     data.settings.fontFamily = font; save(); render();
-    return done(buildStatusLines(`Setting font: ${font}`));
+    return done(buildStatusLines(`Setting interface font: ${font === "system" ? "System" : "Waypoint"}`));
   }
   if (head === "theme") {
     if (!arg) return textOut(`Current theme: ${getTheme().label}`);
-    const map = { catppuccin: "catppuccin", nord: "nord", gruvbox: "gruvbox", tokyo: "tokyoNight", "tokyo-night": "tokyoNight", tokyonight: "tokyoNight" };
+    const map = { catppuccin: "catppuccin", daylight: "daylight", light: "daylight", nord: "nord", gruvbox: "gruvbox", graphite: "graphite", tokyo: "tokyoNight", "tokyo-night": "tokyoNight", tokyonight: "tokyoNight" };
     if (!map[arg]) return textOut(buildHelpText("theme"), "terminal-warning");
     data.settings.theme = map[arg]; save(); render();
     return done(buildStatusLines(`Applying theme: ${getTheme().label}`));
@@ -3364,29 +3881,17 @@ function runCommand(commandRaw) {
   if (head === "accent" || head === "surface" || head === "text" || head === "titlecolor") {
     const color = rest[0] || "";
     if (!/^#[0-9a-f]{6}$/i.test(color)) return textOut(buildHelpText("colors"), "terminal-warning");
-    if (head === "accent") { data.settings.customAccent = color; data.settings.useCustomColors = true; }
-    if (head === "surface") { data.settings.customPanel = color; data.settings.useCustomColors = true; }
+    if (head === "accent") { data.settings.customAccent = color; data.settings.useCustomAppearance = true; data.settings.useCustomColors = true; data.settings.useCustomTextColors = true; }
+    if (head === "surface") { data.settings.customPanel = color; data.settings.useCustomAppearance = true; data.settings.useCustomColors = true; data.settings.useCustomTextColors = true; }
     if (head === "text") data.settings.customText = color;
-    if (head === "titlecolor") { data.settings.sectionTitleColor = color; data.settings.useCustomTextColors = true; }
+    if (["text", "titlecolor"].includes(head)) { data.settings.useCustomAppearance = true; data.settings.useCustomColors = true; data.settings.useCustomTextColors = true; }
+    if (head === "titlecolor") data.settings.sectionTitleColor = color;
     save(); render();
     return done(buildStatusLines(`Setting ${head} color: ${color}`));
   }
-  if (head === "window") {
-    if (rest[0] !== "transparency") return textOut(buildHelpText("transparency"), "terminal-warning");
-    const amount = clamp(Number(rest[1]), 60, 100, NaN);
-    if (!Number.isFinite(amount)) return textOut(buildHelpText("transparency"), "terminal-warning");
-    data.settings.windowTransparency = amount; save(); render();
-    return done(buildStatusLines(`Setting window transparency: ${amount}%`));
+  if (head === "transparency" || ((head === "section" || head === "window" || head === "terminal") && rest[0] === "transparency")) {
+    return textOut(buildHelpText("transparency"), "terminal-warning");
   }
-  if (head === "terminal") {
-    if (!arg) return textOut(`Terminal transparency: ${data.settings.terminalTransparency}%`);
-    if (rest[0] !== "transparency") return textOut(buildHelpText("transparency"), "terminal-warning");
-    const amount = clamp(Number(rest[1]), 60, 100, NaN);
-    if (!Number.isFinite(amount)) return textOut(buildHelpText("transparency"), "terminal-warning");
-    data.settings.terminalTransparency = amount; save(); render();
-    return done(buildStatusLines(`Setting terminal transparency: ${amount}%`));
-  }
-  if (head === "transparency") return textOut("Use window transparency <60-100> or terminal transparency <60-100>.", "terminal-warning");
   if (head === "name") {
     const nextName = commandRaw.trim().replace(/^name\s*/i, "").trim();
     if (!nextName) return textOut("Usage: name <username>", "terminal-warning");
@@ -3416,8 +3921,9 @@ function runCommand(commandRaw) {
   if (head === "banner") {
     const map = { desktop: "desktop", atmosphere: "atmo", atmo: "atmo", custom: "custom", auto: "auto", default: "auto" };
     const sizeMap = { hidden: "hidden", hide: "hidden", small: "small", compact: "small", medium: "medium", balanced: "medium", large: "large", tall: "large", showcase: "large" };
-    if (arg === "size") {
-      const size = parts[1];
+    if (!arg) return textOut(`Banner: ${labelBannerStyle(data.settings.heroStyle)}\nSize: ${labelHeroSize(data.settings.heroSize)}`);
+    if (rest[0] === "size") {
+      const size = rest[1];
       if (!sizeMap[size]) return textOut("Usage: banner size hidden|small|medium|large", "terminal-warning");
       setBannerSize(sizeMap[size]);
       return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
@@ -3426,13 +3932,14 @@ function runCommand(commandRaw) {
       setBannerSize(sizeMap[arg]);
       return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
     }
-    if (!map[arg]) return textOut("Usage: banner auto|desktop|atmosphere|custom|hidden|small|medium|large", "terminal-warning");
+    if (!map[arg]) return textOut(buildHelpText("banner"), "terminal-warning");
     data.settings.heroStyle = map[arg]; save(); render();
-    return done(buildStatusLines(`Setting banner: ${labelHero(data.settings.heroStyle)}`));
+    return done(buildStatusLines(`Setting banner: ${labelBannerStyle(data.settings.heroStyle)}`));
   }
   if (head === "wallpaper") {
     const map = { theme: "wallpaper", wallpaper: "wallpaper", default: "wallpaper", gradient: "gradient", custom: "custom" };
-    if (!map[arg]) return textOut("Usage: wallpaper theme|gradient|custom", "terminal-warning");
+    if (!arg) return textOut(`Wallpaper: ${labelBackground(data.settings.backgroundMode)}`);
+    if (!map[arg]) return textOut(buildHelpText("wallpaper"), "terminal-warning");
     data.settings.backgroundMode = map[arg]; save(); render();
     return done(buildStatusLines(`Setting wallpaper: ${labelBackground(data.settings.backgroundMode)}`));
   }
@@ -3466,36 +3973,50 @@ function runCommand(commandRaw) {
   }
   if (head === "import") { $("importFile")?.click(); return textOut("Choose a JSON file to import."); }
   if (head === "export") {
-    const type = ["workspace", "bookmarks", "settings", "complete"].includes(arg) ? arg : "complete";
+    if (arg && !["workspace", "bookmarks", "settings", "complete"].includes(arg)) {
+      return textOut("Usage: export [complete|workspace|bookmarks|settings]", "terminal-warning");
+    }
+    const type = arg || "complete";
     exportJson(type);
     return textOut(`Export started: ${type}.`, "terminal-success-text");
   }
   if (head === "reset") {
     const target = arg || "";
     if (!target) return textOut(buildHelpText("reset"), "terminal-warning");
-    resetCategory(target);
+    if (!resetCategory(target)) return textOut(buildHelpText("reset"), "terminal-warning");
     return done(buildStatusLines(`Resetting ${target}`));
   }
-  if (head === "css") return textOut(buildHelpText("css"));
+  if (head === "css") return done(terminalPre(buildHelpText("css"), "terminal-help"));
   if (head === "search") { closeAllModals(); focusSearch(); return; }
   return textOut(`${head}: command not found\n\nTry: help`, "terminal-error");
 }
 function resetCategory(target) {
   const d = structuredClone(defaultData.settings);
-  if (target === "appearance") ["theme", "fontFamily", "uiScale", "useCustomColors", "customAccent", "customPanel", "customText", "windowTransparency"].forEach(k => data.settings[k] = d[k]);
+  if (target === "appearance") {
+    [
+      "theme", "fontFamily", "uiScale",
+      "backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroStyle",
+      "useCustomAppearance", "useCustomColors", "useCustomTextColors",
+      "customAccent", "customPanel", "customText", "sectionTitleColor",
+      "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor",
+      "customCss"
+    ].forEach(k => data.settings[k] = d[k]);
+    WaypointStorage.remove(CUSTOM_BG_KEY);
+    WaypointStorage.remove(CUSTOM_HERO_KEY);
+  }
   else if (target === "layout" || target === "workspace") { data.settings.workspace = defaultWorkspace(d.workspace?.template || "classic"); data.settings.shortcut = d.shortcut; syncLegacyVisibilityFromWorkspace(); }
-  else if (target === "bookmarks") ["bookmarkLayout", "bookmarkColumns", "bookmarkFontSize", "bookmarkIconSize"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "bookmarks") ["bookmarkLayout", "bookmarkFontSize", "bookmarkIconSize", "keyboardNavigation"].forEach(k => data.settings[k] = d[k]);
   else if (target === "weather") ["weatherLocation", "weatherUnit"].forEach(k => data.settings[k] = d[k]);
   else if (target === "banner") ["backgroundMode", "overlay", "blur", "heroSize", "heroHeight", "heroStyle"].forEach(k => data.settings[k] = d[k]);
   else if (target === "text" || target === "textcolors") ["useCustomTextColors", "sectionTitleColor", "bookmarkTextColor", "mutedTextColor", "terminalTextColor", "statusTextColor", "customText"].forEach(k => data.settings[k] = d[k]);
-  else if (target === "advanced") ["searchEngine", "customSearchUrl", "customCss", "terminalTransparency"].forEach(k => data.settings[k] = d[k]);
+  else if (target === "advanced" || target === "search") ["searchEngine", "customSearchUrl"].forEach(k => data.settings[k] = d[k]);
   else if (target === "all" || target === "everything") { data = structuredClone(defaultData); WaypointStorage.remove(CUSTOM_BG_KEY); WaypointStorage.remove(CUSTOM_HERO_KEY); WaypointStorage.remove(WEATHER_CACHE_KEY); }
-  else return;
+  else return false;
   save(); render(); refreshWeather(false);
+  return true;
 }
 function addResetButtonEvents() {
-  const map = { resetAppearanceBtn: "appearance", resetLayoutBtn: "workspace", resetBookmarksBtn: "bookmarks", resetWeatherBtn: "weather", resetBannerBtn: "banner", resetTextBtn: "text", resetAdvancedBtn: "advanced" };
+  const map = { resetAppearanceBtn: "appearance", resetLayoutBtn: "workspace", resetBookmarksBtn: "bookmarks", resetWeatherBtn: "weather", resetSearchBtn: "search" };
   Object.entries(map).forEach(([id, target]) => $(id)?.addEventListener("click", () => resetCategory(target)));
 }
 addResetButtonEvents();
-

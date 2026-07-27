@@ -1,5 +1,102 @@
 # Changelog
 
+## [1.5.1] - Unreleased
+
+### Changed
+
+- Improved bookmark drag/drop handling so bookmark row drops no longer bubble into section-level drop handlers.
+- Added clearer bookmark drag source, drop-zone, and insertion-target feedback.
+- Made bookmark insertion detection account for grid-style bookmark layouts as well as vertical list flows.
+- Changed external bookmark, URL, and hyperlink drops so they prefill the Add Link modal instead of immediately creating bookmarks.
+- Added optional WaypointKeys navigation, inspired by Jumpkey, for selecting bookmark sections and launching links with sequential letter keys.
+- Added contextual keyboard hints, Escape cancellation, Space-to-search, and a `?` keyboard help dialog.
+- Kept keyboard hint assignments transient so existing bookmark data remains unchanged.
+- Made section key hints remain visible on bookmark cards whenever WaypointKeys is enabled.
+- Simplified section headers with sentence-case titles, a quiet divider, and restrained action buttons.
+- Moved each section hint beside its add-link control so section titles remain clean and left-aligned.
+- Made Escape release search focus so keyboard navigation can resume without a pointer click.
+- Redesigned Compact List as a responsive grid of category cards inspired by Jumpkey's category overview.
+- Added generated section icons and bookmark counts without changing stored section data.
+- Added a lightweight centered section focus view for category-card clicks, Grid Card section clicks, and WaypointKeys activation.
+- Preserved the existing Grid Card bookmark presentation.
+- Changed Compact List to four category cards per desktop row while keeping Grid Cards at three sections per row.
+- Replaced the focused-section blur with a correctly layered dim backdrop so focused content remains crisp.
+- Added an explicit dark popup palette for Settings dropdown options.
+- Redesigned all four built-in palettes around layered page, surface, elevated, hover, text, accent, card, border, and icon colors inspired by Jumpkey's theme architecture.
+- Gave Catppuccin, Nord, Gruvbox, and Tokyo Night theme-specific interaction colors instead of sharing a fixed Waypoint green.
+- Preserved every existing theme wallpaper, desktop banner, atmosphere banner, and default hero assignment.
+- Fixed built-in theme text and muted colors being overwritten by inactive custom-color defaults.
+- Expanded Custom Colors so user palettes derive the same layered surface, text, accent, card, and border hierarchy.
+- Consolidated Banner, Text Colors, terminal transparency, and Custom CSS into a structured Appearance page.
+- Renamed Advanced to Search and kept search-provider controls there.
+- Replaced the separate custom color switches with one Use Custom Appearance owner.
+- Disabled custom palette, text, and CSS controls unless Use Custom Appearance is enabled.
+- Kept custom wallpaper and banner uploads independent from Use Custom Appearance.
+- Added active `waypoint:settings/<page>` routing with aliases for removed and legacy Settings tabs.
+- Replaced generated section text glyphs with semantic built-in SVG icons selected from section titles.
+- Replaced all user-facing Hero terminology with Banner or Page Header language while retaining internal identifiers.
+- Expanded generated section icons for web, servers, imageboards, cloud, finance, mail, documents, downloads, and photos.
+- Added bookmark name and URL inference when a section title does not identify a useful icon.
+- Added a Graphite built-in theme using Jumpkey's graphite palette as a reference while retaining Waypoint artwork.
+- Removed the redundant Bookmark Columns control and its manual layout overrides; compact and grid layouts continue to use responsive fallbacks.
+- Limited Hide Section Titles to Grid Cards so Compact List category titles always remain visible.
+- Increased WaypointKeys badge size, contrast, and letter weight.
+- Moved section key badges to a prominent upper-left position when Grid Card section titles are hidden.
+- Extended the WaypointKeys section-selection window from four to ten seconds.
+- Added original Graphite wallpaper, desktop banner, and atmosphere banner artwork.
+- Revised the Graphite desktop banner to feature a stylized multi-monitor workstation consistent with Waypoint's other desktop variants.
+- Repurposed Window Transparency as Section Card Transparency.
+- Fixed Settings and other modal surfaces at Waypoint's default opacity instead of linking them to section cards.
+- Removed the section card and terminal transparency sliders and terminal commands.
+- Fixed section cards and terminal surfaces at 60% opacity; Custom CSS is now the only override path.
+- Added Daylight, Waypoint's first built-in light theme, with light-aware surfaces, controls, text, accents, and wallpaper overlay behavior.
+- Added original Daylight wallpaper, stylized desktop-computer banner, and atmosphere banner artwork.
+- Unified the terminal command input with the terminal body's fixed background and transparency.
+- Increased temporary terminal input help-text contrast across themes.
+- Moved the decorative minimize, maximize, and functional close controls to the right side of the terminal titlebar.
+- Added semantic color accents to the terminal prompt and `fetch` output.
+- Audited terminal commands and corrected banner sizing, template help, layout lists, export validation, reset validation, and section deletion feedback.
+- Replaced stale terminal and guide language with current Banner, Appearance, font, layout, and Custom CSS terminology.
+- Expanded and made the Waypoint Guide responsive, including WaypointKeys instructions and current backup guidance.
+- Redesigned `fetch` as a compact Waypoint system card with a custom terminal mark, local-status badge, aligned metadata, and one consistent category color.
+- Revised `fetch` back to native terminal-style output with an ASCII Waypoint logo, transparent background, and restrained single-accent metadata.
+- Restored the compact legacy `~/_`-style fetch mark and removed the logo wordmark.
+- Replaced the ambiguous legacy fetch mark with a clearer ASCII mountain-and-waypoint symbol, without adding a wordmark.
+- Replaced the `~/_` command-center glyph with a scalable vector mountain, route, waypoint, and destination logo derived from the new fetch mark.
+- Added a standalone transparent `img/waypoint-logo.svg` asset for reuse outside the inline interface mark.
+- Replaced fetch's approximate ASCII mark with the reusable Waypoint SVG so terminal and header branding match exactly.
+- Enlarged and centered the fetch logo within a wider left column, shifting metadata right for clearer visual balance.
+- Replaced the README screenshot gallery with seven current-build showcase captures covering Graphite, Nord, Daylight, Compact List, Grid Cards, WaypointKeys, Appearance settings, terminal fetch, and mobile layout.
+- Rebuilt the README showcase around the flagship Top Bar and Grid Card workspace with eight sections and 96 bookmarks, plus Nord, Daylight, WaypointKeys, Workspace Designer, Appearance, terminal fetch, and an animated terminal workflow.
+- Replaced inline editable section titles with a dedicated Rename Section modal opened from focused sections, preventing title clicks from intercepting WaypointKeys.
+- Expanded the README gallery with Standard Header, Bottom Bar, hidden search, hidden banner, minimal, large-banner, and custom wallpaper/banner configurations.
+- Removed superseded screenshot and terminal-demo assets from the screenshots directory.
+
+### Fixed
+
+- Corrected the initial Nord banner image path so first render no longer requests a missing legacy asset.
+- Hardened bookmark move logic against invalid indexes before mutating saved bookmark order.
+- Cleared transient bookmark drag state before re-rendering after a successful move.
+- Preserved the Add Link modal save action as the single creation path for externally dropped bookmarks.
+- Fixed external bookmark, URL, and hyperlink drops into empty sections so they open the Add Link modal.
+
+### Documentation
+
+- Set the active build to the Bookmark Experience Pass.
+- Marked Waypoint Protocol Expansion as on hold.
+- Updated the Waypoint 1.5.1 Build 1 design review contract around bookmark drag/drop, reorder logic, and interaction audit work.
+- Added the Waypoint 1.5.1 Build 1 build report.
+- Clarified that internal build tracking belongs in planning documents, not runtime app metadata.
+- Added the Waypoint 1.5.1 Build 2 design review and build report.
+- Added the Waypoint 1.5.1 Build 3 design review and build report.
+- Reviewed ARCHITECTURE.md; its existing Navigation ownership already describes WaypointKeys, so no architecture change was required.
+- Reviewed ARCHITECTURE.md for the Compact Category Layout; Workspace still owns presentation and Bookmarks still own content, so no architecture change was required.
+- Added the Waypoint 1.5.1 Build 4 design review and build report.
+- Reviewed ARCHITECTURE.md for the Layered Theme System; Themes still own appearance only, so no architecture change was required.
+- Added the Waypoint 1.5.1 Build 5 design review and build report.
+- Updated ARCHITECTURE.md and WAYPOINT_PROTOCOL.md with active Settings routes and compatibility aliases.
+- Added the Waypoint 1.5.1 Build 6 design review and build report.
+
 ## [1.5.0-dev12] - 2026-06-30
 
 ### Changed
