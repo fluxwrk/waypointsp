@@ -19,11 +19,16 @@
 - Reduced the measured established Graphite startup payload from 6,032,649 bytes to 3,877,346 bytes, a 35.7% reduction.
 - Reduced critical local startup requests from ten to eight before the first usable interface.
 - Reduced median first-usable time from 154.6 ms to 114.7 ms in the controlled localhost Chromium benchmark.
+- Replaced full bookmark-workspace reconstruction with bookmark-, section-, appearance-, and workspace-scoped updates for common runtime actions.
+- Reduced full bookmark-workspace renders from eight to one across the eight-operation stress benchmark; full application renders fell from eight to zero.
+- Reduced measured bookmark create/edit medians from 20.5/22.2 ms to 2.5/2.3 ms on the 96-bookmark benchmark profile.
+- Added browser-native User Timing measures for full, bookmark, section, appearance, and workspace rendering without logging or telemetry.
 
 ### Documentation
 
 - Added the Waypoint 1.5.2 Build 1 Startup Asset Optimization design review and build report.
 - Updated project state and roadmap ownership for the first implementation build following the Runtime Architecture and Performance Audit.
+- Added the Waypoint 1.5.2 Build 2 Targeted Rendering Optimization design review and build report.
 
 ## [1.5.1] - Unreleased
 

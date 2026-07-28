@@ -1342,7 +1342,7 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
       event.stopPropagation();
       setWorkspaceHeroStyle(button.dataset.workspaceHeroStyle);
       save();
-      render();
+      renderWorkspace();
       if (editLayoutActive) renderWorkspaceDesignerPanel(selectedWorkspaceWidgetId);
     });
   });
@@ -1360,7 +1360,7 @@ function renderWorkspaceDesignerPanel(widgetId = selectedWorkspaceWidgetId) {
       if (slotId !== currentSlot) {
         setWidgetSlot(selected, slotId);
         save();
-        render();
+        renderWorkspace();
       }
       if (editLayoutActive) selectWorkspaceWidget(selected);
     });
@@ -1408,7 +1408,7 @@ function resetWidgetLayout() {
   data.settings.widgets = normalizeWidgetState({});
   syncLegacyVisibilityFromWorkspace();
   save();
-  render();
+  renderWorkspace();
   setEditLayoutMode(true);
 }
 
@@ -1994,7 +1994,7 @@ function setBannerSize(size) {
     syncLegacyVisibilityFromWorkspace();
   }
   save();
-  render();
+  renderAppearance();
   return true;
 }
 
@@ -2064,131 +2064,196 @@ function closeAllModals() {
   emitWaypointEvent("modal-closed", { id: "all" });
 }
 
-function render() {
-  syncLegacyVisibilityFromWorkspace();
-  document.body.classList.toggle("bookmark-list-layout", (data.settings.bookmarkLayout || "list") === "list");
-  document.body.classList.toggle("bookmark-grid-layout", (data.settings.bookmarkLayout || "list") === "grid");
-  document.body.classList.toggle("keyboard-navigation-enabled", data.settings.keyboardNavigation === true);
-  applyTheme();
-  applyPersonalization();
-  applyHero();
-  updateLogoPrompt();
-  syncControls();
-  renderSections();
-  syncSectionFocusDom();
-  applyWidgetFoundation();
-  ensureWorkspaceLauncher();
-  updateEditLayoutBar();
-  renderTerminal();
-  updateWeatherWidget();
-  applySearchEngine();
+function measureWaypointRender(name, callback) {
+  if (!globalThis.performance?.mark || !globalThis.performance?.measure) return callback();
+  const token = `${name}:${performance.now()}:${Math.random()}`;
+  const start = `${token}:start`;
+  const end = `${token}:end`;
+  performance.mark(start);
+  try {
+    return callback();
+  } finally {
+    performance.mark(end);
+    performance.measure(name, start, end);
+    performance.clearMarks(start);
+    performance.clearMarks(end);
+  }
+}
+
+function emitRendered() {
   emitWaypointEvent("rendered");
 }
 
-function renderSections() {
-  const container = $("sections");
-  if (!container) return;
-  container.innerHTML = "";
+function syncBookmarkPresentationClasses() {
+  document.body.classList.toggle("bookmark-list-layout", (data.settings.bookmarkLayout || "list") === "list");
+  document.body.classList.toggle("bookmark-grid-layout", (data.settings.bookmarkLayout || "list") === "grid");
+  document.body.classList.toggle("keyboard-navigation-enabled", data.settings.keyboardNavigation === true);
+}
 
-  const keyMap = navigationKeyMap();
-  data.sections.forEach((section, sectionIndex) => {
-    const sectionEl = document.createElement("article");
-    sectionEl.className = `section waypoint-widget-section${section.links.length ? "" : " empty-section"}`;
-    sectionEl.dataset.widgetId = `section-${sectionIndex}`;
-    sectionEl.dataset.widgetLabel = `Bookmark Section: ${section.name || `Section ${sectionIndex + 1}`}`;
-    sectionEl.dataset.widgetArea = "content";
-    sectionEl.draggable = true;
-    sectionEl.dataset.sectionIndex = sectionIndex;
-    sectionEl.innerHTML = `
-      <div class="section-header">
-        <span class="section-generated-icon" aria-hidden="true">${sectionGeneratedIcon(section.name, section.links)}</span>
-        <span class="section-name">${escapeHtml(section.name)}</span>
-      </div>
-      <div class="section-actions">
-        <kbd class="keyboard-hint section-key-hint" aria-hidden="true">${escapeHtml(keyMap[sectionIndex].key.toUpperCase())}</kbd>
-        <button class="section-action add-link-btn" title="Add link" type="button">+</button>
-        <button class="section-action section-rename" title="Rename section" type="button" aria-label="Rename section">✎</button>
-        <button class="section-action section-delete" title="Delete section" type="button">×</button>
-        <button class="section-action section-focus-close" title="Close section" type="button" aria-label="Close focused section">×</button>
-      </div>
-      <div class="category-summary">${section.links.length} ${section.links.length === 1 ? "bookmark" : "bookmarks"}</div>
-      <div class="links" data-section-index="${sectionIndex}"></div>
-    `;
-
-    sectionEl.querySelector(".add-link-btn").addEventListener("click", () => openLinkModal(sectionIndex));
-    sectionEl.querySelector(".section-rename").addEventListener("click", () => openRenameSectionModal(sectionIndex));
-    sectionEl.querySelector(".section-delete").addEventListener("click", () => deleteSection(sectionIndex));
-    sectionEl.querySelector(".section-focus-close").addEventListener("click", event => {
-      event.stopPropagation();
-      clearKeyboardNavigation();
-      clearSectionFocus();
-    });
-    sectionEl.addEventListener("click", event => {
-      if (event.target.closest(".link, .section-actions")) return;
-      event.stopPropagation();
-      focusBookmarkSection(sectionIndex);
-    });
-
-    setupSectionDrag(sectionEl, sectionIndex);
-    const linksContainer = sectionEl.querySelector(".links");
-    setupLinkDropZone(linksContainer, sectionIndex);
-
-    section.links.forEach((link, linkIndex) => {
-      const row = document.createElement("div");
-      row.className = "link";
-      row.draggable = true;
-      row.dataset.sectionIndex = sectionIndex;
-      row.dataset.linkIndex = linkIndex;
-      const iconSource = isWaypointUrl(link.url) ? waypointIcon(link.url) : link.icon || favicon(link.url);
-      const internalClass = isWaypointUrl(link.url) ? " internal-link" : "";
-      const displayName = isWaypointUrl(link.url) ? cleanInternalLinkName(link.name, link.url) : link.name;
-      row.className += internalClass;
-      const fallbackIcon = iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "";
-      row.innerHTML = `
-        <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(fallbackIcon)}</span>
-        <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
-        <kbd class="keyboard-hint link-key-hint" aria-hidden="true">${escapeHtml(keyMap[sectionIndex].linkKeys[linkIndex].toUpperCase())}</kbd>
-        <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
-        <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
-        <span class="delete-link" title="Delete link" aria-label="Delete link">×</span>
-      `;
-      const iconImg = row.querySelector("img");
-      const fallbackEl = row.querySelector(".link-icon-fallback");
-      if (iconImg && !iconImg.hidden) {
-        iconImg.addEventListener("error", () => {
-          iconImg.hidden = true;
-          if (fallbackEl && !fallbackEl.textContent.trim()) fallbackEl.textContent = "◆";
-        }, { once: true });
-      }
-      row.addEventListener("click", event => {
-        if (event.target.closest(".delete-link") || event.target.closest(".edit-link") || event.defaultPrevented) return;
-        clearSectionFocus();
-        if (handleWaypointLink(link.url)) return;
-        window.location.href = link.url;
-      });
-      row.querySelector(".edit-link").addEventListener("click", event => {
-        event.preventDefault();
-        event.stopPropagation();
-        openLinkModal(sectionIndex, linkIndex);
-      });
-      row.querySelector(".delete-link").addEventListener("click", event => {
-        event.preventDefault();
-        event.stopPropagation();
-        data.sections[sectionIndex].links.splice(linkIndex, 1);
-        save();
-        render();
-      });
-      row.addEventListener("dblclick", event => {
-        event.preventDefault();
-        openLinkModal(sectionIndex, linkIndex);
-      });
-      setupLinkDrag(row, sectionIndex, linkIndex);
-      linksContainer.appendChild(row);
-    });
-
-    container.appendChild(sectionEl);
+function renderAppearance() {
+  return measureWaypointRender("waypoint:appearance:update", () => {
+    applyTheme();
+    applyPersonalization();
+    applyHero();
+    updateLogoPrompt();
+    syncControls();
+    applyWidgetFoundation();
+    ensureWorkspaceLauncher();
+    updateEditLayoutBar();
+    renderTerminal();
+    emitRendered();
   });
+}
 
+function renderWorkspace() {
+  return measureWaypointRender("waypoint:workspace:update", () => {
+    syncLegacyVisibilityFromWorkspace();
+    syncBookmarkPresentationClasses();
+    applyPersonalization();
+    applyHero();
+    syncControls();
+    applyWidgetFoundation();
+    ensureWorkspaceLauncher();
+    updateEditLayoutBar();
+    syncSectionFocusDom();
+    emitRendered();
+  });
+}
+
+function renderBookmarkSettings({ rebuild = false } = {}) {
+  syncBookmarkPresentationClasses();
+  applyPersonalization();
+  syncControls();
+  if (rebuild) renderSections();
+  syncSectionFocusDom();
+  emitRendered();
+}
+
+function render() {
+  return measureWaypointRender("waypoint:render:full", () => {
+    syncLegacyVisibilityFromWorkspace();
+    syncBookmarkPresentationClasses();
+    applyTheme();
+    applyPersonalization();
+    applyHero();
+    updateLogoPrompt();
+    syncControls();
+    renderSections();
+    syncSectionFocusDom();
+    applyWidgetFoundation();
+    ensureWorkspaceLauncher();
+    updateEditLayoutBar();
+    renderTerminal();
+    updateWeatherWidget();
+    applySearchEngine();
+    emitRendered();
+  });
+}
+
+function createLinkElement(sectionIndex, linkIndex, keyMap = navigationKeyMap()) {
+  const link = data.sections[sectionIndex]?.links[linkIndex];
+  if (!link) return null;
+  const row = document.createElement("div");
+  row.className = "link";
+  row.draggable = true;
+  row.dataset.sectionIndex = sectionIndex;
+  row.dataset.linkIndex = linkIndex;
+  const iconSource = isWaypointUrl(link.url) ? waypointIcon(link.url) : link.icon || favicon(link.url);
+  const internalClass = isWaypointUrl(link.url) ? " internal-link" : "";
+  const displayName = isWaypointUrl(link.url) ? cleanInternalLinkName(link.name, link.url) : link.name;
+  row.className += internalClass;
+  const fallbackIcon = iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "";
+  row.innerHTML = `
+    <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(fallbackIcon)}</span>
+    <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
+    <kbd class="keyboard-hint link-key-hint" aria-hidden="true">${escapeHtml((keyMap[sectionIndex]?.linkKeys[linkIndex] || "").toUpperCase())}</kbd>
+    <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
+    <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
+    <span class="delete-link" title="Delete link" aria-label="Delete link">×</span>
+  `;
+  const iconImg = row.querySelector("img");
+  const fallbackEl = row.querySelector(".link-icon-fallback");
+  if (iconImg && !iconImg.hidden) {
+    iconImg.addEventListener("error", () => {
+      iconImg.hidden = true;
+      if (fallbackEl && !fallbackEl.textContent.trim()) fallbackEl.textContent = "◆";
+    }, { once: true });
+  }
+  row.addEventListener("click", event => {
+    if (event.target.closest(".delete-link") || event.target.closest(".edit-link") || event.defaultPrevented) return;
+    clearSectionFocus();
+    if (handleWaypointLink(link.url)) return;
+    window.location.href = link.url;
+  });
+  row.querySelector(".edit-link").addEventListener("click", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    openLinkModal(sectionIndex, linkIndex);
+  });
+  row.querySelector(".delete-link").addEventListener("click", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    data.sections[sectionIndex].links.splice(linkIndex, 1);
+    save();
+    renderSection(sectionIndex);
+  });
+  row.addEventListener("dblclick", event => {
+    event.preventDefault();
+    openLinkModal(sectionIndex, linkIndex);
+  });
+  setupLinkDrag(row, sectionIndex, linkIndex);
+  return row;
+}
+
+function createSectionElement(sectionIndex, keyMap = navigationKeyMap()) {
+  const section = data.sections[sectionIndex];
+  if (!section) return null;
+  const sectionEl = document.createElement("article");
+  sectionEl.className = `section waypoint-widget-section${section.links.length ? "" : " empty-section"}`;
+  sectionEl.dataset.widgetId = `section-${sectionIndex}`;
+  sectionEl.dataset.widgetLabel = `Bookmark Section: ${section.name || `Section ${sectionIndex + 1}`}`;
+  sectionEl.dataset.widgetArea = "content";
+  sectionEl.draggable = true;
+  sectionEl.dataset.sectionIndex = sectionIndex;
+  sectionEl.innerHTML = `
+    <div class="section-header">
+      <span class="section-generated-icon" aria-hidden="true">${sectionGeneratedIcon(section.name, section.links)}</span>
+      <span class="section-name">${escapeHtml(section.name)}</span>
+    </div>
+    <div class="section-actions">
+      <kbd class="keyboard-hint section-key-hint" aria-hidden="true">${escapeHtml((keyMap[sectionIndex]?.key || "").toUpperCase())}</kbd>
+      <button class="section-action add-link-btn" title="Add link" type="button">+</button>
+      <button class="section-action section-rename" title="Rename section" type="button" aria-label="Rename section">✎</button>
+      <button class="section-action section-delete" title="Delete section" type="button">×</button>
+      <button class="section-action section-focus-close" title="Close section" type="button" aria-label="Close focused section">×</button>
+    </div>
+    <div class="category-summary">${section.links.length} ${section.links.length === 1 ? "bookmark" : "bookmarks"}</div>
+    <div class="links" data-section-index="${sectionIndex}"></div>
+  `;
+  sectionEl.querySelector(".add-link-btn").addEventListener("click", () => openLinkModal(sectionIndex));
+  sectionEl.querySelector(".section-rename").addEventListener("click", () => openRenameSectionModal(sectionIndex));
+  sectionEl.querySelector(".section-delete").addEventListener("click", () => deleteSection(sectionIndex));
+  sectionEl.querySelector(".section-focus-close").addEventListener("click", event => {
+    event.stopPropagation();
+    clearKeyboardNavigation();
+    clearSectionFocus();
+  });
+  sectionEl.addEventListener("click", event => {
+    if (event.target.closest(".link, .section-actions")) return;
+    event.stopPropagation();
+    focusBookmarkSection(sectionIndex);
+  });
+  setupSectionDrag(sectionEl, sectionIndex);
+  const linksContainer = sectionEl.querySelector(".links");
+  setupLinkDropZone(linksContainer, sectionIndex);
+  section.links.forEach((link, linkIndex) => {
+    const row = createLinkElement(sectionIndex, linkIndex, keyMap);
+    if (row) linksContainer.appendChild(row);
+  });
+  return sectionEl;
+}
+
+function createAddSectionTile() {
   const addTile = document.createElement("button");
   addTile.className = "section-add-tile";
   addTile.type = "button";
@@ -2196,7 +2261,121 @@ function renderSections() {
   addTile.setAttribute("aria-label", "Add Section");
   addTile.innerHTML = `<span aria-hidden="true">+</span>`;
   addTile.addEventListener("click", () => openSectionModal());
-  container.appendChild(addTile);
+  return addTile;
+}
+
+function renderSections() {
+  return measureWaypointRender("waypoint:bookmarks:all", () => {
+    const container = $("sections");
+    if (!container) return;
+    container.innerHTML = "";
+    const keyMap = navigationKeyMap();
+    data.sections.forEach((section, sectionIndex) => {
+      const sectionEl = createSectionElement(sectionIndex, keyMap);
+      if (sectionEl) container.appendChild(sectionEl);
+    });
+    container.appendChild(createAddSectionTile());
+  });
+}
+
+function refreshSectionNavigationHints(sectionIndex = null) {
+  const keyMap = navigationKeyMap();
+  const sections = Number.isInteger(sectionIndex)
+    ? [document.querySelector(`.section[data-section-index="${sectionIndex}"]`)].filter(Boolean)
+    : [...document.querySelectorAll(".section[data-section-index]")];
+  sections.forEach(sectionEl => {
+    const index = Number(sectionEl.dataset.sectionIndex);
+    const sectionHint = sectionEl.querySelector(".section-key-hint");
+    if (sectionHint) sectionHint.textContent = (keyMap[index]?.key || "").toUpperCase();
+    sectionEl.querySelectorAll(".link").forEach(row => {
+      const linkIndex = Number(row.dataset.linkIndex);
+      const linkHint = row.querySelector(".link-key-hint");
+      if (linkHint) linkHint.textContent = (keyMap[index]?.linkKeys[linkIndex] || "").toUpperCase();
+    });
+  });
+}
+
+function refreshSectionMetadata(sectionIndex) {
+  const section = data.sections[sectionIndex];
+  const sectionEl = document.querySelector(`.section[data-section-index="${sectionIndex}"]`);
+  if (!section || !sectionEl) return false;
+  sectionEl.classList.toggle("empty-section", section.links.length === 0);
+  sectionEl.dataset.widgetLabel = `Bookmark Section: ${section.name || `Section ${sectionIndex + 1}`}`;
+  const title = sectionEl.querySelector(".section-name");
+  if (title) title.textContent = section.name;
+  const icon = sectionEl.querySelector(".section-generated-icon");
+  if (icon) icon.innerHTML = sectionGeneratedIcon(section.name, section.links);
+  const summary = sectionEl.querySelector(".category-summary");
+  if (summary) summary.textContent = `${section.links.length} ${section.links.length === 1 ? "bookmark" : "bookmarks"}`;
+  return true;
+}
+
+function renderSectionMetadata(sectionIndex, { refreshAllHints = false } = {}) {
+  return measureWaypointRender("waypoint:bookmarks:section", () => {
+    if (!refreshSectionMetadata(sectionIndex)) {
+      renderSection(sectionIndex);
+      return;
+    }
+    refreshSectionNavigationHints(refreshAllHints ? null : sectionIndex);
+    syncSectionFocusDom();
+    emitRendered();
+  });
+}
+
+function renderSection(sectionIndex) {
+  return measureWaypointRender("waypoint:bookmarks:section", () => {
+    const current = document.querySelector(`.section[data-section-index="${sectionIndex}"]`);
+    const replacement = createSectionElement(sectionIndex);
+    if (!current || !replacement) {
+      renderSections();
+      syncSectionFocusDom();
+      emitRendered();
+      return;
+    }
+    current.replaceWith(replacement);
+    syncSectionFocusDom();
+    emitRendered();
+  });
+}
+
+function renderBookmark(sectionIndex, linkIndex) {
+  return measureWaypointRender("waypoint:bookmarks:bookmark", () => {
+    const sectionEl = document.querySelector(`.section[data-section-index="${sectionIndex}"]`);
+    const links = sectionEl?.querySelector(".links");
+    const replacement = createLinkElement(sectionIndex, linkIndex);
+    if (!sectionEl || !links || !replacement) {
+      renderSection(sectionIndex);
+      return;
+    }
+    const current = links.querySelector(`.link[data-link-index="${linkIndex}"]`);
+    if (current) current.replaceWith(replacement);
+    else if (linkIndex === data.sections[sectionIndex].links.length - 1) links.appendChild(replacement);
+    else {
+      renderSection(sectionIndex);
+      return;
+    }
+    refreshSectionMetadata(sectionIndex);
+    refreshSectionNavigationHints(sectionIndex);
+    syncSectionFocusDom();
+    emitRendered();
+  });
+}
+
+function renderAddedSection(sectionIndex) {
+  return measureWaypointRender("waypoint:bookmarks:section", () => {
+    const container = $("sections");
+    const addTile = container?.querySelector(".section-add-tile");
+    const sectionEl = createSectionElement(sectionIndex);
+    if (!container || !addTile || !sectionEl) {
+      renderSections();
+      emitRendered();
+      return;
+    }
+    container.insertBefore(sectionEl, addTile);
+    refreshSectionNavigationHints();
+    syncSectionFocusDom();
+    emitRendered();
+  });
 }
 
 function handleWaypointLink(url) {
@@ -2272,7 +2451,9 @@ function setupSectionDrag(sectionEl, sectionIndex) {
     data.sections.splice(before ? target : target + 1, 0, moved);
     draggedSectionIndex = null;
     save();
-    render();
+    renderSections();
+    syncSectionFocusDom();
+    emitRendered();
   });
 }
 
@@ -2452,7 +2633,12 @@ function moveLink(fromSection, fromIndex, toSection, toIndex) {
   activeLinkDropTarget = null;
   clearLinkDragClasses();
   save();
-  render();
+  if (fromSection === toSection) {
+    renderSection(fromSection);
+  } else {
+    renderSection(fromSection);
+    renderSection(toSection);
+  }
 }
 
 function clearLinkDropMarkers() { document.querySelectorAll(".link-drop-before,.link-drop-after").forEach(el => el.classList.remove("link-drop-before", "link-drop-after")); }
@@ -2504,12 +2690,14 @@ function saveLink() {
   }
   const nextName = isWaypointUrl(normalizedUrl) ? cleanInternalLinkName(name, normalizedUrl) : name;
   const nextLink = { name: nextName, url: normalizedUrl, icon: isWaypointUrl(normalizedUrl) ? waypointIcon(normalizedUrl) : pendingLinkIcon || "" };
-  if (editingLink) data.sections[editingLink.sectionIndex].links[editingLink.linkIndex] = nextLink;
-  else data.sections[activeSection].links.push(nextLink);
+  const changedSectionIndex = editingLink?.sectionIndex ?? activeSection;
+  const changedLinkIndex = editingLink?.linkIndex ?? data.sections[activeSection].links.length;
+  if (editingLink) data.sections[changedSectionIndex].links[changedLinkIndex] = nextLink;
+  else data.sections[changedSectionIndex].links.push(nextLink);
   editingLink = null;
   pendingLinkIcon = null;
   save();
-  render();
+  renderBookmark(changedSectionIndex, changedLinkIndex);
   closeModal("linkModal");
 }
 
@@ -2519,8 +2707,12 @@ function deleteSection(index) {
   if (!confirm(`Delete section "${section.name}" and ${section.links.length} link(s)?`)) return;
   data.sections.splice(index, 1);
   if (!data.sections.length) data.sections.push({ name: "New Section", links: [] });
+  if (focusedSectionIndex === index) focusedSectionIndex = null;
+  else if (Number.isInteger(focusedSectionIndex) && focusedSectionIndex > index) focusedSectionIndex -= 1;
   save();
-  render();
+  renderSections();
+  syncSectionFocusDom();
+  emitRendered();
 }
 
 function openSectionModal() {
@@ -2621,7 +2813,7 @@ function renameSectionFromModal() {
   data.sections[sectionIndex].name = nextName;
   renamingSectionIndex = null;
   save();
-  render();
+  renderSectionMetadata(sectionIndex, { refreshAllHints: true });
   closeModal("renameSectionModal");
   focusBookmarkSection(sectionIndex);
 }
@@ -2631,7 +2823,7 @@ function addSection(name = "") {
   if (!sectionName) return openSectionModal();
   data.sections.push({ name: sectionName, links: [] });
   save();
-  render();
+  renderAddedSection(data.sections.length - 1);
 }
 
 function findSectionIndexByName(name) {
@@ -2673,7 +2865,7 @@ function addLinkByCommand(sectionName, linkName, url) {
   const safeName = isWaypointUrl(safeUrl) ? cleanInternalLinkName(linkName, safeUrl) : String(linkName).trim() || safeUrl;
   data.sections[sectionIndex].links.push({ name: safeName, url: safeUrl, icon: isWaypointUrl(safeUrl) ? waypointIcon(safeUrl) : "" });
   save();
-  render();
+  renderBookmark(sectionIndex, data.sections[sectionIndex].links.length - 1);
   return `Added <strong>${escapeHtml(linkName)}</strong> to <strong>${escapeHtml(data.sections[sectionIndex].name)}</strong>.`;
 }
 
@@ -2682,7 +2874,7 @@ function renameSectionByCommand(oldName, newName) {
   if (sectionIndex < 0) return `No section named <strong>${escapeHtml(oldName)}</strong>.`;
   data.sections[sectionIndex].name = String(newName || "").trim() || data.sections[sectionIndex].name;
   save();
-  render();
+  renderSectionMetadata(sectionIndex, { refreshAllHints: true });
   return `Section renamed to <strong>${escapeHtml(data.sections[sectionIndex].name)}</strong>.`;
 }
 
@@ -3175,7 +3367,7 @@ function commandResult(text) {
 function executeButtonCommand(command) {
   if (command === "fetch") runCommand("fetch");
   if (command === "addSection") { openSectionModal(); }
-  if (command === "toggleBanner") { data.settings.heroStyle = data.settings.heroStyle === "hidden" ? "auto" : "hidden"; save(); render(); }
+  if (command === "toggleBanner") { data.settings.heroStyle = data.settings.heroStyle === "hidden" ? "auto" : "hidden"; save(); renderAppearance(); }
   if (command === "export") exportJson();
   if (command === "import") $("importFile")?.click();
   if (command === "help") runCommand("help");
@@ -3402,10 +3594,10 @@ function bindEvents() {
     const previousTheme = data.settings.theme;
     data.settings.theme = value;
     save();
-    render();
+    renderAppearance();
     emitWaypointEvent("theme-changed", { theme: value, previousTheme });
   });
-  bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); render(); });
+  bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); renderAppearance(); });
   bindNumber("uiScaleSlider", "uiScale", () => applyPersonalization());
   bindSetting("customAppearanceSelect", "change", value => {
     const enabled = value === "true";
@@ -3413,24 +3605,24 @@ function bindEvents() {
     data.settings.useCustomColors = enabled;
     data.settings.useCustomTextColors = enabled;
     save();
-    render();
+    renderAppearance();
   });
-  bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; save(); render(); });
-  bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; save(); render(); });
-  bindSetting("globalTextColorInput", "input", value => { data.settings.customText = value; save(); render(); });
-  bindSetting("sectionTitleColorInput", "input", value => { data.settings.sectionTitleColor = value; save(); render(); });
-  bindSetting("bookmarkTextColorInput", "input", value => { data.settings.bookmarkTextColor = value; save(); render(); });
-  bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; save(); render(); });
-  bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; save(); render(); });
-  bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; save(); render(); });
-  $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); render(); });
-  bindSetting("workspaceHeroStyleSelect", "change", value => { setWorkspaceHeroStyle(value); save(); render(); });
-  bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); render(); });
-  bindSetting("showWordmarkSelect", "change", value => { setWidgetVisible("wordmark", value === "true"); save(); render(); });
-  bindSetting("showClockSelect", "change", value => { setWidgetVisible("clock", value === "true"); save(); render(); });
-  bindSetting("showWeatherSelect", "change", value => { setWidgetVisible("weather", value === "true"); save(); render(); });
-  bindSetting("showSearchSelect", "change", value => { setWidgetVisible("search", value === "true"); save(); render(); });
-  bindSetting("showSectionTitlesSelect", "change", value => { data.settings.workspace.display.showSectionTitles = value === "true"; data.settings.workspace.modified = true; syncLegacyVisibilityFromWorkspace(); save(); render(); });
+  bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; save(); renderAppearance(); });
+  bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; save(); renderAppearance(); });
+  bindSetting("globalTextColorInput", "input", value => { data.settings.customText = value; save(); renderAppearance(); });
+  bindSetting("sectionTitleColorInput", "input", value => { data.settings.sectionTitleColor = value; save(); renderAppearance(); });
+  bindSetting("bookmarkTextColorInput", "input", value => { data.settings.bookmarkTextColor = value; save(); renderAppearance(); });
+  bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; save(); renderAppearance(); });
+  bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; save(); renderAppearance(); });
+  bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; save(); renderAppearance(); });
+  $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); renderWorkspace(); });
+  bindSetting("workspaceHeroStyleSelect", "change", value => { setWorkspaceHeroStyle(value); save(); renderWorkspace(); });
+  bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); renderWorkspace(); });
+  bindSetting("showWordmarkSelect", "change", value => { setWidgetVisible("wordmark", value === "true"); save(); renderWorkspace(); });
+  bindSetting("showClockSelect", "change", value => { setWidgetVisible("clock", value === "true"); save(); renderWorkspace(); });
+  bindSetting("showWeatherSelect", "change", value => { setWidgetVisible("weather", value === "true"); save(); renderWorkspace(); });
+  bindSetting("showSearchSelect", "change", value => { setWidgetVisible("search", value === "true"); save(); renderWorkspace(); });
+  bindSetting("showSectionTitlesSelect", "change", value => { data.settings.workspace.display.showSectionTitles = value === "true"; data.settings.workspace.modified = true; syncLegacyVisibilityFromWorkspace(); save(); renderWorkspace(); });
   $("editLayoutBtn")?.addEventListener("click", toggleEditLayoutMode);
   document.addEventListener("click", event => {
     if (!editLayoutActive || !selectedWorkspaceWidgetId) return;
@@ -3441,15 +3633,15 @@ function bindEvents() {
     data.settings.keyboardNavigation = value === "true";
     clearKeyboardNavigation();
     save();
-    render();
+    renderBookmarkSettings();
   });
   bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
   bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
   bindSetting("customCssInput", "input", value => { data.settings.customCss = value.slice(0, 8000); save(); applyPersonalization(); });
   $("cssManBtn")?.addEventListener("click", () => { openModal("terminalModal"); runCommand("help css"); });
-  $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); render(); });
+  $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); renderAppearance(); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
-  bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); render(); });
+  bindSetting("backgroundModeSelect", "change", value => { data.settings.backgroundMode = value; save(); renderAppearance(); });
   bindSetting("heroStyleSelect", "change", value => {
     if (value === "hidden") {
       data.settings.heroStyle = "auto";
@@ -3461,9 +3653,9 @@ function bindEvents() {
       setBannerSize("medium");
       return;
     }
-    save(); render();
+    save(); renderAppearance();
   });
-  bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); render(); });
+  bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); renderBookmarkSettings(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
   bindNumber("overlaySlider", "overlay", () => applyTheme());
   bindNumber("blurSlider", "blur", () => applyTheme());
@@ -3474,17 +3666,17 @@ function bindEvents() {
   $("backgroundUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_BG_KEY, reader.result); data.settings.backgroundMode = "custom"; save(); render(); };
+    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_BG_KEY, reader.result); data.settings.backgroundMode = "custom"; save(); renderAppearance(); };
     reader.readAsDataURL(file);
   });
   $("imageUpload")?.addEventListener("change", e => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_HERO_KEY, reader.result); data.settings.heroStyle = "custom"; save(); render(); };
+    reader.onload = () => { WaypointStorage.saveRaw(CUSTOM_HERO_KEY, reader.result); data.settings.heroStyle = "custom"; save(); renderAppearance(); };
     reader.readAsDataURL(file);
   });
-  $("resetBackgroundBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_BG_KEY); data.settings.backgroundMode = "wallpaper"; save(); render(); });
-  $("resetHeroBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
+  $("resetBackgroundBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_BG_KEY); data.settings.backgroundMode = "wallpaper"; save(); renderAppearance(); });
+  $("resetHeroBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); renderAppearance(); });
 
   document.addEventListener("keydown", event => {
     if (WelcomeTourController.active && !(WelcomeTourController.step === "keys" && WelcomeTourController.phase === "try")) return;
@@ -3679,7 +3871,7 @@ const WelcomeTourController = {
     data.settings.theme = this.originalTheme;
     this.themeDecision = "restored";
     save();
-    render();
+    renderAppearance();
     this.render();
   },
 
@@ -3692,7 +3884,7 @@ const WelcomeTourController = {
     data.settings.keyboardNavigation = true;
     clearKeyboardNavigation();
     save();
-    render();
+    renderBookmarkSettings();
     this.phase = "try";
     this.render();
   },
@@ -4082,41 +4274,41 @@ function runCommand(commandRaw) {
       data.settings.workspace.display.showSectionTitles = visible;
       data.settings.workspace.modified = true;
       syncLegacyVisibilityFromWorkspace();
-      save(); render();
+      save(); renderWorkspace();
       return done(buildStatusLines(`${visible ? "Showing" : "Hiding"}: Grid Card section titles`));
     }
     const widgetId = widgetMap[arg];
     if (!widgetId) return textOut(buildHelpText("visibility"), "terminal-warning");
     if (!setWidgetVisible(widgetId, visible)) return textOut(`Cannot ${head} ${arg}.`, "terminal-warning");
-    save(); render();
+    save(); renderWorkspace();
     return done(buildStatusLines(`${visible ? "Showing" : "Hiding"}: ${arg}`));
   }
   if (["template", "preset", "workspace"].includes(head)) {
     if (head === "workspace" && !arg) return done(terminalPre(workspaceSummaryText(), "terminal-help"));
     if (!arg) return textOut(`Current template: ${data.settings.workspace?.template || "classic"}${data.settings.workspace?.modified ? " (modified)" : ""}`);
     if (!["classic", "minimal", "dashboard"].includes(arg)) return textOut(buildHelpText("template"), "terminal-warning");
-    applyWorkspaceTemplate(arg); save(); render();
+    applyWorkspaceTemplate(arg); save(); renderWorkspace();
     return done(buildStatusLines(`Applying workspace template: ${arg}`));
   }
   if (head === "font") {
     if (!arg) return textOut(`Current interface font: ${data.settings.fontFamily === "system" ? "System" : "Waypoint"}`);
     const font = normalizeFontName(commandRaw.trim().replace(/^font\s*/i, "").trim());
     if (!font) return textOut(buildHelpText("font"), "terminal-warning");
-    data.settings.fontFamily = font; save(); render();
+    data.settings.fontFamily = font; save(); renderAppearance();
     return done(buildStatusLines(`Setting interface font: ${font === "system" ? "System" : "Waypoint"}`));
   }
   if (head === "theme") {
     if (!arg) return textOut(`Current theme: ${getTheme().label}`);
     const map = { catppuccin: "catppuccin", daylight: "daylight", light: "daylight", nord: "nord", gruvbox: "gruvbox", graphite: "graphite", tokyo: "tokyoNight", "tokyo-night": "tokyoNight", tokyonight: "tokyoNight" };
     if (!map[arg]) return textOut(buildHelpText("theme"), "terminal-warning");
-    data.settings.theme = map[arg]; save(); render();
+    data.settings.theme = map[arg]; save(); renderAppearance();
     return done(buildStatusLines(`Applying theme: ${getTheme().label}`));
   }
   if (head === "layout") {
     const map = { list: "list", compact: "list", row: "list", rows: "list", grid: "grid", cards: "grid" };
     if (!arg) return textOut(`Bookmark layout: ${(data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid Cards"}`);
     if (!map[arg]) return textOut(buildHelpText("layout"), "terminal-warning");
-    data.settings.bookmarkLayout = map[arg]; save(); render();
+    data.settings.bookmarkLayout = map[arg]; save(); renderBookmarkSettings();
     return done(buildStatusLines(`Setting bookmark layout: ${data.settings.bookmarkLayout === "list" ? "Compact List" : "Grid Cards"}`));
   }
   if (head === "accent" || head === "surface" || head === "text" || head === "titlecolor") {
@@ -4127,7 +4319,7 @@ function runCommand(commandRaw) {
     if (head === "text") data.settings.customText = color;
     if (["text", "titlecolor"].includes(head)) { data.settings.useCustomAppearance = true; data.settings.useCustomColors = true; data.settings.useCustomTextColors = true; }
     if (head === "titlecolor") data.settings.sectionTitleColor = color;
-    save(); render();
+    save(); renderAppearance();
     return done(buildStatusLines(`Setting ${head} color: ${color}`));
   }
   if (head === "transparency" || ((head === "section" || head === "window" || head === "terminal") && rest[0] === "transparency")) {
@@ -4136,20 +4328,20 @@ function runCommand(commandRaw) {
   if (head === "name") {
     const nextName = commandRaw.trim().replace(/^name\s*/i, "").trim();
     if (!nextName) return textOut("Usage: name <username>", "terminal-warning");
-    data.settings.userName = sanitizeUserName(nextName); save(); render();
+    data.settings.userName = sanitizeUserName(nextName); save(); renderAppearance();
     return textOut(`Name set to ${displayUserName()}.`, "terminal-success-text");
   }
   if (head === "searchengine" || head === "engine") {
     const map = { google: "google", ddg: "duckduckgo", duckduckgo: "duckduckgo", brave: "brave", bing: "bing", custom: "custom" };
     if (!arg) return textOut(`Current search engine: ${labelSearch(data.settings.searchEngine)}`);
     if (!map[arg]) return textOut(buildHelpText("search"), "terminal-warning");
-    data.settings.searchEngine = map[arg]; save(); render();
+    data.settings.searchEngine = map[arg]; save(); applySearchEngine(); syncControls(); renderTerminal(); emitRendered();
     return done(buildStatusLines(`Setting search engine: ${labelSearch(data.settings.searchEngine)}`));
   }
   if (head === "customsearch") {
     const url = commandRaw.trim().replace(/^customsearch\s*/i, "").trim();
     if (!url) return textOut("Usage: customsearch https://example.com/search?q=%s", "terminal-warning");
-    data.settings.customSearchUrl = url.slice(0, 240); data.settings.searchEngine = "custom"; save(); render();
+    data.settings.customSearchUrl = url.slice(0, 240); data.settings.searchEngine = "custom"; save(); applySearchEngine(); syncControls(); renderTerminal(); emitRendered();
     return textOut("Custom search URL saved.", "terminal-success-text");
   }
   if (head === "weather") {
@@ -4174,21 +4366,21 @@ function runCommand(commandRaw) {
       return done(buildStatusLines(`Setting banner size: ${labelHeroSize(data.settings.heroSize)}`));
     }
     if (!map[arg]) return textOut(buildHelpText("banner"), "terminal-warning");
-    data.settings.heroStyle = map[arg]; save(); render();
+    data.settings.heroStyle = map[arg]; save(); renderAppearance();
     return done(buildStatusLines(`Setting banner: ${labelBannerStyle(data.settings.heroStyle)}`));
   }
   if (head === "wallpaper") {
     const map = { theme: "wallpaper", wallpaper: "wallpaper", default: "wallpaper", gradient: "gradient", custom: "custom" };
     if (!arg) return textOut(`Wallpaper: ${labelBackground(data.settings.backgroundMode)}`);
     if (!map[arg]) return textOut(buildHelpText("wallpaper"), "terminal-warning");
-    data.settings.backgroundMode = map[arg]; save(); render();
+    data.settings.backgroundMode = map[arg]; save(); renderAppearance();
     return done(buildStatusLines(`Setting wallpaper: ${labelBackground(data.settings.backgroundMode)}`));
   }
   if (head === "add") {
     if (arg.startsWith("section")) {
       const sectionName = commandRaw.trim().replace(/^add\s+section\s*/i, "").trim();
       if (!sectionName) return textOut(buildHelpText("add"), "terminal-warning");
-      data.sections.push({ name: sectionName, links: [] }); save(); render();
+      data.sections.push({ name: sectionName, links: [] }); save(); renderAddedSection();
       return textOut(`Section added: ${sectionName}`, "terminal-success-text");
     }
     if (arg.startsWith("link")) {
@@ -4253,7 +4445,18 @@ function resetCategory(target) {
   else if (target === "advanced" || target === "search") ["searchEngine", "customSearchUrl"].forEach(k => data.settings[k] = d[k]);
   else if (target === "all" || target === "everything") { data = structuredClone(defaultData); WaypointStorage.remove(CUSTOM_BG_KEY); WaypointStorage.remove(CUSTOM_HERO_KEY); WaypointStorage.remove(WEATHER_CACHE_KEY); }
   else return false;
-  save(); render(); refreshWeather(false);
+  save();
+  if (target === "all" || target === "everything") render();
+  else if (target === "layout" || target === "workspace") renderWorkspace();
+  else if (target === "bookmarks") renderBookmarkSettings();
+  else if (["appearance", "banner", "text", "textcolors"].includes(target)) renderAppearance();
+  else {
+    syncControls();
+    applySearchEngine();
+    renderTerminal();
+    emitRendered();
+  }
+  refreshWeather(false);
   return true;
 }
 function addResetButtonEvents() {
