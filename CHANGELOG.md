@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Replaced the legacy PNG favicon with Waypoint's reusable SVG logo.
 - Improved bookmark drag/drop handling so bookmark row drops no longer bubble into section-level drop handlers.
 - Added clearer bookmark drag source, drop-zone, and insertion-target feedback.
 - Made bookmark insertion detection account for grid-style bookmark layouts as well as vertical list flows.
@@ -74,6 +75,7 @@
 
 ### Fixed
 
+- Added public-version query parameters to Waypoint's core CSS and JavaScript URLs so browsers request current assets after a release.
 - Corrected the initial Nord banner image path so first render no longer requests a missing legacy asset.
 - Hardened bookmark move logic against invalid indexes before mutating saved bookmark order.
 - Cleared transient bookmark drag state before re-rendering after a successful move.
