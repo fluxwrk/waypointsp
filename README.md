@@ -118,26 +118,15 @@ Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoin
 
 ---
 
-## Roadmap
+## Project Status
 
-Detailed project architecture, roadmap, development guidance, design reviews, and build reports are organized in the [documentation index](docs/README.md).
+**Latest Public Release:** **v1.5.0**
 
-### Completed
+**Current Main Branch:** **v1.5.2** (latest stable development)
 
-- ✅ v1.0 Foundation
-- ✅ v1.1 Personalization
-- ✅ v1.2 Terminal Upgrade
-- ✅ v1.3 First Experience & Onboarding
-- ✅ v1.4 Workspace Foundation
-- ✅ v1.5 Workspace Evolution
+> The `main` branch always contains the latest validated development build. Public releases are created after a development milestone is complete.
 
-### In Progress
-
-- 🚧 v1.5.1 Bookmark Experience Pass
-
-### On Hold
-
-- ⏸ Waypoint Protocol Expansion
+**Current Development:** 🚧 **v1.5.2 Runtime & Architecture Optimization**
 
 ---
 
