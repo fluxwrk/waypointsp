@@ -3,7 +3,7 @@ const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6",
 const CUSTOM_BG_KEY = "startpage-custom-background";
 const CUSTOM_HERO_KEY = "startpage-custom-hero";
 const WEATHER_CACHE_KEY = "startpage-weather-cache-v2";
-let appMeta = { name: "Waypoint", version: "1.5.1", branch: "main", codename: "Bookmark Experience Pass" };
+let appMeta = { name: "Waypoint", version: "1.5.2", branch: "main", codename: "Startup Asset Optimization" };
 
 const SEARCH_ENGINES = {
   google: { label: "Google", badge: "G", action: "https://www.google.com/search", param: "q", placeholder: "Search Google" },
@@ -16,9 +16,9 @@ const SEARCH_ENGINES = {
 const THEMES = {
   catppuccin: {
     label: "Catppuccin",
-    wallpaper: "img/catppuccin-wallpaper.png",
-    desktop: "img/catppuccin-desktop-banner.png",
-    atmo: "img/catppuccin-atmo-banner.png",
+    wallpaper: "img/catppuccin-wallpaper.webp",
+    desktop: "img/catppuccin-desktop-banner.webp",
+    atmo: "img/catppuccin-atmo-banner.webp",
     defaultHero: "atmo",
     gradient: "linear-gradient(135deg, #181825 0%, #1e1e2e 48%, #313244 100%)",
     page: "#181825", surface: "#1e1e2e", elevated: "#313244", hover: "#45475a",
@@ -29,9 +29,9 @@ const THEMES = {
   daylight: {
     label: "Daylight",
     scheme: "light",
-    wallpaper: "img/daylight-wallpaper.png",
-    desktop: "img/daylight-desktop-banner.png",
-    atmo: "img/daylight-atmo-banner.png",
+    wallpaper: "img/daylight-wallpaper.webp",
+    desktop: "img/daylight-desktop-banner.webp",
+    atmo: "img/daylight-atmo-banner.webp",
     defaultHero: "atmo",
     gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 48%, #e2e8f0 100%)",
     page: "#f1f5f9", surface: "#ffffff", elevated: "#e8edf5", hover: "#dbe4f0",
@@ -41,9 +41,9 @@ const THEMES = {
   },
   nord: {
     label: "Nord",
-    wallpaper: "img/nord-wallpaper.png",
-    desktop: "img/nord-desktop-banner.png",
-    atmo: "img/nord-atmo-banner.png",
+    wallpaper: "img/nord-wallpaper.webp",
+    desktop: "img/nord-desktop-banner.webp",
+    atmo: "img/nord-atmo-banner.webp",
     defaultHero: "atmo",
     gradient: "linear-gradient(135deg, #242933 0%, #2e3440 48%, #3b4252 100%)",
     page: "#242933", surface: "#2e3440", elevated: "#3b4252", hover: "#4c566a",
@@ -53,9 +53,9 @@ const THEMES = {
   },
   gruvbox: {
     label: "Gruvbox",
-    wallpaper: "img/gruvbox-wallpaper.png",
-    desktop: "img/gruvbox-desktop-banner.png",
-    atmo: "img/gruvbox-atmo-banner.png",
+    wallpaper: "img/gruvbox-wallpaper.webp",
+    desktop: "img/gruvbox-desktop-banner.webp",
+    atmo: "img/gruvbox-atmo-banner.webp",
     defaultHero: "desktop",
     gradient: "linear-gradient(135deg, #1d2021 0%, #282828 50%, #3c3836 100%)",
     page: "#1d2021", surface: "#282828", elevated: "#3c3836", hover: "#504945",
@@ -65,9 +65,9 @@ const THEMES = {
   },
   graphite: {
     label: "Graphite",
-    wallpaper: "img/graphite-wallpaper.png",
-    desktop: "img/graphite-desktop-banner.png",
-    atmo: "img/graphite-atmo-banner.png",
+    wallpaper: "img/graphite-wallpaper.webp",
+    desktop: "img/graphite-desktop-banner.webp",
+    atmo: "img/graphite-atmo-banner.webp",
     defaultHero: "desktop",
     gradient: "linear-gradient(135deg, #111113 0%, #18181b 48%, #27272a 100%)",
     page: "#111113", surface: "#1c1c20", elevated: "#29292e", hover: "#38383f",
@@ -77,9 +77,9 @@ const THEMES = {
   },
   tokyoNight: {
     label: "Tokyo Night",
-    wallpaper: "img/tokyo-night-wallpaper.png",
-    desktop: "img/tokyo-night-desktop-banner.png",
-    atmo: "img/tokyo-night-atmo-banner.png",
+    wallpaper: "img/tokyo-night-wallpaper.webp",
+    desktop: "img/tokyo-night-desktop-banner.webp",
+    atmo: "img/tokyo-night-atmo-banner.webp",
     defaultHero: "desktop",
     gradient: "linear-gradient(135deg, #13141c 0%, #1a1b26 48%, #24283b 100%)",
     page: "#13141c", surface: "#1a1b26", elevated: "#24283b", hover: "#343b58",
@@ -661,6 +661,7 @@ function handleKeyboardNavigation(event) {
     document.querySelector(`.section[data-section-index="${sectionIndex}"]`)?.classList.add("keyboard-section-active");
     focusBookmarkSection(sectionIndex);
     scheduleKeyboardNavigationReset();
+    emitWaypointEvent("waypointkeys-section-selected", { sectionIndex, key });
     return true;
   }
 
@@ -1391,7 +1392,10 @@ function setEditLayoutMode(active) {
   updateEditLayoutBar();
   applyWidgetFoundation();
   ensureWorkspaceLauncher();
-  if (editLayoutActive) renderWorkspaceDesignerPanel();
+  if (editLayoutActive) {
+    renderWorkspaceDesignerPanel();
+    emitWaypointEvent("workspace-studio-opened");
+  }
 }
 
 function toggleEditLayoutMode() {
@@ -1883,9 +1887,9 @@ function applyHero() {
   card.style.setProperty("--hero-min-height", `${data.settings.heroHeight}px`);
   card.style.setProperty("--hero-fit", "contain");
   card.classList.add("fit-contain");
-  const heroSrc = getHeroSrc();
   const theme = getTheme();
-  card.style.backgroundImage = `url("${heroSrc}"), ${theme.gradient}`;
+  const heroSrc = isBannerHidden ? "" : getHeroSrc();
+  card.style.backgroundImage = heroSrc ? `url("${heroSrc}"), ${theme.gradient}` : theme.gradient;
   card.style.backgroundPosition = "center center";
   card.style.backgroundSize = "contain, cover";
   card.style.backgroundRepeat = "no-repeat";
@@ -2030,24 +2034,35 @@ function positionSettings() {
   }
 }
 
-function openSettingsPage(page = "appearance") {
+function openSettingsPage(page = "appearance", context = {}) {
   const targetPage = normalizeSettingsPage(page);
   document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === targetPage));
   document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === targetPage));
-  openModal("settingsModal");
+  openModal("settingsModal", context);
+  emitWaypointEvent("settings-page-changed", { page: targetPage, source: context.source || "interface" });
 }
-function openModal(id) {
+function openModal(id, context = {}) {
   clearSectionFocus();
   $(id)?.classList.remove("hidden");
   if (id === "terminalModal") {
     renderTerminal();
     positionTerminal();
     setTimeout(() => $("commandInput")?.focus(), 80);
+    emitWaypointEvent("terminal-opened", { source: context.source || "interface" });
   }
-  if (id === "settingsModal") positionSettings();
+  if (id === "settingsModal") {
+    positionSettings();
+    emitWaypointEvent("settings-opened", { source: context.source || "interface" });
+  }
 }
-function closeModal(id) { $(id)?.classList.add("hidden"); }
-function closeAllModals() { document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden")); }
+function closeModal(id) {
+  $(id)?.classList.add("hidden");
+  emitWaypointEvent("modal-closed", { id });
+}
+function closeAllModals() {
+  document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
+  emitWaypointEvent("modal-closed", { id: "all" });
+}
 
 function render() {
   syncLegacyVisibilityFromWorkspace();
@@ -2067,6 +2082,7 @@ function render() {
   renderTerminal();
   updateWeatherWidget();
   applySearchEngine();
+  emitWaypointEvent("rendered");
 }
 
 function renderSections() {
@@ -3289,7 +3305,7 @@ function bindEvents() {
     event.stopImmediatePropagation();
     selectWorkspaceWidget(widgetId);
   }, true);
-  $("logoBtn")?.addEventListener("click", () => openModal("terminalModal"));
+  $("logoBtn")?.addEventListener("click", () => openModal("terminalModal", { source: "logo" }));
   setupTerminalDrag();
   setupSettingsDrag();
   $("settingsBtn")?.addEventListener("click", () => openModal("settingsModal"));
@@ -3357,17 +3373,17 @@ function bindEvents() {
   document.querySelectorAll("[data-close-modal]").forEach(btn => btn.addEventListener("click", () => closeModal(btn.dataset.closeModal)));
   document.querySelectorAll(".modal").forEach(modal => modal.addEventListener("click", e => { if (e.target === modal) closeModal(modal.id); }));
   document.querySelectorAll("[data-command]").forEach(btn => btn.addEventListener("click", () => executeButtonCommand(btn.dataset.command)));
+  $("welcomeTourClose")?.addEventListener("click", () => WelcomeTourController.cancel());
+  $("welcomeTourSkip")?.addEventListener("click", () => WelcomeTourController.cancel());
 
   $("commandInput")?.addEventListener("keydown", e => {
     if (e.key === "Enter" && e.target.value.trim()) {
       e.preventDefault();
-      welcomeGuideState.active = false;
       const value = e.target.value;
       e.target.value = "";
       runCommand(value);
       return;
     }
-    if (handleWelcomeGuideKey(e)) return;
   });
 
   $("importFile")?.addEventListener("change", e => { const file = e.target.files[0]; if (file) importJsonFile(file); e.target.value = ""; });
@@ -3382,7 +3398,13 @@ function bindEvents() {
   bindSetting("weatherUnitSelect", "change", value => { data.settings.weatherUnit = value; save(); refreshWeather(true); });
   bindSetting("searchEngineSelect", "change", value => { data.settings.searchEngine = value; save(); applySearchEngine(); renderTerminal(); });
   bindSetting("customSearchInput", "change", value => { data.settings.customSearchUrl = value.trim().slice(0, 240); save(); applySearchEngine(); });
-  bindSetting("themeSelect", "change", value => { data.settings.theme = value; save(); render(); });
+  bindSetting("themeSelect", "change", value => {
+    const previousTheme = data.settings.theme;
+    data.settings.theme = value;
+    save();
+    render();
+    emitWaypointEvent("theme-changed", { theme: value, previousTheme });
+  });
   bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); render(); });
   bindNumber("uiScaleSlider", "uiScale", () => applyPersonalization());
   bindSetting("customAppearanceSelect", "change", value => {
@@ -3465,7 +3487,7 @@ function bindEvents() {
   $("resetHeroBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); render(); });
 
   document.addEventListener("keydown", event => {
-    if (welcomeGuideState.active && event.key === "Escape") return;
+    if (WelcomeTourController.active && !(WelcomeTourController.step === "keys" && WelcomeTourController.phase === "try")) return;
     if (event.key === "Escape" && editLayoutActive) return setEditLayoutMode(false);
     if (event.key === "Escape" && keyboardNavigationSection !== null) {
       event.preventDefault();
@@ -3494,7 +3516,6 @@ function bindSetting(id, eventName, setter) { $(id)?.addEventListener(eventName,
 function bindNumber(id, key, after) { $(id)?.addEventListener("input", e => { data.settings[key] = Number(e.target.value); save(); after?.(); renderTerminal(); }); }
 
 async function initWaypoint() {
-  await loadMetadata();
   data = await loadInitialProfile();
   bindEvents();
   render();
@@ -3503,8 +3524,18 @@ async function initWaypoint() {
   }
   updateClock();
   setInterval(updateClock, 1000);
-  refreshWeather(false);
-  setInterval(() => refreshWeather(false), 30 * 60 * 1000);
+  requestAnimationFrame(() => {
+    const startNonCriticalWork = () => {
+      loadMetadata();
+      refreshWeather(false);
+      setInterval(() => refreshWeather(false), 30 * 60 * 1000);
+    };
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(startNonCriticalWork, { timeout: 1500 });
+    } else {
+      setTimeout(startNonCriticalWork, 0);
+    }
+  });
 }
 initWaypoint();
 
@@ -3533,179 +3564,385 @@ function currentConfigText() {
     `Bookmarks: ${countBookmarks()}`
   ].join("\n");
 }
-const WELCOME_GUIDE = [
-  {
-    title: "Getting Started",
-    body: [
-      "Waypoint is a local-first browser start page.",
-      "Use it as a dashboard, launcher, and bookmark manager.",
-      "Click links normally, or use the terminal for quick configuration.",
-      "Your configuration is stored locally in this browser."
-    ]
+function emitWaypointEvent(name, detail = {}) {
+  document.dispatchEvent(new CustomEvent(`waypoint:${name}`, { detail }));
+}
+
+const WelcomeTourController = {
+  active: false,
+  step: "welcome",
+  phase: "",
+  originalTheme: "",
+  themeDecision: null,
+  target: null,
+  commandCenterActivated: false,
+  abortController: null,
+  resizeFrame: null,
+  steps: ["search", "command", "fetch", "appearance", "workspace", "keys", "complete"],
+
+  start() {
+    this.cancel(false);
+    this.active = true;
+    this.step = "welcome";
+    this.phase = "";
+    this.originalTheme = data.settings.theme;
+    this.themeDecision = null;
+    this.commandCenterActivated = false;
+    this.abortController = new AbortController();
+    document.body.classList.add("welcome-tour-active");
+    this.bind();
+    closeAllModals();
+    if (editLayoutActive) setEditLayoutMode(false);
+    this.render();
   },
-  {
-    title: "Managing Bookmarks",
-    body: [
-      "Graphical interface:",
-      "  • Click + on a section to add a bookmark.",
-      "  • Click ✎ to edit a bookmark.",
-      "  • Click × to remove a bookmark or section.",
-      "  • Drag bookmarks to reorder or move them between sections.",
-      "  • Focus a section, then click its pencil button to rename it.",
-      "  • Compact List shows category cards; Grid Cards show bookmarks directly.",
-      "",
-      "Terminal examples:",
-      "  add section \"Media\"",
-      "  add link \"Media\" \"Jellyfin\" https://jellyfin.org",
-      "  remove section \"Media\""
-    ]
+
+  bind() {
+    const options = { signal: this.abortController.signal };
+    document.addEventListener("keydown", event => this.handleKeydown(event), { ...options, capture: true });
+    window.addEventListener("resize", () => this.schedulePosition(), options);
+    window.addEventListener("scroll", () => this.schedulePosition(), { ...options, capture: true });
+    $("searchInput")?.addEventListener("focus", () => {
+      if (this.step === "search") this.go("command");
+    }, options);
+    $("logoBtn")?.addEventListener("click", () => {
+      if (this.step === "command") this.commandCenterActivated = true;
+    }, { ...options, capture: true });
+    document.addEventListener("waypoint:terminal-opened", event => {
+      if (this.step === "command" && this.commandCenterActivated && event.detail.source === "logo") this.go("fetch");
+      else if (this.step === "fetch") this.render();
+    }, options);
+    document.addEventListener("waypoint:terminal-command-completed", event => {
+      if (this.step === "fetch" && event.detail.command === "fetch" && event.detail.success) {
+        this.phase = "done";
+        this.render();
+      }
+    }, options);
+    document.addEventListener("waypoint:settings-page-changed", event => {
+      if (this.step === "appearance" && event.detail.page === "appearance") {
+        this.phase = "theme";
+        this.render();
+      } else if (this.step === "workspace" && event.detail.page === "layout") {
+        this.phase = "studio";
+        this.render();
+      }
+    }, options);
+    document.addEventListener("waypoint:theme-changed", () => {
+      if (this.step === "appearance" && this.phase === "theme") this.go("workspace", "entry");
+    }, options);
+    document.addEventListener("waypoint:workspace-studio-opened", () => {
+      if (this.step !== "workspace") return;
+      setEditLayoutMode(false);
+      this.go("keys", data.settings.keyboardNavigation ? "try" : "choice");
+    }, options);
+    document.addEventListener("waypoint:waypointkeys-section-selected", () => {
+      if (this.step === "keys" && this.phase === "try") this.go("complete");
+    }, options);
+    document.addEventListener("waypoint:rendered", () => {
+      if (this.active) requestAnimationFrame(() => this.render());
+    }, options);
+    document.addEventListener("waypoint:modal-closed", () => {
+      if (this.active) requestAnimationFrame(() => this.render());
+    }, options);
   },
-  {
-    title: "WaypointKeys & Search",
-    body: [
-      "When WaypointKeys is enabled:",
-      "  • Press a section key, then a bookmark key to open it.",
-      "  • Press Space to focus search.",
-      "  • Press Esc to cancel key navigation or release search focus.",
-      "  • Press ? to open the keyboard reference.",
-      "",
-      "Key hints appear on sections and bookmarks while navigation is active."
-    ]
+
+  go(step, phase = "") {
+    if (!this.active) return;
+    this.clearTarget();
+    this.step = step;
+    this.phase = phase;
+    this.render();
   },
-  {
-    title: "Terminal Commands",
-    body: [
-      "The terminal is a real Waypoint control surface.",
-      "Useful commands:",
-      "  help",
-      "  fetch",
-      "  ls themes",
-      "  ls config",
-      "  help add",
-      "  help banner",
-      "  help layout",
-      "",
-      "You can reopen this guide anytime with:",
-      "  welcome"
-    ]
+
+  cancel(restoreFocus = true) {
+    if (!this.active) return;
+    this.active = false;
+    this.abortController?.abort();
+    this.abortController = null;
+    cancelAnimationFrame(this.resizeFrame);
+    this.clearTarget();
+    document.body.classList.remove("welcome-tour-active");
+    const root = $("welcomeTour");
+    if (root) root.hidden = true;
+    if (restoreFocus) $("logoBtn")?.focus({ preventScroll: true });
   },
-  {
-    title: "Appearance & Settings",
-    body: [
-      "Open Settings from the ⚙️ bookmark, or type:",
-      "  settings",
-      "",
-      "Common terminal customizations:",
-      "  theme nord",
-      "  template minimal",
-      "  layout compact",
-      "  font system",
-      "  banner atmosphere",
-      "  wallpaper theme",
-      "  settings appearance",
-      "  help css"
-    ]
+
+  finish() {
+    if (data.settings.theme !== this.originalTheme && !this.themeDecision) return;
+    this.cancel();
   },
-  {
-    title: "Import & Export",
-    body: [
-      "Waypoint profiles are JSON files.",
-      "Export supports complete backups plus separate workspace, bookmarks, and settings files.",
-      "",
-      "Commands:",
-      "  export complete",
-      "  export bookmarks",
-      "  import",
-      "",
-      "Export a complete backup before making large changes or moving browsers."
-    ]
+
+  restart() {
+    this.start();
   },
-  {
-    title: "About Waypoint",
-    body: [
-      "Waypoint is built with plain HTML, CSS, and JavaScript.",
-      "No backend. No account. No tracking.",
-      "Everything you change is saved locally in your browser.",
-      "",
-      "Press Esc to leave this guide."
-    ]
+
+  restoreTheme() {
+    data.settings.theme = this.originalTheme;
+    this.themeDecision = "restored";
+    save();
+    render();
+    this.render();
+  },
+
+  keepTheme() {
+    this.themeDecision = "kept";
+    this.render();
+  },
+
+  enableKeys() {
+    data.settings.keyboardNavigation = true;
+    clearKeyboardNavigation();
+    save();
+    render();
+    this.phase = "try";
+    this.render();
+  },
+
+  handleKeydown(event) {
+    if (!this.active) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.cancel();
+      return;
+    }
+    if (!["welcome", "complete"].includes(this.step) || event.key !== "Tab") return;
+    const focusable = [...$("welcomeTourCallout").querySelectorAll("button:not(:disabled)")];
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  },
+
+  progress() {
+    if (this.step === "welcome") return "1 of 7";
+    const index = this.steps.indexOf(this.step);
+    return index >= 0 && this.step !== "complete" ? `${index + 2} of 7` : "Tour complete";
+  },
+
+  content() {
+    const settingsLink = document.querySelector('.link.internal-link a[href^="waypoint:settings"]')?.closest(".link");
+    const root = $("welcomeTour");
+    const isTerminalOpen = !$("terminalModal")?.classList.contains("hidden");
+    const isSettingsOpen = !$("settingsModal")?.classList.contains("hidden");
+    if (this.step === "welcome") return {
+      title: "Welcome to Waypoint",
+      body: "<p>This short tour demonstrates the main interface by letting you use the real controls.</p><p>It will not create bookmarks, change your layout, or take you away from Waypoint.</p>",
+      blocking: true,
+      actions: [["Start Tour", () => this.go("search")]]
+    };
+    if (this.step === "search") return {
+      title: "Search",
+      body: "<p>Search is Waypoint’s normal browser search entry point.</p><p>Focus or click the search field to continue. You do not need to submit anything.</p>",
+      target: () => $("searchInput"),
+      fallback: [["Skip This Step", () => this.go("command")]]
+    };
+    if (this.step === "command") return {
+      title: "Command center",
+      body: "<p>The Waypoint logo opens the command center. Use the highlighted control to open the real terminal.</p>",
+      target: () => $("logoBtn"),
+      fallback: [["Skip This Step", () => this.go("fetch")]]
+    };
+    if (this.step === "fetch") return {
+      title: "Try a terminal command",
+      body: this.phase === "done"
+        ? "<p>Waypoint ran the real <code>fetch</code> command successfully. Continue when you’re ready.</p>"
+        : "<p>Type <code>fetch</code> in the real terminal and press Enter. The tour advances only after Waypoint runs it successfully.</p>",
+      target: () => isTerminalOpen ? document.querySelector("#terminalModal .terminal-window") : null,
+      actions: this.phase === "done" ? [["Continue", () => {
+        closeModal("terminalModal");
+        this.go("appearance", "entry");
+      }]] : [],
+      fallback: [["Reopen Terminal", () => openModal("terminalModal", { source: "tour-recovery" })]]
+    };
+    if (this.step === "appearance" && this.phase === "theme") return {
+      title: "Choose a theme",
+      body: "<p>Themes coordinate Waypoint’s interface while preserving your own uploaded images.</p><p>Choose a theme from the highlighted selector to continue.</p>",
+      target: () => isSettingsOpen ? $("themeSelect") : null,
+      fallback: [["Reopen Appearance", () => openSettingsPage("appearance", { source: "tour-recovery" })]]
+    };
+    if (this.step === "appearance") return {
+      title: "Settings and appearance",
+      body: settingsLink
+        ? "<p>Open Settings through the highlighted bookmark. We’ll continue on Appearance.</p>"
+        : "<p>Your profile does not currently expose a Settings bookmark. Use the recovery action to open the existing Appearance page safely.</p>",
+      target: () => document.querySelector('.link.internal-link a[href^="waypoint:settings"]')?.closest(".link"),
+      fallback: [["Open Appearance Settings", () => openSettingsPage("appearance", { source: "tour-recovery" })]]
+    };
+    if (this.step === "workspace" && this.phase === "studio") return {
+      title: "Customize Workspace",
+      body: "<p>Workspace owns layout and widget placement. Open Workspace Studio; you do not need to move or hide anything.</p>",
+      target: () => isSettingsOpen ? $("editLayoutBtn") : null,
+      fallback: [["Reopen Workspace Settings", () => openSettingsPage("layout", { source: "tour-recovery" })]]
+    };
+    if (this.step === "workspace") return {
+      title: "Workspace",
+      body: "<p>Open the Workspace page to find layout and widget controls.</p>",
+      target: () => isSettingsOpen ? document.querySelector('[data-settings-page="layout"]') : null,
+      fallback: [["Open Workspace Settings", () => openSettingsPage("layout", { source: "tour-recovery" })]]
+    };
+    if (this.step === "keys" && this.phase === "choice") return {
+      title: "WaypointKeys",
+      body: "<p>WaypointKeys lets you focus a section with its displayed letter, then choose a bookmark. It is currently disabled.</p><p>Enabling it is a real setting change and will remain enabled.</p>",
+      blocking: true,
+      actions: [
+        ["Enable and Try It", () => this.enableKeys()],
+        ["Skip This Step", () => this.go("complete")]
+      ]
+    };
+    if (this.step === "keys") {
+      const firstHint = document.querySelector(".section .section-key-hint");
+      const key = firstHint?.textContent?.trim() || "the shown";
+      return {
+        title: "Try WaypointKeys",
+        body: `<p>Press <code>${escapeHtml(key)}</code> to focus the highlighted section. The tour stops there, so no bookmark will launch.</p>`,
+        target: () => document.querySelector(".section .section-key-hint")?.closest(".section"),
+        fallback: [["Skip This Step", () => this.go("complete")]]
+      };
+    }
+    const themeChanged = data.settings.theme !== this.originalTheme;
+    const decisionNeeded = themeChanged && !this.themeDecision;
+    return {
+      title: "You’re ready",
+      body: "<p>You used Search, the Command Center, Themes, Workspace, and WaypointKeys.</p><p>You can restart this tour any time from the Welcome bookmark or with <code>welcome</code> in the terminal.</p>",
+      blocking: true,
+      actions: [
+        ...(themeChanged ? [
+          ["Keep Current Theme", () => this.keepTheme(), this.themeDecision === "kept"],
+          ["Restore Original Theme", () => this.restoreTheme(), this.themeDecision === "restored"]
+        ] : []),
+        ["Finish", () => this.finish(), false, decisionNeeded],
+        ["Restart Tour", () => this.restart()]
+      ]
+    };
+  },
+
+  render() {
+    if (!this.active) return;
+    const root = $("welcomeTour");
+    const callout = $("welcomeTourCallout");
+    const details = this.content();
+    root.hidden = false;
+    $("welcomeTourProgress").textContent = this.progress();
+    $("welcomeTourTitle").textContent = details.title;
+    $("welcomeTourDescription").innerHTML = details.body;
+    $("welcomeTourStatus").textContent = `${this.progress()} ${details.title}. ${$("welcomeTourDescription").textContent}`;
+    callout.classList.toggle("is-blocking", !!details.blocking);
+    callout.setAttribute("aria-modal", details.blocking ? "true" : "false");
+    if (details.blocking) {
+      callout.style.removeProperty("left");
+      callout.style.removeProperty("top");
+      callout.style.removeProperty("transform");
+    }
+    const actions = $("welcomeTourActions");
+    actions.innerHTML = "";
+    (details.actions || []).forEach(([label, handler, selected, disabled]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = selected ? `✓ ${label}` : label;
+      button.disabled = !!disabled;
+      button.addEventListener("click", handler);
+      actions.appendChild(button);
+    });
+    const resolvedTarget = details.target?.();
+    const targetAvailable = resolvedTarget && resolvedTarget.getClientRects().length;
+    if (!details.blocking && !targetAvailable) {
+      (details.fallback || []).forEach(([label, handler]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = label;
+        button.addEventListener("click", handler);
+        actions.appendChild(button);
+      });
+    }
+    this.clearTarget();
+    this.targetResolver = details.target || null;
+    this.renderTarget();
+    if (details.blocking) requestAnimationFrame(() => actions.querySelector("button")?.focus());
+  },
+
+  clearTarget() {
+    this.target?.classList.remove("welcome-tour-target");
+    this.target = null;
+  },
+
+  renderTarget() {
+    if (!this.active) return;
+    this.clearTarget();
+    const target = this.targetResolver?.();
+    const focus = $("welcomeTourFocus");
+    if (!target || !target.getClientRects().length) {
+      focus.hidden = true;
+      this.positionShades(null);
+      return;
+    }
+    this.target = target;
+    target.classList.add("welcome-tour-target");
+    const rect = target.getBoundingClientRect();
+    if (rect.top < 8 || rect.bottom > innerHeight - 8 || rect.left < 8 || rect.right > innerWidth - 8) {
+      target.scrollIntoView({ block: "center", inline: "center", behavior: "auto" });
+      requestAnimationFrame(() => this.renderTarget());
+      return;
+    }
+    const pad = 7;
+    const box = {
+      left: Math.max(8, rect.left - pad),
+      top: Math.max(8, rect.top - pad),
+      right: Math.min(innerWidth - 8, rect.right + pad),
+      bottom: Math.min(innerHeight - 8, rect.bottom + pad)
+    };
+    focus.hidden = false;
+    Object.assign(focus.style, {
+      left: `${box.left}px`, top: `${box.top}px`,
+      width: `${Math.max(0, box.right - box.left)}px`,
+      height: `${Math.max(0, box.bottom - box.top)}px`
+    });
+    this.positionShades(box);
+    this.positionCallout(box);
+  },
+
+  positionShades(box) {
+    const shades = Object.fromEntries([...document.querySelectorAll("[data-tour-shade]")].map(el => [el.dataset.tourShade, el]));
+    Object.values(shades).forEach(shade => {
+      shade.style.display = "none";
+      shade.style.removeProperty("left");
+      shade.style.removeProperty("top");
+      shade.style.removeProperty("width");
+      shade.style.removeProperty("height");
+      shade.style.removeProperty("inset");
+    });
+    if (!box) {
+      Object.assign(shades.top.style, { display: "block", inset: "0" });
+    }
+  },
+
+  positionCallout(box) {
+    const callout = $("welcomeTourCallout");
+    if (callout.classList.contains("is-blocking") || innerWidth <= 680) return;
+    callout.style.transform = "none";
+    const gap = 16;
+    const width = callout.offsetWidth;
+    const height = callout.offsetHeight;
+    let left = box.right + gap;
+    if (left + width > innerWidth - 12) left = box.left - width - gap;
+    left = Math.max(12, Math.min(left, innerWidth - width - 12));
+    let top = Math.max(12, Math.min(box.top, innerHeight - height - 12));
+    Object.assign(callout.style, { left: `${left}px`, top: `${top}px` });
+  },
+
+  schedulePosition() {
+    cancelAnimationFrame(this.resizeFrame);
+    this.resizeFrame = requestAnimationFrame(() => this.renderTarget());
   }
-];
-
-let welcomeGuideState = { active: false, mode: "menu", index: 0 };
-
-function centerText(text, width) {
-  const value = String(text);
-  const space = Math.max(0, width - value.length);
-  const left = Math.floor(space / 2);
-  return " ".repeat(left) + value + " ".repeat(space - left);
-}
-
-function wrapGuideLine(line, width) {
-  const max = width - 2;
-  const value = String(line);
-  if (!value.trim()) return [""];
-  const indent = value.match(/^\s*/)?.[0] || "";
-  const words = value.trim().split(/\s+/);
-  const lines = [];
-  let current = indent + words.shift();
-  words.forEach(word => {
-    if ((current + " " + word).length <= max) current += " " + word;
-    else { lines.push(current); current = indent + word; }
-  });
-  lines.push(current);
-  return lines;
-}
-
-function boxLines(title, lines) {
-  const width = window.innerWidth <= 560 ? 40 : window.innerWidth <= 820 ? 60 : 84;
-  const top = `╔${"═".repeat(width)}╗`;
-  const mid = `╠${"═".repeat(width)}╣`;
-  const bottom = `╚${"═".repeat(width)}╝`;
-  const wrapped = lines.flatMap(line => wrapGuideLine(line, width));
-  const body = wrapped.map(line => `║ ${String(line).padEnd(width - 2, " ")} ║`);
-  return [top, `║${centerText(title, width)}║`, mid, ...body, bottom].join("\n");
-}
-
-function renderWelcomeGuide() {
-  const out = $("commandOutput");
-  if (!out) return;
-  if (welcomeGuideState.mode === "menu") {
-    const rows = WELCOME_GUIDE.map((item, i) => i === welcomeGuideState.index ? `► ${item.title}  ←` : `  ${item.title}`);
-    const content = boxLines("Waypoint Guide", ["", ...rows, "", "↑↓ Move   Enter/→ Select   Esc Exit"]);
-    out.innerHTML = `<pre class="welcome-tui">${escapeHtml(content)}</pre>`;
-  } else {
-    const page = WELCOME_GUIDE[welcomeGuideState.index];
-    const lines = [...page.body, "", "←/Enter Back   Esc Exit"];
-    const content = boxLines(page.title, lines);
-    out.innerHTML = `<pre class="welcome-tui welcome-tui-page">${escapeHtml(content)}</pre>`;
-  }
-}
+};
 
 function startWelcomeGuide() {
-  welcomeGuideState = { active: true, mode: "menu", index: 0 };
-  openModal("terminalModal");
-  renderWelcomeGuide();
-  setTimeout(() => $("commandInput")?.focus(), 50);
-}
-
-function stopWelcomeGuide() {
-  welcomeGuideState.active = false;
-  pushTerminal(terminalBlock(commandResult("Welcome guide closed. Type help to see commands.")));
-}
-
-function handleWelcomeGuideKey(event) {
-  if (!welcomeGuideState.active) return false;
-  const handled = () => { event.preventDefault(); event.stopPropagation(); };
-  if (event.key === "Escape") { handled(); stopWelcomeGuide(); return true; }
-  if (welcomeGuideState.mode === "menu") {
-    if (event.key === "ArrowDown") { handled(); welcomeGuideState.index = (welcomeGuideState.index + 1) % WELCOME_GUIDE.length; renderWelcomeGuide(); return true; }
-    if (event.key === "ArrowUp") { handled(); welcomeGuideState.index = (welcomeGuideState.index - 1 + WELCOME_GUIDE.length) % WELCOME_GUIDE.length; renderWelcomeGuide(); return true; }
-    if (event.key === "Enter" || event.key === "ArrowRight") { handled(); welcomeGuideState.mode = "page"; renderWelcomeGuide(); return true; }
-  } else {
-    if (event.key === "ArrowLeft" || event.key === "Backspace" || event.key === "Enter") { handled(); welcomeGuideState.mode = "menu"; renderWelcomeGuide(); return true; }
-  }
-  return false;
+  WelcomeTourController.start();
 }
 
 function buildHelpText(topic = "") {
@@ -3738,7 +3975,7 @@ function buildHelpText(topic = "") {
     "help             Show help or command help",
     "ls               List options and configuration",
     "settings         Open Settings",
-    "welcome          Open the Waypoint guide",
+    "welcome          Start the interactive welcome tour",
     "theme            Manage themes",
     "template         Apply workspace templates",
     "layout           Manage bookmark layout",
@@ -3818,7 +4055,11 @@ function runCommand(commandRaw) {
     return done(terminalPre(buildHelpText(), "terminal-help"));
   }
   if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
-  if (head === "fetch") return done(buildFastfetchHtml());
+  if (head === "fetch") {
+    done(buildFastfetchHtml());
+    emitWaypointEvent("terminal-command-completed", { command: "fetch", success: true });
+    return;
+  }
   if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
   if (head === "workspace") return done(terminalPre(workspaceSummaryText(), "terminal-help"));
   if (head === "settings") {

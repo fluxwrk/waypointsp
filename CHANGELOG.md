@@ -1,9 +1,33 @@
 # Changelog
 
+## [1.5.2] - Unreleased
+
+### Changed
+
+- Converted all built-in theme wallpapers and banners from PNG to pixel-identical lossless WebP for a 6.99 MB reduction across the complete theme-artwork set.
+- Removed the hardcoded inactive Nord banner from initial HTML asset discovery so startup requests only the active theme's selected artwork.
+- Avoided loading a theme banner when the banner is hidden.
+- Moved metadata and weather network refresh work after the first rendered frame while retaining synchronized fallback metadata and cached weather rendering.
+- Updated the public runtime and core asset versions together to 1.5.2.
+
+### Performance
+
+- Reduced the measured established Graphite startup payload from 6,032,649 bytes to 3,877,346 bytes, a 35.7% reduction.
+- Reduced critical local startup requests from ten to eight before the first usable interface.
+- Reduced median first-usable time from 154.6 ms to 114.7 ms in the controlled localhost Chromium benchmark.
+
+### Documentation
+
+- Added the Waypoint 1.5.2 Build 1 Startup Asset Optimization design review and build report.
+- Updated project state and roadmap ownership for the first implementation build following the Runtime Architecture and Performance Audit.
+
 ## [1.5.1] - Unreleased
 
 ### Changed
 
+- Replaced the terminal Welcome TUI with one optional interactive tour that teaches Search, the Command Center, Themes, Workspace, and WaypointKeys through the real interface.
+- Made the Welcome bookmark, `waypoint:welcome`, and terminal `welcome` command start or restart the same shared tour.
+- Added accessible tour highlighting, action-based progression, modal recovery, explicit theme keep-or-restore completion choices, and safe cancellation from every step.
 - Replaced the legacy PNG favicon with Waypoint's reusable SVG logo.
 - Improved bookmark drag/drop handling so bookmark row drops no longer bubble into section-level drop handlers.
 - Added clearer bookmark drag source, drop-zone, and insertion-target feedback.
@@ -84,6 +108,8 @@
 
 ### Documentation
 
+- Added the Waypoint 1.5.1 Build 7 Interactive Welcome Tour design review and build report.
+- Defined welcome-tour ownership in ARCHITECTURE.md and the updated `waypoint:welcome` route behavior in WAYPOINT_PROTOCOL.md.
 - Set the active build to the Bookmark Experience Pass.
 - Marked Waypoint Protocol Expansion as on hold.
 - Updated the Waypoint 1.5.1 Build 1 design review contract around bookmark drag/drop, reorder logic, and interaction audit work.
