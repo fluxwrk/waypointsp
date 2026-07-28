@@ -120,6 +120,8 @@ Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoin
 
 ## Roadmap
 
+Detailed project architecture, roadmap, development guidance, design reviews, and build reports are organized in the [documentation index](docs/README.md).
+
 ### Completed
 
 - ✅ v1.0 Foundation

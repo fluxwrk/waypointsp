@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Replaced the monolithic runtime implementation with feature-owned classic JavaScript source files for Core, Storage, Appearance, Workspace, WaypointKeys, Bookmarks, Search, Weather, Settings, Terminal, and the Welcome Tour.
+- Reduced `script.js` to the application composition root responsible for cross-feature render coordination, stable event binding, initialization order, and one-time bootstrap.
+- Preserved direct static-file loading without ES modules, frameworks, dependencies, bundlers, or build tooling.
 - Converted all built-in theme wallpapers and banners from PNG to pixel-identical lossless WebP for a 6.99 MB reduction across the complete theme-artwork set.
 - Removed the hardcoded inactive Nord banner from initial HTML asset discovery so startup requests only the active theme's selected artwork.
 - Avoided loading a theme banner when the banner is hidden.
@@ -34,6 +37,8 @@
 - Updated project state and roadmap ownership for the first implementation build following the Runtime Architecture and Performance Audit.
 - Added the Waypoint 1.5.2 Build 2 Targeted Rendering Optimization design review and build report.
 - Added the Waypoint 1.5.2 Build 3 High-Frequency Update and Persistence Optimization design review and build report.
+- Added the Waypoint 1.5.2 Build 4 Feature-Owned Runtime Source design review and build report.
+- Documented runtime source ownership, ordered loading, composition-root responsibilities, and multi-file version synchronization.
 
 ## [1.5.1] - Unreleased
 
