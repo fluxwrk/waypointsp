@@ -10,6 +10,10 @@
 - Moved metadata and weather network refresh work after the first rendered frame while retaining synchronized fallback metadata and cached weather rendering.
 - Updated the public runtime and core asset versions together to 1.5.2.
 
+### Fixed
+
+- Included the current stylesheet in the Build 1 changed-files package so the interactive Welcome Tour's overlay, spotlight, and terminal focus styling remain synchronized with the 1.5.2 markup and controller.
+
 ### Performance
 
 - Reduced the measured established Graphite startup payload from 6,032,649 bytes to 3,877,346 bytes, a 35.7% reduction.
