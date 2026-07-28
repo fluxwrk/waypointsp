@@ -23,12 +23,17 @@
 - Reduced full bookmark-workspace renders from eight to one across the eight-operation stress benchmark; full application renders fell from eight to zero.
 - Reduced measured bookmark create/edit medians from 20.5/22.2 ms to 2.5/2.3 ms on the 96-bookmark benchmark profile.
 - Added browser-native User Timing measures for full, bookmark, section, appearance, and workspace rendering without logging or telemetry.
+- Separated live Appearance preview from durable profile persistence for ranges, custom colors, Custom CSS, and user-name input.
+- Reduced representative 60-event live interactions from 60 full-profile serializations and storage writes to one final serialization and write.
+- Replaced intermediate control synchronization, terminal rendering, and broad Appearance refreshes with owned CSS/style/prompt previews.
+- Added browser-native measures for Appearance preview/commit and primary-profile serialization/persistence.
 
 ### Documentation
 
 - Added the Waypoint 1.5.2 Build 1 Startup Asset Optimization design review and build report.
 - Updated project state and roadmap ownership for the first implementation build following the Runtime Architecture and Performance Audit.
 - Added the Waypoint 1.5.2 Build 2 Targeted Rendering Optimization design review and build report.
+- Added the Waypoint 1.5.2 Build 3 High-Frequency Update and Persistence Optimization design review and build report.
 
 ## [1.5.1] - Unreleased
 

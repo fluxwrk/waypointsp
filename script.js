@@ -352,6 +352,8 @@ let keyboardNavigationTimer = null;
 const KEYBOARD_NAVIGATION_TIMEOUT_MS = 10000;
 let focusedSectionIndex = null;
 let renamingSectionIndex = null;
+const pendingLiveSettings = new Set();
+let liveSettingCommitTimer = null;
 
 function $(id) { return document.getElementById(id); }
 function clamp(value, min, max, fallback) { return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback; }
@@ -360,7 +362,14 @@ function safeParse(value) { try { return JSON.parse(value); } catch { return nul
 const WaypointStorage = {
   save(key, value) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      const serialized = key === KEY
+        ? measureWaypointRender("waypoint:profile:serialize", () => JSON.stringify(value))
+        : JSON.stringify(value);
+      if (key === KEY) {
+        measureWaypointRender("waypoint:profile:persist", () => localStorage.setItem(key, serialized));
+      } else {
+        localStorage.setItem(key, serialized);
+      }
       return true;
     } catch {
       return false;
@@ -1707,9 +1716,11 @@ function normalizeData(input) {
 
 function save() {
   data.settings.lastModified = new Date().toISOString();
-  WaypointStorage.save(KEY, data);
+  const persisted = WaypointStorage.save(KEY, data);
+  if (persisted) pendingLiveSettings.clear();
   updateLogoPrompt();
   syncControls();
+  return persisted;
 }
 
 function hexToRgba(hex, alpha = 1) {
@@ -1982,6 +1993,98 @@ function updateWorkspaceAwareSettings() {
 function setValue(id, value) { const el = $(id); if (!el) return; if (document.activeElement === el) return; if (el.value !== String(value)) el.value = value; }
 function setText(id, value) { const el = $(id); if (el) el.textContent = value; }
 
+function applyLiveSettingPreview(key) {
+  const root = document.documentElement;
+  if (key === "uiScale") {
+    root.style.setProperty("--ui-scale", String(data.settings.uiScale / 100));
+    setText("uiScaleValue", `${data.settings.uiScale}%`);
+    return;
+  }
+  if (key === "bookmarkFontSize") {
+    root.style.setProperty("--bookmark-font-size", `${data.settings.bookmarkFontSize}px`);
+    setText("bookmarkFontValue", `${data.settings.bookmarkFontSize}px`);
+    return;
+  }
+  if (key === "bookmarkIconSize") {
+    root.style.setProperty("--bookmark-icon-size", `${data.settings.bookmarkIconSize}px`);
+    setText("bookmarkIconValue", `${data.settings.bookmarkIconSize}px`);
+    return;
+  }
+  if (key === "overlay") {
+    const overlay = $("backgroundOverlay");
+    const overlayColor = getTheme().scheme === "light" ? "255,255,255" : "0,0,0";
+    if (overlay) overlay.style.background = `rgba(${overlayColor},${data.settings.overlay / 100})`;
+    setText("overlayValue", `${data.settings.overlay}%`);
+    return;
+  }
+  if (key === "blur") {
+    const background = $("backgroundLayer");
+    if (background) background.style.filter = `blur(${data.settings.blur}px)`;
+    setText("blurValue", `${data.settings.blur}px`);
+    return;
+  }
+  if (key === "customCss") {
+    let style = $("waypointCustomCss");
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "waypointCustomCss";
+      document.head.appendChild(style);
+    }
+    style.textContent = data.settings.useCustomAppearance ? data.settings.customCss || "" : "";
+    return;
+  }
+  if (key === "userName") {
+    updateLogoPrompt();
+    return;
+  }
+  if (key === "sectionTitleColor") {
+    root.style.setProperty("--section-title-color", data.settings.sectionTitleColor);
+    return;
+  }
+  if (key === "bookmarkTextColor") {
+    root.style.setProperty("--bookmark-text-color", data.settings.bookmarkTextColor);
+    return;
+  }
+  if (key === "mutedTextColor") {
+    root.style.setProperty("--custom-muted-text", data.settings.mutedTextColor);
+    return;
+  }
+  if (key === "terminalTextColor") {
+    root.style.setProperty("--terminal-text-color", data.settings.terminalTextColor);
+    return;
+  }
+  if (key === "statusTextColor") {
+    root.style.setProperty("--status-text-color", data.settings.statusTextColor);
+    return;
+  }
+  if (["customAccent", "customPanel", "customText"].includes(key)) applyTheme();
+}
+
+function previewLiveSetting(key, value) {
+  if (data.settings[key] === value) return false;
+  return measureWaypointRender("waypoint:appearance:preview", () => {
+    data.settings[key] = value;
+    pendingLiveSettings.add(key);
+    applyLiveSettingPreview(key);
+    return true;
+  });
+}
+
+function scheduleLiveSettingsCommit(delay = 200) {
+  clearTimeout(liveSettingCommitTimer);
+  liveSettingCommitTimer = setTimeout(() => {
+    liveSettingCommitTimer = null;
+    commitLiveSettings();
+  }, delay);
+}
+
+function commitLiveSettings() {
+  clearTimeout(liveSettingCommitTimer);
+  liveSettingCommitTimer = null;
+  if (!pendingLiveSettings.size) return false;
+  return measureWaypointRender("waypoint:appearance:commit", () => save());
+}
+
 function setBannerSize(size) {
   if (!HERO_SIZES[size]) return false;
   data.settings.bannerHiddenByWorkspace = false;
@@ -2035,6 +2138,7 @@ function positionSettings() {
 }
 
 function openSettingsPage(page = "appearance", context = {}) {
+  commitLiveSettings();
   const targetPage = normalizeSettingsPage(page);
   document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === targetPage));
   document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === targetPage));
@@ -2056,10 +2160,12 @@ function openModal(id, context = {}) {
   }
 }
 function closeModal(id) {
+  if (id === "settingsModal") commitLiveSettings();
   $(id)?.classList.add("hidden");
   emitWaypointEvent("modal-closed", { id });
 }
 function closeAllModals() {
+  commitLiveSettings();
   document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
   emitWaypointEvent("modal-closed", { id: "all" });
 }
@@ -3585,7 +3691,7 @@ function bindEvents() {
   $("exportSettingsBtn")?.addEventListener("click", () => exportJson("settings"));
   $("importBtn")?.addEventListener("click", () => $("importFile")?.click());
 
-  bindSetting("userNameInput", "input", value => { data.settings.userName = sanitizeUserName(value); save(); renderTerminal(); });
+  bindLiveSetting("userNameInput", "userName", sanitizeUserName);
   bindSetting("weatherLocationInput", "change", value => { data.settings.weatherLocation = value.trim().slice(0, 80); save(); refreshWeather(true); renderTerminal(); });
   bindSetting("weatherUnitSelect", "change", value => { data.settings.weatherUnit = value; save(); refreshWeather(true); });
   bindSetting("searchEngineSelect", "change", value => { data.settings.searchEngine = value; save(); applySearchEngine(); renderTerminal(); });
@@ -3598,7 +3704,7 @@ function bindEvents() {
     emitWaypointEvent("theme-changed", { theme: value, previousTheme });
   });
   bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); renderAppearance(); });
-  bindNumber("uiScaleSlider", "uiScale", () => applyPersonalization());
+  bindLiveSetting("uiScaleSlider", "uiScale", value => Number(value));
   bindSetting("customAppearanceSelect", "change", value => {
     const enabled = value === "true";
     data.settings.useCustomAppearance = enabled;
@@ -3607,14 +3713,14 @@ function bindEvents() {
     save();
     renderAppearance();
   });
-  bindSetting("accentColorInput", "input", value => { data.settings.customAccent = value; save(); renderAppearance(); });
-  bindSetting("panelColorInput", "input", value => { data.settings.customPanel = value; save(); renderAppearance(); });
-  bindSetting("globalTextColorInput", "input", value => { data.settings.customText = value; save(); renderAppearance(); });
-  bindSetting("sectionTitleColorInput", "input", value => { data.settings.sectionTitleColor = value; save(); renderAppearance(); });
-  bindSetting("bookmarkTextColorInput", "input", value => { data.settings.bookmarkTextColor = value; save(); renderAppearance(); });
-  bindSetting("mutedTextColorInput", "input", value => { data.settings.mutedTextColor = value; save(); renderAppearance(); });
-  bindSetting("terminalTextColorInput", "input", value => { data.settings.terminalTextColor = value; save(); renderAppearance(); });
-  bindSetting("statusTextColorInput", "input", value => { data.settings.statusTextColor = value; save(); renderAppearance(); });
+  bindLiveSetting("accentColorInput", "customAccent");
+  bindLiveSetting("panelColorInput", "customPanel");
+  bindLiveSetting("globalTextColorInput", "customText");
+  bindLiveSetting("sectionTitleColorInput", "sectionTitleColor");
+  bindLiveSetting("bookmarkTextColorInput", "bookmarkTextColor");
+  bindLiveSetting("mutedTextColorInput", "mutedTextColor");
+  bindLiveSetting("terminalTextColorInput", "terminalTextColor");
+  bindLiveSetting("statusTextColorInput", "statusTextColor");
   $("applyWorkspaceTemplateBtn")?.addEventListener("click", () => { applyWorkspaceTemplate($("workspaceTemplateSelect")?.value || "classic"); save(); renderWorkspace(); });
   bindSetting("workspaceHeroStyleSelect", "change", value => { setWorkspaceHeroStyle(value); save(); renderWorkspace(); });
   bindSetting("showLogoSelect", "change", value => { setWidgetVisible("logo", value === "true"); save(); renderWorkspace(); });
@@ -3635,9 +3741,9 @@ function bindEvents() {
     save();
     renderBookmarkSettings();
   });
-  bindNumber("bookmarkFontSlider", "bookmarkFontSize", () => applyPersonalization());
-  bindNumber("bookmarkIconSlider", "bookmarkIconSize", () => applyPersonalization());
-  bindSetting("customCssInput", "input", value => { data.settings.customCss = value.slice(0, 8000); save(); applyPersonalization(); });
+  bindLiveSetting("bookmarkFontSlider", "bookmarkFontSize", value => Number(value));
+  bindLiveSetting("bookmarkIconSlider", "bookmarkIconSize", value => Number(value));
+  bindLiveSetting("customCssInput", "customCss", value => value.slice(0, 8000));
   $("cssManBtn")?.addEventListener("click", () => { openModal("terminalModal"); runCommand("help css"); });
   $("clearCustomCssBtn")?.addEventListener("click", () => { data.settings.customCss = ""; save(); renderAppearance(); });
   $("resetEverythingBtn")?.addEventListener("click", resetEverything);
@@ -3657,8 +3763,8 @@ function bindEvents() {
   });
   bindSetting("bookmarkLayoutSelect", "change", value => { data.settings.bookmarkLayout = value; save(); renderBookmarkSettings(); });
   bindSetting("shortcutSelect", "change", value => { data.settings.shortcut = value; save(); renderTerminal(); });
-  bindNumber("overlaySlider", "overlay", () => applyTheme());
-  bindNumber("blurSlider", "blur", () => applyTheme());
+  bindLiveSetting("overlaySlider", "overlay", value => Number(value));
+  bindLiveSetting("blurSlider", "blur", value => Number(value));
   bindSetting("heroHeightPresetSelect", "change", value => {
     setBannerSize(value);
   });
@@ -3702,10 +3808,37 @@ function bindEvents() {
       event.preventDefault(); openModal("terminalModal");
     }
   });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") commitLiveSettings();
+  });
+  window.addEventListener("pagehide", commitLiveSettings);
 }
 
 function bindSetting(id, eventName, setter) { $(id)?.addEventListener(eventName, e => setter(e.target.value)); }
-function bindNumber(id, key, after) { $(id)?.addEventListener("input", e => { data.settings[key] = Number(e.target.value); save(); after?.(); renderTerminal(); }); }
+function bindLiveSetting(id, key, normalize = value => value) {
+  const control = $(id);
+  if (!control) return;
+  let keyboardInputActive = false;
+  const preview = () => {
+    if (previewLiveSetting(key, normalize(control.value))) scheduleLiveSettingsCommit();
+  };
+  control.addEventListener("input", preview);
+  control.addEventListener("change", () => {
+    preview();
+    if (!keyboardInputActive) commitLiveSettings();
+  });
+  control.addEventListener("keydown", () => {
+    keyboardInputActive = true;
+  });
+  control.addEventListener("keyup", () => {
+    keyboardInputActive = false;
+    scheduleLiveSettingsCommit();
+  });
+  control.addEventListener("blur", () => {
+    keyboardInputActive = false;
+    commitLiveSettings();
+  });
+}
 
 async function initWaypoint() {
   data = await loadInitialProfile();
