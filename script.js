@@ -144,11 +144,18 @@ function bindEvents() {
   });
 
   document.querySelectorAll(".settings-tab").forEach(btn => btn.addEventListener("click", () => openSettingsPage(btn.dataset.settingsPage || "appearance")));
-  document.querySelectorAll("[data-close-modal]").forEach(btn => btn.addEventListener("click", () => closeModal(btn.dataset.closeModal)));
-  document.querySelectorAll(".modal").forEach(modal => modal.addEventListener("click", e => { if (e.target === modal) closeModal(modal.id); }));
+  document.querySelectorAll("[data-close-modal]").forEach(btn => btn.addEventListener("click", () => {
+    if (btn.dataset.closeModal === "welcomeGuideModal") closeWelcomeGuide();
+    else closeModal(btn.dataset.closeModal);
+  }));
+  document.querySelectorAll(".modal").forEach(modal => modal.addEventListener("click", e => {
+    if (e.target !== modal) return;
+    if (modal.id === "welcomeGuideModal") closeWelcomeGuide();
+    else closeModal(modal.id);
+  }));
+  $("confirmationAcceptBtn")?.addEventListener("click", () => finishWaypointConfirmation(true));
   document.querySelectorAll("[data-command]").forEach(btn => btn.addEventListener("click", () => executeButtonCommand(btn.dataset.command)));
-  $("welcomeTourClose")?.addEventListener("click", () => WelcomeTourController.cancel());
-  $("welcomeTourSkip")?.addEventListener("click", () => WelcomeTourController.cancel());
+  $("welcomeGuideActions")?.addEventListener("click", handleWelcomeGuideAction);
 
   $("commandInput")?.addEventListener("keydown", e => {
     if (e.key === "Enter" && e.target.value.trim()) {
@@ -173,11 +180,9 @@ function bindEvents() {
   bindSetting("searchEngineSelect", "change", value => { data.settings.searchEngine = value; save(); applySearchEngine(); renderTerminal(); });
   bindSetting("customSearchInput", "change", value => { data.settings.customSearchUrl = value.trim().slice(0, 240); save(); applySearchEngine(); });
   bindSetting("themeSelect", "change", value => {
-    const previousTheme = data.settings.theme;
     data.settings.theme = value;
     save();
     renderAppearance();
-    emitWaypointEvent("theme-changed", { theme: value, previousTheme });
   });
   bindSetting("fontSelect", "change", value => { data.settings.fontFamily = value; save(); renderAppearance(); });
   bindLiveSetting("uiScaleSlider", "uiScale", value => Number(value));
@@ -261,7 +266,11 @@ function bindEvents() {
   $("resetHeroBtn")?.addEventListener("click", () => { WaypointStorage.remove(CUSTOM_HERO_KEY); data.settings.heroStyle = "auto"; save(); renderAppearance(); });
 
   document.addEventListener("keydown", event => {
-    if (WelcomeTourController.active && !(WelcomeTourController.step === "keys" && WelcomeTourController.phase === "try")) return;
+    if (event.key === "Escape" && !$("confirmationModal")?.classList.contains("hidden")) {
+      event.preventDefault();
+      closeModal("confirmationModal");
+      return;
+    }
     if (event.key === "Escape" && editLayoutActive) return setEditLayoutMode(false);
     if (event.key === "Escape" && keyboardNavigationSection !== null) {
       event.preventDefault();
@@ -272,6 +281,11 @@ function bindEvents() {
     if (event.key === "Escape" && focusedSectionIndex !== null) {
       event.preventDefault();
       clearSectionFocus();
+      return;
+    }
+    if (event.key === "Escape" && !$("welcomeGuideModal")?.classList.contains("hidden")) {
+      event.preventDefault();
+      closeWelcomeGuide();
       return;
     }
     if (event.key === "Escape") return closeAllModals();

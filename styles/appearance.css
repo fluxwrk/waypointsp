@@ -1,0 +1,83 @@
+/* Waypoint appearance stylesheet ownership. Loaded in the documented cascade. */
+
+
+.background-layer,
+.background-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.background-layer {
+  z-index: -3;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(0px);
+  transform: scale(1.025);
+}
+.background-overlay {
+  z-index: -2;
+  background: rgba(0, 0, 0, .35);
+}
+.background-layer {
+  transform: scale(1.04);
+}
+.background-overlay {
+  background: linear-gradient(180deg, rgba(4,7,13,.28), rgba(4,7,13,.42) 48%, rgba(4,7,13,.72));
+}
+.ui-hide-logo .logo-mark, .ui-hide-wordmark .brand-wordmark, .ui-hide-clock #clock, .ui-hide-weather #weatherWidget, .ui-hide-search .search { display: none !important; }
+.custom-text-only input:disabled { opacity: .35; cursor: not-allowed; }
+
+/* Consolidated Appearance settings */
+.appearance-settings-group {
+  margin-bottom: 14px;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--card-border) 74%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+}
+.appearance-settings-heading {
+  margin-bottom: 14px;
+}
+.appearance-settings-heading span {
+  display: block;
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 800;
+}
+.appearance-settings-heading p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.custom-appearance-toggle {
+  width: min(360px, 100%);
+  margin-bottom: 14px;
+}
+.custom-appearance-controls {
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--card-border) 62%, transparent);
+  transition: opacity .16s ease;
+}
+.custom-appearance-controls h4 {
+  margin: 16px 0 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.custom-appearance-controls h4:first-child {
+  margin-top: 0;
+}
+.custom-appearance-controls.custom-appearance-disabled {
+  opacity: .42;
+}
+.custom-appearance-controls :disabled {
+  cursor: not-allowed !important;
+}
+.custom-appearance-controls .upload-btn:has(input:disabled) {
+  pointer-events: none;
+  filter: saturate(.35);
+}

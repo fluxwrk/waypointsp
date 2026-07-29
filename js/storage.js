@@ -80,6 +80,7 @@ function loadStoredProfile() {
 }
 
 async function loadDemoProfile() {
+  if (window.location.protocol === "file:") return normalizeData(bundledDemoData);
   try {
     const response = await fetch("demo.json", { cache: "no-store" });
     if (!response.ok) throw new Error("demo profile unavailable");
@@ -90,6 +91,7 @@ async function loadDemoProfile() {
 }
 
 async function loadMetadata() {
+  if (window.location.protocol === "file:") return appMeta;
   try {
     const response = await fetch("metadata.json", { cache: "no-store" });
     if (!response.ok) throw new Error("metadata unavailable");

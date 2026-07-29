@@ -83,11 +83,12 @@ function createLinkElement(sectionIndex, linkIndex, keyMap = navigationKeyMap())
   const iconSource = isWaypointUrl(link.url) ? waypointIcon(link.url) : link.icon || favicon(link.url);
   const internalClass = isWaypointUrl(link.url) ? " internal-link" : "";
   const displayName = isWaypointUrl(link.url) ? cleanInternalLinkName(link.name, link.url) : link.name;
+  const hasImageSource = /^data:|^https?:/i.test(iconSource);
   row.className += internalClass;
   const fallbackIcon = iconSource && !/^data:|^https?:/i.test(iconSource) ? iconSource : "";
   row.innerHTML = `
     <span class="link-icon-fallback" aria-hidden="true">${escapeHtml(fallbackIcon)}</span>
-    <img src="${escapeHtml(/^data:|^https?:/i.test(iconSource) ? iconSource : "")}" alt="" aria-hidden="true"${/^data:|^https?:/i.test(iconSource) ? "" : " hidden"}>
+    <img${hasImageSource ? ` src="${escapeHtml(iconSource)}"` : ""} alt="" aria-hidden="true"${hasImageSource ? "" : " hidden"}>
     <kbd class="keyboard-hint link-key-hint" aria-hidden="true">${escapeHtml((keyMap[sectionIndex]?.linkKeys[linkIndex] || "").toUpperCase())}</kbd>
     <a href="${escapeHtml(link.url)}" tabindex="-1">${escapeHtml(displayName)}</a>
     <span class="edit-link" title="Edit link" aria-label="Edit link">✎</span>
@@ -115,9 +116,7 @@ function createLinkElement(sectionIndex, linkIndex, keyMap = navigationKeyMap())
   row.querySelector(".delete-link").addEventListener("click", event => {
     event.preventDefault();
     event.stopPropagation();
-    data.sections[sectionIndex].links.splice(linkIndex, 1);
-    save();
-    renderSection(sectionIndex);
+    deleteLink(sectionIndex, linkIndex);
   });
   row.addEventListener("dblclick", event => {
     event.preventDefault();
@@ -624,10 +623,32 @@ function saveLink() {
   closeModal("linkModal");
 }
 
-function deleteSection(index) {
+async function deleteLink(sectionIndex, linkIndex) {
+  const section = data.sections[sectionIndex];
+  const link = section?.links[linkIndex];
+  if (!section || !link) return false;
+  const confirmed = await requestWaypointConfirmation({
+    title: "Delete bookmark?",
+    message: `Delete “${link.name}” from “${section.name}”? This cannot be undone.`,
+    confirmLabel: "Delete bookmark"
+  });
+  if (!confirmed) return false;
+  section.links.splice(linkIndex, 1);
+  save();
+  renderSection(sectionIndex);
+  return true;
+}
+
+async function deleteSection(index) {
   const section = data.sections[index];
-  if (!section) return;
-  if (!confirm(`Delete section "${section.name}" and ${section.links.length} link(s)?`)) return;
+  if (!section) return false;
+  const bookmarkCount = section.links.length;
+  const confirmed = await requestWaypointConfirmation({
+    title: "Delete section?",
+    message: `Delete “${section.name}” and ${bookmarkCount} ${bookmarkCount === 1 ? "bookmark" : "bookmarks"}? This cannot be undone.`,
+    confirmLabel: "Delete section"
+  });
+  if (!confirmed) return false;
   data.sections.splice(index, 1);
   if (!data.sections.length) data.sections.push({ name: "New Section", links: [] });
   if (focusedSectionIndex === index) focusedSectionIndex = null;
@@ -636,6 +657,7 @@ function deleteSection(index) {
   renderSections();
   syncSectionFocusDom();
   emitRendered();
+  return true;
 }
 
 function openSectionModal() {
@@ -801,9 +823,41 @@ function renameSectionByCommand(oldName, newName) {
   return `Section renamed to <strong>${escapeHtml(data.sections[sectionIndex].name)}</strong>.`;
 }
 
-function deleteSectionByCommand(sectionName) {
+function parseDeleteLinkCommand(commandRaw) {
+  const body = commandRaw.trim().replace(/^(delete|remove)\s+link\s*/i, "").trim();
+  const quoted = [...body.matchAll(/"([^"]+)"|'([^']+)'/g)].map(match => match[1] || match[2]);
+  if (quoted.length >= 2) return { sectionName: quoted[0], linkName: quoted[1] };
+  const sectionMatch = data.sections
+    .map(section => section.name)
+    .filter(name => body.toLowerCase().startsWith(`${name.toLowerCase()} `))
+    .sort((a, b) => b.length - a.length)[0];
+  if (!sectionMatch) return null;
+  const linkName = body.slice(sectionMatch.length).trim();
+  return linkName ? { sectionName: sectionMatch, linkName } : null;
+}
+
+function deleteSectionByCommand(sectionName, onComplete) {
   const sectionIndex = findSectionIndexByName(sectionName);
   if (sectionIndex < 0) return `No section named <strong>${escapeHtml(sectionName)}</strong>.`;
-  deleteSection(sectionIndex);
-  return `Deleted section <strong>${escapeHtml(sectionName)}</strong>.`;
+  deleteSection(sectionIndex).then(deleted => {
+    onComplete?.(deleted
+      ? `Deleted section <strong>${escapeHtml(sectionName)}</strong>.`
+      : `Deletion cancelled for section <strong>${escapeHtml(sectionName)}</strong>.`, deleted);
+  });
+  return `Confirm deletion of section <strong>${escapeHtml(sectionName)}</strong> in the Waypoint dialog.`;
+}
+
+function deleteLinkByCommand(sectionName, linkName, onComplete) {
+  const sectionIndex = findSectionIndexByName(sectionName);
+  if (sectionIndex < 0) return `No section named <strong>${escapeHtml(sectionName)}</strong>.`;
+  const linkIndex = data.sections[sectionIndex].links.findIndex(link =>
+    String(link.name || "").trim().toLowerCase() === String(linkName || "").trim().toLowerCase()
+  );
+  if (linkIndex < 0) return `No bookmark named <strong>${escapeHtml(linkName)}</strong> in <strong>${escapeHtml(sectionName)}</strong>.`;
+  deleteLink(sectionIndex, linkIndex).then(deleted => {
+    onComplete?.(deleted
+      ? `Deleted bookmark <strong>${escapeHtml(linkName)}</strong> from <strong>${escapeHtml(sectionName)}</strong>.`
+      : `Deletion cancelled for bookmark <strong>${escapeHtml(linkName)}</strong>.`, deleted);
+  });
+  return `Confirm deletion of bookmark <strong>${escapeHtml(linkName)}</strong> in the Waypoint dialog.`;
 }

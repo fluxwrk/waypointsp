@@ -4,7 +4,7 @@ const KEY = "waypoint-data-v1";
 
 const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6", "startpage-data-v5", "startpage-data-v2", "startpage-data-v1"];
 
-let appMeta = { name: "Waypoint", version: "1.5.2", branch: "main", codename: "Startup Asset Optimization" };
+let appMeta = { name: "Waypoint", version: "1.5.2", branch: "main", codename: "Runtime & Architecture Optimization" };
 
 const defaultData = {
   "sections": [
@@ -136,7 +136,7 @@ const bundledDemoData = {
     ]
   },
   "settings": {
-    "theme": "catppuccin",
+    "theme": "nord",
     "backgroundMode": "wallpaper",
     "overlay": 2,
     "blur": 5,
@@ -144,9 +144,10 @@ const bundledDemoData = {
     "heroSize": "small",
     "heroZoom": 100,
     "heroY": 50,
-    "heroStyle": "auto",
+    "heroStyle": "desktop",
     "heroFit": "contain",
     "bookmarkLayout": "grid",
+    "keyboardNavigation": true,
     "userName": "demouser",
     "weatherLocation": "10012",
     "weatherUnit": "auto",
@@ -155,6 +156,7 @@ const bundledDemoData = {
     "shortcut": "ctrlShiftSpace",
     "fontFamily": "inter",
     "uiScale": 100,
+    "useCustomAppearance": false,
     "useCustomColors": false,
     "customAccent": "#00d084",
     "customPanel": "#09111a",
@@ -249,10 +251,11 @@ const bundledDemoData = {
     "customCss": "",
     "terminalLeft": null,
     "terminalTop": null,
-    "settingsLeft": 0,
-    "settingsTop": 0,
-    "lastModified": "2026-06-30T06:30:43.287Z",
-    "workspaceHeroStyle": "topBar"
+    "settingsLeft": 574,
+    "settingsTop": 285,
+    "lastModified": "2026-07-29T03:03:41.112Z",
+    "workspaceHeroStyle": "topBar",
+    "bannerHiddenByWorkspace": false
   }
 };
 
@@ -343,6 +346,10 @@ function favicon(url) {
   }
 }
 
+let pendingWaypointConfirmation = null;
+
+let waypointConfirmationReturnFocus = null;
+
 function openModal(id, context = {}) {
   clearSectionFocus();
   $(id)?.classList.remove("hidden");
@@ -350,15 +357,17 @@ function openModal(id, context = {}) {
     renderTerminal();
     positionTerminal();
     setTimeout(() => $("commandInput")?.focus(), 80);
-    emitWaypointEvent("terminal-opened", { source: context.source || "interface" });
   }
   if (id === "settingsModal") {
     positionSettings();
-    emitWaypointEvent("settings-opened", { source: context.source || "interface" });
   }
 }
 
 function closeModal(id) {
+  if (id === "confirmationModal" && pendingWaypointConfirmation) {
+    finishWaypointConfirmation(false);
+    return;
+  }
   if (id === "settingsModal") commitLiveSettings();
   $(id)?.classList.add("hidden");
   emitWaypointEvent("modal-closed", { id });
@@ -366,8 +375,37 @@ function closeModal(id) {
 
 function closeAllModals() {
   commitLiveSettings();
+  if (pendingWaypointConfirmation) finishWaypointConfirmation(false);
   document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
   emitWaypointEvent("modal-closed", { id: "all" });
+}
+
+function requestWaypointConfirmation({
+  title = "Confirm action",
+  message = "Are you sure?",
+  confirmLabel = "Confirm"
+} = {}) {
+  if (pendingWaypointConfirmation) finishWaypointConfirmation(false);
+  waypointConfirmationReturnFocus = document.activeElement;
+  setText("confirmationModalTitle", title);
+  setText("confirmationModalMessage", message);
+  setText("confirmationAcceptBtn", confirmLabel);
+  $("confirmationModal")?.classList.remove("hidden");
+  return new Promise(resolve => {
+    pendingWaypointConfirmation = resolve;
+    setTimeout(() => $("confirmationAcceptBtn")?.focus(), 50);
+  });
+}
+
+function finishWaypointConfirmation(confirmed) {
+  const resolve = pendingWaypointConfirmation;
+  const returnFocus = waypointConfirmationReturnFocus;
+  pendingWaypointConfirmation = null;
+  waypointConfirmationReturnFocus = null;
+  $("confirmationModal")?.classList.add("hidden");
+  emitWaypointEvent("modal-closed", { id: "confirmationModal" });
+  resolve?.(Boolean(confirmed));
+  if (returnFocus?.isConnected) setTimeout(() => returnFocus.focus(), 0);
 }
 
 function measureWaypointRender(name, callback) {

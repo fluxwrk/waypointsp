@@ -127,7 +127,6 @@ function openSettingsPage(page = "appearance", context = {}) {
   document.querySelectorAll(".settings-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.settingsPage === targetPage));
   document.querySelectorAll(".settings-page").forEach(panel => panel.classList.toggle("active", panel.dataset.page === targetPage));
   openModal("settingsModal", context);
-  emitWaypointEvent("settings-page-changed", { page: targetPage, source: context.source || "interface" });
 }
 
 function resetEverything() {

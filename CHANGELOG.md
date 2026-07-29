@@ -1,10 +1,23 @@
 # Changelog
 
-## [1.5.2] - Unreleased
+## [1.5.2] - 2026-07-28
+
+### Added
+
+- Added WaypointKeys for fast keyboard selection of sections and bookmarks, with visible hints, keyboard help, focused-section navigation, and Escape recovery.
+- Added Grid Cards and Compact Cards bookmark presentations with responsive layouts, generated section icons, bookmark counts, and centered focused-section views.
+- Added Graphite and Daylight themes with matching wallpapers, desktop banners, and atmosphere banners.
+- Added one optional card-based Welcome Guide shared by the Welcome bookmark, `waypoint:welcome`, and Terminal `welcome`.
+- Added native Waypoint confirmation dialogs before section and bookmark deletion from interface controls or Terminal commands.
 
 ### Changed
 
-- Replaced the monolithic runtime implementation with feature-owned classic JavaScript source files for Core, Storage, Appearance, Workspace, WaypointKeys, Bookmarks, Search, Weather, Settings, Terminal, and the Welcome Tour.
+- Replaced the monolithic stylesheet with ten feature-owned stylesheets for tokens, core UI, Settings, layout, Workspace, bookmarks, Appearance, Terminal, WaypointKeys, and the Welcome Guide.
+- Renamed the Workspace setting label from “Shortcut” to “Terminal shortcut” without changing shortcut behavior or storage.
+- Renamed the compact category layout to Compact Cards across Settings, Terminal, and current documentation without changing the stored layout value or behavior.
+- Tightened Compact Cards category-card proportions with a smaller icon container, larger icon glyph, and reduced card spacing while preserving Grid Cards.
+- Extended Terminal deletion to bookmarks with `delete link "<section>" "<bookmark>"` and the equivalent `remove` alias.
+- Replaced the monolithic runtime implementation with feature-owned classic JavaScript source files for Core, Storage, Appearance, Workspace, WaypointKeys, Bookmarks, Search, Weather, Settings, Terminal, and the Welcome Guide.
 - Reduced `script.js` to the application composition root responsible for cross-feature render coordination, stable event binding, initialization order, and one-time bootstrap.
 - Preserved direct static-file loading without ES modules, frameworks, dependencies, bundlers, or build tooling.
 - Converted all built-in theme wallpapers and banners from PNG to pixel-identical lossless WebP for a 6.99 MB reduction across the complete theme-artwork set.
@@ -15,9 +28,16 @@
 
 ### Fixed
 
-- Included the current stylesheet in the Build 1 changed-files package so the interactive Welcome Tour's overlay, spotlight, and terminal focus styling remain synchronized with the 1.5.2 markup and controller.
+- Prevented direct `file://` startup from requesting `demo.json` or `metadata.json`, eliminating predictable Brave CORS failures while preserving normal HTTP loading.
+- Synchronized the embedded demo and metadata fallbacks exactly with the shipped JSON files and removed empty bookmark image sources that could resolve back to `index.html`.
+- Reduced focused Grid Card bookmark widths and centered the popup grid so link cards remain proportionate to the rest of Waypoint.
+- Replaced fragile ordered onboarding with independent Welcome Guide actions that remain reliable when users open or close other panels.
+- Prevented visible banner artwork from bleeding through Search in Standard Header, Top Bar, and Bottom Bar layouts while preserving blur, positioning, and theme-aware presentation.
+- Removed the inherited input surface inside Search so the provider, text field, and submit region share one continuous pill background without boxy center edges.
+- Positioned WaypointKeys bookmark hints at the top-right of focused Grid Card bookmark tiles, matching Compact Cards popups.
+- Included the current onboarding stylesheet in the Build 1 changed-files package so its presentation remains synchronized with the 1.5.2 markup.
 
-### Performance
+### Internal
 
 - Reduced the measured established Graphite startup payload from 6,032,649 bytes to 3,877,346 bytes, a 35.7% reduction.
 - Reduced critical local startup requests from ten to eight before the first usable interface.
@@ -31,22 +51,13 @@
 - Replaced intermediate control synchronization, terminal rendering, and broad Appearance refreshes with owned CSS/style/prompt previews.
 - Added browser-native measures for Appearance preview/commit and primary-profile serialization/persistence.
 
-### Documentation
+### Improved
 
-- Added the Waypoint 1.5.2 Build 1 Startup Asset Optimization design review and build report.
-- Updated project state and roadmap ownership for the first implementation build following the Runtime Architecture and Performance Audit.
-- Added the Waypoint 1.5.2 Build 2 Targeted Rendering Optimization design review and build report.
-- Added the Waypoint 1.5.2 Build 3 High-Frequency Update and Persistence Optimization design review and build report.
-- Added the Waypoint 1.5.2 Build 4 Feature-Owned Runtime Source design review and build report.
-- Documented runtime source ownership, ordered loading, composition-root responsibilities, and multi-file version synchronization.
-
-## [1.5.1] - Unreleased
-
-### Changed
-
-- Replaced the terminal Welcome TUI with one optional interactive tour that teaches Search, the Command Center, Themes, Workspace, and WaypointKeys through the real interface.
-- Made the Welcome bookmark, `waypoint:welcome`, and terminal `welcome` command start or restart the same shared tour.
-- Added accessible tour highlighting, action-based progression, modal recovery, explicit theme keep-or-restore completion choices, and safe cancellation from every step.
+- Refreshed the README showcase gallery from the final v1.5.2 build with current flagship, theme, layout, WaypointKeys, Workspace Studio, Appearance, Terminal, and custom artwork captures.
+- Replaced the guided Welcome Tour with four concise cards for Personalization, Bookmarks, Productivity, and Backup.
+- Added reliable direct actions to Workspace Studio, Appearance, Bookmark Settings, Terminal, WaypointKeys help, and Backup Settings.
+- Made the Welcome bookmark, `waypoint:welcome`, and Terminal `welcome` command open the same stateless guide.
+- Added responsive card presentation, keyboard-accessible actions, visible focus, and clean modal dismissal.
 - Replaced the legacy PNG favicon with Waypoint's reusable SVG logo.
 - Improved bookmark drag/drop handling so bookmark row drops no longer bubble into section-level drop handlers.
 - Added clearer bookmark drag source, drop-zone, and insertion-target feedback.
@@ -59,11 +70,11 @@
 - Simplified section headers with sentence-case titles, a quiet divider, and restrained action buttons.
 - Moved each section hint beside its add-link control so section titles remain clean and left-aligned.
 - Made Escape release search focus so keyboard navigation can resume without a pointer click.
-- Redesigned Compact List as a responsive grid of category cards inspired by Jumpkey's category overview.
+- Redesigned Compact Cards as a responsive grid of category cards inspired by Jumpkey's category overview.
 - Added generated section icons and bookmark counts without changing stored section data.
 - Added a lightweight centered section focus view for category-card clicks, Grid Card section clicks, and WaypointKeys activation.
 - Preserved the existing Grid Card bookmark presentation.
-- Changed Compact List to four category cards per desktop row while keeping Grid Cards at three sections per row.
+- Changed Compact Cards to four category cards per desktop row while keeping Grid Cards at three sections per row.
 - Replaced the focused-section blur with a correctly layered dim backdrop so focused content remains crisp.
 - Added an explicit dark popup palette for Settings dropdown options.
 - Redesigned all four built-in palettes around layered page, surface, elevated, hover, text, accent, card, border, and icon colors inspired by Jumpkey's theme architecture.
@@ -83,7 +94,7 @@
 - Added bookmark name and URL inference when a section title does not identify a useful icon.
 - Added a Graphite built-in theme using Jumpkey's graphite palette as a reference while retaining Waypoint artwork.
 - Removed the redundant Bookmark Columns control and its manual layout overrides; compact and grid layouts continue to use responsive fallbacks.
-- Limited Hide Section Titles to Grid Cards so Compact List category titles always remain visible.
+- Limited Hide Section Titles to Grid Cards so Compact Cards category titles always remain visible.
 - Increased WaypointKeys badge size, contrast, and letter weight.
 - Moved section key badges to a prominent upper-left position when Grid Card section titles are hidden.
 - Extended the WaypointKeys section-selection window from four to ten seconds.
@@ -110,7 +121,7 @@
 - Added a standalone transparent `img/waypoint-logo.svg` asset for reuse outside the inline interface mark.
 - Replaced fetch's approximate ASCII mark with the reusable Waypoint SVG so terminal and header branding match exactly.
 - Enlarged and centered the fetch logo within a wider left column, shifting metadata right for clearer visual balance.
-- Replaced the README screenshot gallery with seven current-build showcase captures covering Graphite, Nord, Daylight, Compact List, Grid Cards, WaypointKeys, Appearance settings, terminal fetch, and mobile layout.
+- Replaced the README screenshot gallery with seven current-build showcase captures covering Graphite, Nord, Daylight, Compact Cards, Grid Cards, WaypointKeys, Appearance settings, terminal fetch, and mobile layout.
 - Rebuilt the README showcase around the flagship Top Bar and Grid Card workspace with eight sections and 96 bookmarks, plus Nord, Daylight, WaypointKeys, Workspace Designer, Appearance, terminal fetch, and an animated terminal workflow.
 - Replaced inline editable section titles with a dedicated Rename Section modal opened from focused sections, preventing title clicks from intercepting WaypointKeys.
 - Expanded the README gallery with Standard Header, Bottom Bar, hidden search, hidden banner, minimal, large-banner, and custom wallpaper/banner configurations.
@@ -124,25 +135,6 @@
 - Cleared transient bookmark drag state before re-rendering after a successful move.
 - Preserved the Add Link modal save action as the single creation path for externally dropped bookmarks.
 - Fixed external bookmark, URL, and hyperlink drops into empty sections so they open the Add Link modal.
-
-### Documentation
-
-- Added the Waypoint 1.5.1 Build 7 Interactive Welcome Tour design review and build report.
-- Defined welcome-tour ownership in ARCHITECTURE.md and the updated `waypoint:welcome` route behavior in WAYPOINT_PROTOCOL.md.
-- Set the active build to the Bookmark Experience Pass.
-- Marked Waypoint Protocol Expansion as on hold.
-- Updated the Waypoint 1.5.1 Build 1 design review contract around bookmark drag/drop, reorder logic, and interaction audit work.
-- Added the Waypoint 1.5.1 Build 1 build report.
-- Clarified that internal build tracking belongs in planning documents, not runtime app metadata.
-- Added the Waypoint 1.5.1 Build 2 design review and build report.
-- Added the Waypoint 1.5.1 Build 3 design review and build report.
-- Reviewed ARCHITECTURE.md; its existing Navigation ownership already describes WaypointKeys, so no architecture change was required.
-- Reviewed ARCHITECTURE.md for the Compact Category Layout; Workspace still owns presentation and Bookmarks still own content, so no architecture change was required.
-- Added the Waypoint 1.5.1 Build 4 design review and build report.
-- Reviewed ARCHITECTURE.md for the Layered Theme System; Themes still own appearance only, so no architecture change was required.
-- Added the Waypoint 1.5.1 Build 5 design review and build report.
-- Updated ARCHITECTURE.md and WAYPOINT_PROTOCOL.md with active Settings routes and compatibility aliases.
-- Added the Waypoint 1.5.1 Build 6 design review and build report.
 
 ## [1.5.0-dev12] - 2026-06-30
 

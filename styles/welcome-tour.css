@@ -1,0 +1,148 @@
+/* Waypoint welcome-tour stylesheet ownership. Loaded in the documented cascade. */
+
+
+/* Interactive welcome tour */
+.welcome-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  pointer-events: none;
+}
+.welcome-tour-shade {
+  position: fixed;
+  background: rgba(0, 0, 0, .26);
+  pointer-events: none;
+  transition: inset .18s ease, width .18s ease, height .18s ease;
+}
+.welcome-tour-focus {
+  position: fixed;
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 200vmax rgba(0, 0, 0, .26),
+    0 0 0 4px color-mix(in srgb, var(--accent), transparent 70%),
+    var(--shadow);
+  pointer-events: none;
+  transition: left .18s ease, top .18s ease, width .18s ease, height .18s ease;
+}
+.welcome-tour-callout {
+  position: fixed;
+  width: min(390px, calc(100vw - 32px));
+  max-height: min(560px, calc(100vh - 32px));
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text);
+  background: var(--panel-strong);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+}
+.welcome-tour-callout.is-blocking {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.welcome-tour-close {
+  position: absolute;
+  right: 13px;
+  top: 11px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  font-size: 23px;
+}
+.welcome-tour-progress {
+  min-height: 1em;
+  margin: 0 42px 8px 0;
+  color: var(--accent);
+  font: 700 11px/1.2 "JetBrains Mono", monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.welcome-tour-callout h2 {
+  margin: 0 34px 10px 0;
+  font-size: 24px;
+}
+.welcome-tour-description {
+  color: var(--muted);
+  line-height: 1.55;
+}
+.welcome-tour-description p { margin: 0 0 10px; }
+.welcome-tour-description code {
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--panel), transparent 10%);
+  font-family: "JetBrains Mono", monospace;
+}
+.welcome-tour-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 18px;
+}
+.welcome-tour-actions button:first-child {
+  color: var(--button-text);
+  background: var(--accent);
+}
+.welcome-tour-skip {
+  margin-top: 12px;
+  padding: 7px 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.welcome-tour-actions button:focus-visible,
+.welcome-tour-skip:focus-visible,
+.welcome-tour-close:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+body.welcome-tour-active #settingsModal:not(.hidden) .settings-modal {
+  left: 50% !important;
+  top: 12px !important;
+  max-height: calc(100vh - 24px) !important;
+  transform: translateX(-50%) !important;
+}
+body.welcome-tour-active #terminalModal:not(.hidden) .terminal-window {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+.welcome-tour .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 680px) {
+
+  .welcome-tour-callout:not(.is-blocking) {
+    left: 12px !important;
+    right: 12px;
+    bottom: 12px;
+    top: auto !important;
+    width: auto;
+    transform: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+
+  .welcome-tour-shade,
+  .welcome-tour-focus { transition: none; }
+}

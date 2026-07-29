@@ -1,0 +1,71 @@
+/* Waypoint tokens stylesheet ownership. Loaded in the documented cascade. */
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/JetBrainsMonoVariable.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #0b0e14;
+  --panel: rgba(17, 20, 30, .70);
+  --panel-strong: rgba(17, 20, 30, .92);
+  --text: #d8dee9;
+  --muted: #9aa4b8;
+  --accent: #88c0d0;
+  --border: rgba(216, 222, 233, .14);
+  --accent-soft: rgba(136, 192, 208, .15);
+  --surface-elevated: #3b4252;
+  --surface-hover: #4c566a;
+  --text-secondary: #b4bfce;
+  --text-strong: #eceff4;
+  --accent-strong: #5e81ac;
+  --accent-bright: #8fbcbb;
+  --accent-hover-color: #88c0d0;
+  --card-background: linear-gradient(145deg, rgba(57,65,79,.92), rgba(41,48,59,.94));
+  --card-border: #526174;
+  --card-icon-surface: #414b5b;
+  --shadow: 0 24px 80px rgba(0, 0, 0, .42);
+  --radius-lg: 24px;
+  --radius-md: 17px;
+  --font-system: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-waypoint: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-terminal: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --mono: var(--font-terminal);
+  --sans: var(--font-waypoint);
+}
+
+
+:root {
+  --way-glow: color-mix(in srgb, var(--accent), transparent 65%);
+}
+
+
+:root {
+  --waypoint-green: #00d084;
+  --waypoint-green-soft: rgba(0, 208, 132, .17);
+}
+
+/* v1.5.0-dev7: Hero layout polish
+   Bar layouts should keep the bar as chrome and center the Hero content as page content. */
+:root {
+  --bar-to-hero-gap: 30px;
+  --hero-to-content-gap: 26px;
+}
+
+@media (max-width: 700px) {
+
+  :root {
+    --bar-to-hero-gap: 18px;
+    --hero-to-content-gap: 18px;
+  }
+}

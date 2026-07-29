@@ -60,7 +60,7 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 ![WaypointKeys focused section with keyboard hints](screenshots/showcase-waypointkeys-grid.png)
 
-<img src="screenshots/showcase-workspace-designer.png" alt="Waypoint Workspace Designer editing search placement" width="49%">
+<img src="screenshots/showcase-workspace-designer.png" alt="Waypoint Workspace Studio editing search placement" width="49%">
 <img src="screenshots/showcase-appearance.png" alt="Consolidated Appearance settings" width="49%">
 
 ![Waypoint terminal fetch command](screenshots/showcase-terminal.png)
@@ -120,13 +120,11 @@ Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoin
 
 ## Project Status
 
-**Latest Public Release:** **v1.5.0**
+**Latest Public Release:** **v1.5.2**
 
-**Current Main Branch:** **v1.5.2** (latest stable development)
+**Current Main Branch:** **v1.5.2**
 
-> The `main` branch always contains the latest validated development build. Public releases are created after a development milestone is complete.
-
-**Current Development:** 🚧 **v1.5.2 Runtime & Architecture Optimization**
+**Development Status:** no active development milestone
 
 ---
 

@@ -110,7 +110,6 @@ function handleKeyboardNavigation(event) {
     document.querySelector(`.section[data-section-index="${sectionIndex}"]`)?.classList.add("keyboard-section-active");
     focusBookmarkSection(sectionIndex);
     scheduleKeyboardNavigationReset();
-    emitWaypointEvent("waypointkeys-section-selected", { sectionIndex, key });
     return true;
   }
 

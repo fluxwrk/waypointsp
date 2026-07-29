@@ -41,7 +41,7 @@ function buildFastfetchHtml() {
       ["Search", labelSearch(data.settings.searchEngine)],
       ["Bookmarks", countBookmarks()],
       ["Sections", data.sections.length],
-      ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid"],
+      ["Layout", (data.settings.bookmarkLayout || "list") === "list" ? "Compact Cards" : "Grid Cards"],
       ["Weather", weather],
       ["Modified", modified]
     ];
@@ -163,7 +163,7 @@ function currentConfigText() {
   return [
     `Theme: ${getTheme().label}`,
     `Workspace template: ${s.workspace?.template || "classic"}${s.workspace?.modified ? " (modified)" : ""}`,
-    `Bookmark layout: ${s.bookmarkLayout === "grid" ? "Grid Cards" : "Compact List"}`,
+    `Bookmark layout: ${s.bookmarkLayout === "grid" ? "Grid Cards" : "Compact Cards"}`,
     `Interface font: ${s.fontFamily === "system" ? "System" : "Waypoint"}`,
     `Search engine: ${labelSearch(s.searchEngine)}`,
     `Weather: ${s.showWeather === false ? "Hidden" : "Shown"}`,
@@ -179,7 +179,7 @@ function buildHelpText(topic = "") {
   const t = requestedTopic === "preset" ? "template" : requestedTopic;
   const pages = {
     theme: `theme\n\nChange or view the current color theme.\n\nSyntax:\n  theme\n  theme <name>\n\nExamples:\n  theme nord\n  theme tokyo-night\n\nSee also:\n  ls themes`,
-    layout: `layout\n\nChange or view the bookmark layout.\n\nSyntax:\n  layout\n  layout compact\n  layout grid\n\nWorkspace templates use the template command.\n\nSee also:\n  help template\n  ls layouts`,
+    layout: `layout\n\nChange or view the bookmark layout.\n\nLayouts:\n  compact — Compact Cards\n  grid — Grid Cards\n\nSyntax:\n  layout\n  layout compact\n  layout grid\n\nWorkspace templates use the template command.\n\nSee also:\n  help template\n  ls layouts`,
     template: `template\n\nChange or view the workspace template.\n\nSyntax:\n  template\n  template <name>\n\nExamples:\n  template classic\n  template minimal\n\nThe preset command remains as a compatibility alias.\n\nSee also:\n  ls layouts`,
     visibility: `show / hide\n\nShow or hide interface elements.\n\nSyntax:\n  show <element>\n  hide <element>\n\nElements:\n  logo\n  title\n  clock\n  weather\n  search\n  titles (Grid Card section titles)\n  banner\n\nThe sections name remains as an alias for titles.`,
     search: `engine\n\nChange or view the search engine.\n\nSyntax:\n  engine\n  engine <name>\n\nExamples:\n  engine google\n  engine duckduckgo\n\nSee also:\n  ls search`,
@@ -187,7 +187,7 @@ function buildHelpText(topic = "") {
     font: `font\n\nChange or view the interface font.\n\nSyntax:\n  font\n  font <name>\n\nExamples:\n  font waypoint\n  font system\n\nThe terminal always uses JetBrains Mono.\n\nSee also:\n  ls fonts`,
     settings: `settings\n\nOpen Settings or a specific settings page.\n\nSyntax:\n  settings\n  settings <page>\n\nPages:\n  appearance\n  layout\n  bookmarks\n  weather\n  search\n  backup\n\nCompatibility aliases:\n  banner, text → appearance\n  advanced → search`,
     add: `add\n\nAdd a section or bookmark.\n\nSyntax:\n  add section <name>\n  add link <section> <name> <url>\n\nExamples:\n  add section Media\n  add link "Media" "Jellyfin" https://jellyfin.org`,
-    remove: `remove / delete\n\nRemove a section.\n\nSyntax:\n  remove section <name>\n  delete section <name>`,
+    remove: `remove / delete\n\nDelete a section or bookmark after confirming in a Waypoint dialog.\n\nSyntax:\n  remove section <name>\n  delete section <name>\n  remove link "<section>" "<bookmark>"\n  delete link "<section>" "<bookmark>"`,
     rename: `rename\n\nRename a section.\n\nSyntax:\n  rename section <old> <new>\n\nExample:\n  rename section "Media" "Streaming"`,
     colors: `colors\n\nChange interface colors.\n\nSyntax:\n  accent <hex>\n  surface <hex>\n  text <hex>\n  titlecolor <hex>\n\nExamples:\n  accent #00d084\n  surface #09111a`,
     transparency: `transparency\n\nSection cards and the terminal use 60% opacity by default. Override their backgrounds through Custom CSS in Settings > Appearance.`,
@@ -204,7 +204,7 @@ function buildHelpText(topic = "") {
     "help             Show help or command help",
     "ls               List options and configuration",
     "settings         Open Settings",
-    "welcome          Start the interactive welcome tour",
+    "welcome          Open the Welcome Guide",
     "theme            Manage themes",
     "template         Apply workspace templates",
     "layout           Manage bookmark layout",
@@ -221,7 +221,7 @@ function buildHelpText(topic = "") {
     "workspace        Show workspace slot assignments",
     "add              Add sections or bookmarks",
     "rename           Rename sections",
-    "remove / delete  Remove sections",
+    "remove / delete  Delete sections or bookmarks",
     "export           Export configuration",
     "import           Import configuration",
     "reset            Reset settings",
@@ -241,7 +241,7 @@ function listCommand(category = "") {
     "": cleanList("Available Lists", ["commands", "themes", "layouts", "fonts", "visibility", "search", "widgets", "workspace", "config"]),
     commands: buildHelpText(),
     themes: cleanList("Available Themes", ["catppuccin", "daylight", "nord", "gruvbox", "graphite", "tokyo-night"]),
-    layouts: `Bookmark Layouts\n\n  compact\n  grid\n\nWorkspace Templates\n\n  classic\n  dashboard\n  minimal`,
+    layouts: `Bookmark Layouts\n\n  compact — Compact Cards\n  grid — Grid Cards\n\nWorkspace Templates\n\n  classic\n  dashboard\n  minimal`,
     fonts: cleanList("Available Interface Fonts", ["system", "waypoint"]),
     visibility: cleanList("Visibility Elements", ["logo", "title", "clock", "weather", "search", "titles", "banner"]),
     search: cleanList("Available Search Engines", ["google", "duckduckgo", "brave", "bing", "custom"]),
@@ -294,7 +294,6 @@ function runCommand(commandRaw) {
   if (head === "ls") return done(terminalPre(listCommand(arg), "terminal-help"));
   if (head === "fetch") {
     done(buildFastfetchHtml());
-    emitWaypointEvent("terminal-command-completed", { command: "fetch", success: true });
     return;
   }
   if (head === "widgets") return done(terminalPre(widgetSummaryText(), "terminal-help"));
@@ -351,10 +350,10 @@ function runCommand(commandRaw) {
   }
   if (head === "layout") {
     const map = { list: "list", compact: "list", row: "list", rows: "list", grid: "grid", cards: "grid" };
-    if (!arg) return textOut(`Bookmark layout: ${(data.settings.bookmarkLayout || "list") === "list" ? "Compact List" : "Grid Cards"}`);
+    if (!arg) return textOut(`Bookmark layout: ${(data.settings.bookmarkLayout || "list") === "list" ? "Compact Cards" : "Grid Cards"}`);
     if (!map[arg]) return textOut(buildHelpText("layout"), "terminal-warning");
     data.settings.bookmarkLayout = map[arg]; save(); renderBookmarkSettings();
-    return done(buildStatusLines(`Setting bookmark layout: ${data.settings.bookmarkLayout === "list" ? "Compact List" : "Grid Cards"}`));
+    return done(buildStatusLines(`Setting bookmark layout: ${data.settings.bookmarkLayout === "list" ? "Compact Cards" : "Grid Cards"}`));
   }
   if (head === "accent" || head === "surface" || head === "text" || head === "titlecolor") {
     const color = rest[0] || "";
@@ -436,10 +435,19 @@ function runCommand(commandRaw) {
     }
     return textOut(buildHelpText("add"), "terminal-warning");
   }
-  if (["delete", "remove"].includes(head) && arg.startsWith("section")) {
-    const sectionName = commandRaw.trim().replace(/^(delete|remove)\s+section\s*/i, "").trim();
-    if (!sectionName) return textOut(buildHelpText("remove"), "terminal-warning");
-    return textOut(deleteSectionByCommand(sectionName).replace(/<[^>]+>/g, ""));
+  if (["delete", "remove"].includes(head) && (arg.startsWith("section") || arg.startsWith("link"))) {
+    const reportDeletion = (message, deleted) => pushTerminal(terminalBlock(commandResult(
+      message.replace(/<[^>]+>/g, ""),
+      deleted ? "terminal-success-text" : "terminal-warning"
+    )));
+    if (arg.startsWith("section")) {
+      const sectionName = commandRaw.trim().replace(/^(delete|remove)\s+section\s*/i, "").trim();
+      if (!sectionName) return textOut(buildHelpText("remove"), "terminal-warning");
+      return textOut(deleteSectionByCommand(sectionName, reportDeletion).replace(/<[^>]+>/g, ""), "terminal-warning");
+    }
+    const parsed = parseDeleteLinkCommand(commandRaw);
+    if (!parsed) return textOut(buildHelpText("remove"), "terminal-warning");
+    return textOut(deleteLinkByCommand(parsed.sectionName, parsed.linkName, reportDeletion).replace(/<[^>]+>/g, ""), "terminal-warning");
   }
   if (head === "rename" && arg.startsWith("section")) {
     const body = commandRaw.trim().replace(/^rename\s+section\s*/i, "").trim();

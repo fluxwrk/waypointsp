@@ -4,7 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Waypoint</title>
-  <link rel="stylesheet" href="style.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/tokens.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/core.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/settings.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/layout.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/workspace.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/bookmarks.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/appearance.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/terminal.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/waypoint-keys.css?v=1.5.2">
+  <link rel="stylesheet" href="styles/welcome-guide.css?v=1.5.2">
   <link rel="icon" type="image/svg+xml" href="img/waypoint-logo.svg">
 </head>
 <body>
@@ -71,6 +80,18 @@
       <div class="modal-actions">
         <button id="saveLinkBtn" class="primary-btn">Save</button>
         <button class="ghost-btn" data-close-modal="linkModal" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="confirmationModal" role="alertdialog" aria-modal="true" aria-labelledby="confirmationModalTitle" aria-describedby="confirmationModalMessage">
+    <div class="modal-content compact-modal confirmation-modal-content">
+      <button class="modal-close" data-close-modal="confirmationModal" aria-label="Cancel">×</button>
+      <h3 id="confirmationModalTitle">Confirm action</h3>
+      <p id="confirmationModalMessage"></p>
+      <div class="modal-actions">
+        <button id="confirmationAcceptBtn" class="danger-btn" type="button">Delete</button>
+        <button class="ghost-btn" data-close-modal="confirmationModal" type="button">Cancel</button>
       </div>
     </div>
   </div>
@@ -184,7 +205,7 @@
           <label>Show Weather<select id="showWeatherSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Show Search<select id="showSearchSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
           <label>Show Grid Section Titles<select id="showSectionTitlesSelect"><option value="true">Show</option><option value="false">Hide</option></select></label>
-          <label>Shortcut<select id="shortcutSelect"><option value="none">Disabled</option><option value="altT">Alt+T</option><option value="ctrlShiftSpace">Ctrl+Shift+Space</option></select></label>
+          <label>Terminal shortcut<select id="shortcutSelect"><option value="none">Disabled</option><option value="altT">Alt+T</option><option value="ctrlShiftSpace">Ctrl+Shift+Space</option></select></label>
         </div>
         <div class="button-row settings-uploads">
           <button id="applyWorkspaceTemplateBtn" class="ghost-btn" type="button">Use Selected Template</button>
@@ -196,7 +217,7 @@
       <div class="settings-page" data-page="bookmarks">
         <div class="terminal-control-grid">
           <label>WaypointKeys<select id="keyboardNavigationSelect"><option value="false">Disabled</option><option value="true">Enabled</option></select></label>
-          <label>Bookmark Layout<select id="bookmarkLayoutSelect"><option value="list">Compact List</option><option value="grid">Grid Cards</option></select></label>
+          <label>Bookmark Layout<select id="bookmarkLayoutSelect"><option value="list">Compact Cards</option><option value="grid">Grid Cards</option></select></label>
           <label>Bookmark Font Size <span id="bookmarkFontValue"></span><input type="range" id="bookmarkFontSlider" min="10" max="15" value="12"></label>
           <label>Icon Size <span id="bookmarkIconValue"></span><input type="range" id="bookmarkIconSlider" min="14" max="36" value="22"></label>
         </div>
@@ -248,21 +269,89 @@
 
   <button id="sectionFocusBackdrop" class="section-focus-backdrop" type="button" aria-label="Close focused section" hidden></button>
 
-  <div id="welcomeTour" class="welcome-tour" hidden>
-    <div class="welcome-tour-shade" data-tour-shade="top"></div>
-    <div class="welcome-tour-shade" data-tour-shade="right"></div>
-    <div class="welcome-tour-shade" data-tour-shade="bottom"></div>
-    <div class="welcome-tour-shade" data-tour-shade="left"></div>
-    <div id="welcomeTourFocus" class="welcome-tour-focus" aria-hidden="true"></div>
-    <section id="welcomeTourCallout" class="welcome-tour-callout" role="dialog" aria-labelledby="welcomeTourTitle" aria-describedby="welcomeTourDescription">
-      <button id="welcomeTourClose" class="welcome-tour-close" type="button" aria-label="Cancel welcome tour">×</button>
-      <p id="welcomeTourProgress" class="welcome-tour-progress"></p>
-      <h2 id="welcomeTourTitle"></h2>
-      <div id="welcomeTourDescription" class="welcome-tour-description"></div>
-      <div id="welcomeTourActions" class="welcome-tour-actions"></div>
-      <button id="welcomeTourSkip" class="welcome-tour-skip" type="button">Skip Tour</button>
-    </section>
-    <p id="welcomeTourStatus" class="sr-only" role="status" aria-live="polite"></p>
+  <div class="modal hidden" id="welcomeGuideModal" role="dialog" aria-modal="true" aria-labelledby="welcomeGuideTitle" aria-describedby="welcomeGuideSubtitle">
+    <div class="modal-content welcome-guide-modal">
+      <button class="modal-close" data-close-modal="welcomeGuideModal" aria-label="Close Welcome Guide">×</button>
+      <header class="welcome-guide-header">
+        <span class="welcome-guide-kicker">Welcome Guide</span>
+        <h2 id="welcomeGuideTitle">Welcome to Waypoint</h2>
+        <p id="welcomeGuideSubtitle">A local-first start page for your favorite sites and tools.</p>
+      </header>
+
+      <div class="welcome-guide-grid" id="welcomeGuideActions">
+        <article class="welcome-guide-card">
+          <div class="welcome-guide-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5.5h16v13H4zM8 5.5v13M8 10h12"/></svg>
+          </div>
+          <h3>Personalize</h3>
+          <p>Make Waypoint feel like your own.</p>
+          <ul>
+            <li>Arrange your workspace with Workspace Studio</li>
+            <li>Change themes, wallpaper, and banner in Appearance</li>
+            <li>Adjust search placement and visual options</li>
+          </ul>
+          <div class="welcome-guide-card-actions">
+            <button type="button" class="primary-btn" data-welcome-destination="studio">Open Workspace Studio</button>
+            <button type="button" data-welcome-destination="appearance">Open Appearance</button>
+          </div>
+        </article>
+
+        <article class="welcome-guide-card">
+          <div class="welcome-guide-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 6.5h6l1.5 2H20v9.5H4zM7 12h10M7 15h7"/></svg>
+          </div>
+          <h3>Bookmarks</h3>
+          <p>Organize the sites you use every day.</p>
+          <ul>
+            <li>Create and manage sections</li>
+            <li>Add, edit, and remove bookmarks</li>
+            <li>Drag and drop to reorder</li>
+            <li>Choose Grid Cards or Compact Cards</li>
+          </ul>
+          <div class="welcome-guide-card-actions">
+            <button type="button" class="primary-btn" data-welcome-destination="bookmarks">Open Bookmark Settings</button>
+          </div>
+        </article>
+
+        <article class="welcome-guide-card">
+          <div class="welcome-guide-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM7 9l3 3-3 3M12 15h5"/></svg>
+          </div>
+          <h3>Productivity</h3>
+          <p>Move around Waypoint faster.</p>
+          <ul>
+            <li>Search the web</li>
+            <li>Use the Terminal for quick actions</li>
+            <li>Learn keyboard shortcuts with WaypointKeys</li>
+          </ul>
+          <div class="welcome-guide-card-actions">
+            <button type="button" class="primary-btn" data-welcome-destination="terminal">Open Terminal</button>
+            <button type="button" data-welcome-destination="keys">View WaypointKeys</button>
+          </div>
+        </article>
+
+        <article class="welcome-guide-card">
+          <div class="welcome-guide-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5zM8 4v6h8V4M8 16h8"/></svg>
+          </div>
+          <h3>Backup</h3>
+          <p>Keep your Waypoint setup safe.</p>
+          <ul>
+            <li>Export your configuration</li>
+            <li>Import an existing backup</li>
+            <li>Restore or reset when needed</li>
+          </ul>
+          <div class="welcome-guide-card-actions">
+            <button type="button" class="primary-btn" data-welcome-destination="backup">Open Backup Settings</button>
+          </div>
+        </article>
+      </div>
+
+      <footer class="welcome-guide-footer">
+        <p>Your data stays in your browser unless you choose to export it.</p>
+        <button type="button" data-close-modal="welcomeGuideModal">Close Guide</button>
+      </footer>
+    </div>
   </div>
 
   <script src="js/core.js?v=1.5.2"></script>
@@ -275,7 +364,7 @@
   <script src="js/weather.js?v=1.5.2"></script>
   <script src="js/settings.js?v=1.5.2"></script>
   <script src="js/terminal.js?v=1.5.2"></script>
-  <script src="js/welcome-tour.js?v=1.5.2"></script>
+  <script src="js/welcome-guide.js?v=1.5.2"></script>
   <script src="script.js?v=1.5.2"></script>
 </body>
 </html>

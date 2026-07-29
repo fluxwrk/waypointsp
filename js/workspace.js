@@ -704,7 +704,6 @@ function setEditLayoutMode(active) {
   ensureWorkspaceLauncher();
   if (editLayoutActive) {
     renderWorkspaceDesignerPanel();
-    emitWaypointEvent("workspace-studio-opened");
   }
 }
 

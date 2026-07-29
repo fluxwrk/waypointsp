@@ -1,0 +1,85 @@
+/* Waypoint waypoint-keys stylesheet ownership. Loaded in the documented cascade. */
+
+
+.keyboard-hint {
+  display: none;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 35%);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--panel-strong), black 8%);
+  color: var(--accent);
+  font: 800 11px/1 var(--mono);
+  box-shadow: 0 3px 10px rgba(0,0,0,.22);
+}
+.section-key-hint { margin-right: 8px; }
+.link-key-hint { flex: 0 0 auto; }
+body.keyboard-navigation-active .section-key-hint { display: grid; }
+body.keyboard-navigation-active .keyboard-section-active .section-key-hint { background: var(--accent); color: var(--bg); }
+body.keyboard-navigation-active .keyboard-section-active .link-key-hint { display: grid; }
+.keyboard-section-active {
+  outline: 2px solid color-mix(in srgb, var(--accent), transparent 25%);
+  outline-offset: 3px;
+}
+.keyboard-help-modal p { color: var(--muted); }
+.keyboard-help-list { display: grid; gap: 10px; margin: 20px 0 0; }
+.keyboard-help-list div { display: grid; grid-template-columns: minmax(155px, .8fr) 1.2fr; gap: 16px; align-items: center; }
+.keyboard-help-list dt, .keyboard-help-list dd { margin: 0; }
+.keyboard-help-list dt { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; }
+.keyboard-help-list kbd { padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; background: rgba(255,255,255,.06); color: var(--text); font: 800 11px var(--mono); }
+.keyboard-help-list dd { color: var(--text); font-size: 13px; }
+@media (max-width: 560px) {
+
+  .keyboard-help-list div { grid-template-columns: 1fr; gap: 5px; }
+}
+
+/* Section headers and persistent WaypointKeys discovery */
+body.keyboard-navigation-enabled .section-key-hint {
+  display: grid;
+}
+.section-key-hint {
+  position: static;
+  margin: 0;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  box-shadow: none;
+}
+body.keyboard-navigation-active .keyboard-section-active .section-key-hint {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent), transparent 78%);
+}
+body.bookmark-list-layout.section-focus-active .section-focused .link-key-hint,
+body.bookmark-grid-layout.section-focus-active .section-focused .link-key-hint {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+.section-generated-icon,
+.keyboard-hint {
+  color: var(--accent-bright);
+  background: var(--card-icon-surface);
+  border-color: color-mix(in srgb, var(--card-border) 74%, var(--accent) 26%);
+}
+
+/* WaypointKeys badges stay legible and remain discoverable without Grid Card titles. */
+.keyboard-hint,
+.section-key-hint {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  border-width: 1px;
+  border-radius: 8px;
+  color: var(--text-strong);
+  background: color-mix(in srgb, var(--surface-hover) 72%, var(--accent) 28%);
+  border-color: color-mix(in srgb, var(--accent-bright) 72%, transparent);
+  font: 950 14px/1 var(--mono);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .65);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .24);
+}
+body.bookmark-grid-layout.ui-hide-section-titles .section-key-hint {
+  margin-right: auto;
+}
