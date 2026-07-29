@@ -54,7 +54,7 @@
 
 ---
 
-## Screenshots
+### Screenshots
 
 <div align="center">
 
@@ -72,7 +72,7 @@
 
 ---
 
-## Installation
+### Installation
 
 Clone the repository:
 
@@ -88,15 +88,13 @@ No installation required.
 
 ---
 
-## Customization
+### Customization
 
 Waypoint is designed to be personalized.
 
 Customize themes, wallpapers, layouts, widgets, colors, banners, bookmarks, and more to create a workspace that feels like your own.
 
 ---
-
-## Project Status
 
 **Latest Public Release:** **v1.5.2**
 
