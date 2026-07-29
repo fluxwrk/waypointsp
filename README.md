@@ -6,7 +6,7 @@
 
 ## Waypoint is a modern, local-first browser start page designed to be fast, customizable, and beautiful by default.
 
- *It exists because I couldn't find a start page I wanted to use every day. So I built one.*
+*It exists because I couldn't find a start page I wanted to use every day. So I built one.*
 
 <p>
   <img alt="GitHub Release" src="https://img.shields.io/github/v/release/waypointsp-dev/waypointsp">
@@ -18,27 +18,39 @@
 
 ---
 
-## Design Philosophy
+<div align="center">
 
-Waypoint is built around a few simple ideas:
+![Waypoint v1.5.2 flagship workspace with Graphite, Top Bar, Search, and Grid Cards](screenshots/waypoint-1.5.2-workspace.png)
 
-- Bookmarks come first.
-- Workspaces provide structured customization.
-- Simplicity is preferred over feature count.
-- Every feature must earn its place.
-
-Waypoint is intentionally focused on being an exceptional browser start page rather than a general-purpose dashboard.
+</div>
 
 ---
 
-## Highlights
+## Features
 
-• Local-first — Everything stays in your browser.  
-• Workspace Studio — Design your layout visually.  
-• Linux-inspired Terminal — Built-in commands and keyboard-driven workflow.  
-• Flexible Layouts — Classic, Top Bar, and Bottom Bar.  
-• Smart Bookmarks — Sections, drag-and-drop, and automatic icons.  
-• Thoughtful Defaults — Ready to use from the first launch.
+### 📚 Bookmarks
+
+- Drag and drop bookmark management
+- Grid Cards, Compact Cards, and Focused Section views
+- Automatic website icons and organized sections
+
+### 🎨 Customization
+
+- Multiple layouts, themes, wallpapers, and banners
+- Workspace Studio for visual customization
+- Extensive appearance and color options
+
+### ⌨️ Productivity
+
+- WaypointKeys keyboard navigation
+- Integrated terminal with built-in commands
+- Zero build process and instant startup
+
+### 🔒 Privacy
+
+- Local-first by design
+- Runs directly from `file://` or any web server
+- No accounts or cloud services required
 
 ---
 
@@ -46,15 +58,13 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 <div align="center">
 
-![Waypoint v1.5.2 flagship workspace with Graphite, Top Bar, a small banner with Search, and Grid Cards](screenshots/waypoint-1.5.2-workspace.png)
+<img src="screenshots/waypoint-1.5.2-compact-cards.png" width="49%">
+<img src="screenshots/waypoint-1.5.2-focused-section.png" width="49%">
 
-<img src="screenshots/waypoint-1.5.2-compact-cards.png" alt="Waypoint Compact Cards with generated category icons and bookmark counts" width="49%">
-<img src="screenshots/waypoint-1.5.2-focused-section.png" alt="Waypoint focused section view with balanced bookmark tiles" width="49%">
+<img src="screenshots/waypoint-1.5.2-customization.png" width="49%">
+<img src="screenshots/waypoint-1.5.2-waypointkeys.png" width="49%">
 
-<img src="screenshots/waypoint-1.5.2-customization.png" alt="Workspace Studio editing standalone Search in a Daylight Minimal workspace" width="49%">
-<img src="screenshots/waypoint-1.5.2-waypointkeys.png" alt="WaypointKeys focused section with visible bookmark key hints" width="49%">
-
-<h3>Terminal workflow</h3>
+<h3>Terminal Demo</h3>
 
 ![Using real Waypoint Terminal commands to add a bookmark, change themes, and switch layouts](screenshots/waypoint-1.5.2-terminal.webp)
 
@@ -78,17 +88,11 @@ No installation required.
 
 ---
 
-## Terminal
-
-The integrated terminal brings a familiar Linux-inspired command line directly into your start page. Use it to explore Waypoint, configure settings, and access built-in commands without leaving the browser.
-
-Type `help` to get started.
-
----
-
 ## Customization
 
-Customize themes, colors, wallpapers, layouts, widgets, and more to make Waypoint your own.
+Waypoint is designed to be personalized.
+
+Customize themes, wallpapers, layouts, widgets, colors, banners, bookmarks, and more to create a workspace that feels like your own.
 
 ---
 
