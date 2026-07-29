@@ -46,45 +46,19 @@ Waypoint is intentionally focused on being an exceptional browser start page rat
 
 <div align="center">
 
-![Waypoint flagship Top Bar workspace with Graphite theme and Grid Card bookmarks](screenshots/showcase-flagship.png)
+![Waypoint v1.5.2 flagship workspace with Graphite, Top Bar, a small banner with Search, and Grid Cards](screenshots/waypoint-1.5.2-workspace.png)
 
-</div>
+<img src="screenshots/waypoint-1.5.2-compact-cards.png" alt="Waypoint Compact Cards with generated category icons and bookmark counts" width="49%">
+<img src="screenshots/waypoint-1.5.2-focused-section.png" alt="Waypoint focused section view with balanced bookmark tiles" width="49%">
 
-<details>
-<summary><strong>Open the showcase gallery</strong></summary>
-
-<div align="center">
-
-<img src="screenshots/showcase-nord.png" alt="Nord theme with Top Bar and Grid Card bookmarks" width="49%">
-<img src="screenshots/showcase-daylight-grid.png" alt="Daylight theme with Top Bar and Grid Card bookmarks" width="49%">
-
-![WaypointKeys focused section with keyboard hints](screenshots/showcase-waypointkeys-grid.png)
-
-<img src="screenshots/showcase-workspace-designer.png" alt="Waypoint Workspace Studio editing search placement" width="49%">
-<img src="screenshots/showcase-appearance.png" alt="Consolidated Appearance settings" width="49%">
-
-![Waypoint terminal fetch command](screenshots/showcase-terminal.png)
+<img src="screenshots/waypoint-1.5.2-customization.png" alt="Workspace Studio editing standalone Search in a Daylight Minimal workspace" width="49%">
+<img src="screenshots/waypoint-1.5.2-waypointkeys.png" alt="WaypointKeys focused section with visible bookmark key hints" width="49%">
 
 <h3>Terminal workflow</h3>
 
-![Using Waypoint terminal commands](screenshots/showcase-terminal-demo.gif)
-
-<h3>Layout and visibility configurations</h3>
-
-<img src="screenshots/showcase-standard-header.png" alt="Gruvbox Grid Cards with the standard header and medium desktop banner" width="49%">
-<img src="screenshots/showcase-bottom-bar.png" alt="Graphite Grid Cards with the Bottom Bar layout" width="49%">
-
-<img src="screenshots/showcase-no-search.png" alt="Catppuccin workspace with the search box hidden" width="49%">
-<img src="screenshots/showcase-no-banner.png" alt="Nord workspace with the banner hidden and standalone search" width="49%">
-
-<img src="screenshots/showcase-minimal.png" alt="Daylight workspace with both search and banner hidden" width="49%">
-<img src="screenshots/showcase-large-banner.png" alt="Tokyo Night workspace with a large desktop banner" width="49%">
-
-![Custom wallpaper and custom banner configuration](screenshots/showcase-custom-artwork.png)
+![Using real Waypoint Terminal commands to add a bookmark, change themes, and switch layouts](screenshots/waypoint-1.5.2-terminal.webp)
 
 </div>
-
-</details>
 
 ---
 

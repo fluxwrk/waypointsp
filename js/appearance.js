@@ -280,16 +280,20 @@ function applyHero() {
   const img = $("heroImage");
   if (!card || !img) return;
   const workspace = canonicalizeWorkspace();
-  const isBannerHidden = workspace.slots.hero === "hidden" || data.settings.heroSize === "hidden";
+  const hiddenByWorkspace = workspace.slots.hero === "hidden";
+  const isBannerHidden = hiddenByWorkspace || data.settings.heroSize === "hidden";
   const heroSize = isBannerHidden ? "hidden" : normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
-  data.settings.heroSize = heroSize;
-  data.settings.heroHeight = heroHeightForSize(heroSize, data.settings.heroHeight);
+  const heroHeight = heroHeightForSize(heroSize, data.settings.heroHeight);
+  if (!hiddenByWorkspace) {
+    data.settings.heroSize = heroSize;
+    data.settings.heroHeight = heroHeight;
+  }
   card.classList.toggle("hidden-banner", isBannerHidden);
   const hero = document.querySelector(".hero");
   hero?.classList.toggle("banner-hidden", isBannerHidden);
   ["hidden", "small", "medium", "large"].forEach(size => hero?.classList.toggle(`hero-size-${size}`, heroSize === size));
-  card.style.setProperty("--hero-height", `${data.settings.heroHeight}px`);
-  card.style.setProperty("--hero-min-height", `${data.settings.heroHeight}px`);
+  card.style.setProperty("--hero-height", `${heroHeight}px`);
+  card.style.setProperty("--hero-min-height", `${heroHeight}px`);
   card.style.setProperty("--hero-fit", "contain");
   card.classList.add("fit-contain");
   const theme = getTheme();

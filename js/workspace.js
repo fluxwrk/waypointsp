@@ -256,6 +256,7 @@ function canonicalizeWorkspace(workspace = data.settings.workspace) {
 function syncLegacyVisibilityFromWorkspace() {
   const workspace = canonicalizeWorkspace();
   const heroHidden = workspace.slots.hero === "hidden";
+  const wasHiddenByWorkspace = data.settings.bannerHiddenByWorkspace === true;
 
   // Legacy fields now mirror Workspace only for old controls/imports.
   // They are not allowed to drive layout.
@@ -266,12 +267,17 @@ function syncLegacyVisibilityFromWorkspace() {
   data.settings.showSearch = workspace.slots.search !== "hidden";
   data.settings.showSectionTitles = workspace.display?.showSectionTitles !== false;
 
-  if (heroHidden) {
-    data.settings.heroSize = "hidden";
-  } else {
+  data.settings.bannerHiddenByWorkspace = heroHidden;
+  if (!heroHidden) {
+    // Older v1.5.2 profiles may have persisted the effective Workspace-hidden
+    // state into the Appearance-owned banner size. Restore a visible default
+    // only when that stale value came from Workspace.
+    if (wasHiddenByWorkspace && data.settings.heroSize === "hidden") {
+      data.settings.heroSize = "medium";
+    }
     data.settings.heroSize = normalizeHeroSize(data.settings.heroSize, data.settings.heroHeight, data.settings.heroStyle);
+    data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
   }
-  data.settings.heroHeight = heroHeightForSize(data.settings.heroSize, data.settings.heroHeight);
   data.settings.layoutPreset = workspace.template || "classic";
   data.settings.workspaceHeroStyle = workspaceHeroStyle(workspace);
 }
@@ -299,11 +305,9 @@ function setWidgetSlot(widgetId, slotId) {
   workspace.modified = true;
 
   if (widgetId === "hero") {
+    const wasHiddenByWorkspace = data.settings.bannerHiddenByWorkspace === true;
     data.settings.bannerHiddenByWorkspace = slotId === "hidden";
-    if (slotId === "hidden") {
-      data.settings.heroSize = "hidden";
-      data.settings.heroHeight = heroHeightForSize("hidden", data.settings.heroHeight);
-    } else if (data.settings.heroSize === "hidden") {
+    if (slotId !== "hidden" && wasHiddenByWorkspace && data.settings.heroSize === "hidden") {
       data.settings.heroSize = "medium";
       data.settings.heroHeight = heroHeightForSize("medium", data.settings.heroHeight);
     }
@@ -338,6 +342,10 @@ function setWorkspaceHeroStyle(style) {
 function applyWorkspaceTemplate(templateId) {
   if (!WORKSPACE_TEMPLATES[templateId]) return false;
   data.settings.workspace = defaultWorkspace(templateId);
+  if (data.settings.workspace.slots.hero !== "hidden" && data.settings.heroSize === "hidden") {
+    data.settings.heroSize = "medium";
+    data.settings.heroHeight = heroHeightForSize("medium", data.settings.heroHeight);
+  }
   syncLegacyVisibilityFromWorkspace();
   return true;
 }

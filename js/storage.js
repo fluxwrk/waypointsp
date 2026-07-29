@@ -191,10 +191,7 @@ function normalizeData(input) {
   normalized.settings.showWeather = normalized.settings.workspace.slots.weather !== "hidden";
   normalized.settings.showSearch = normalized.settings.workspace.slots.search !== "hidden";
   normalized.settings.showSectionTitles = normalized.settings.workspace.display?.showSectionTitles !== false;
-  if (normalized.settings.workspace.slots.hero === "hidden") {
-    normalized.settings.heroSize = "hidden";
-    normalized.settings.heroHeight = heroHeightForSize("hidden", normalized.settings.heroHeight);
-  }
+  normalized.settings.bannerHiddenByWorkspace = normalized.settings.workspace.slots.hero === "hidden";
   normalized.settings.layoutPreset = normalized.settings.workspace.template;
   normalized.settings.widgets = normalizeWidgetState(normalized.settings.widgets);
   normalized.settings.bookmarkFontSize = clamp(Number(normalized.settings.bookmarkFontSize), 10, 15, 12);
