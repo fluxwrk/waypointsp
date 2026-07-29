@@ -100,9 +100,7 @@ Customize themes, wallpapers, layouts, widgets, colors, banners, bookmarks, and 
 
 **Latest Public Release:** **v1.5.2**
 
-**Current Main Branch:** **v1.6.0-dev1**
-
-**Development Status:** no active development milestone
+**Development Status:** **Active (v1.6.0)**
 
 ---
 
