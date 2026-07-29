@@ -4,7 +4,7 @@ const KEY = "waypoint-data-v1";
 
 const OLD_KEYS = ["startpage-data-v9", "startpage-data-v8", "startpage-data-v6", "startpage-data-v5", "startpage-data-v2", "startpage-data-v1"];
 
-let appMeta = { name: "Waypoint", version: "1.5.2", branch: "main", codename: "Runtime & Architecture Optimization" };
+let appMeta = { name: "Waypoint", version: "1.6.0-dev1", branch: "main", codename: "Runtime & Architecture Optimization" };
 
 const defaultData = {
   "sections": [
